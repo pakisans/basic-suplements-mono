@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { getCategoryBySlug, getSubcategories } from '@/services/categories';
 import { getProductBySlug, getProductsByCategory } from '@/services/products';
 import { ProductGrid } from '@/components/product/ProductGrid';
@@ -173,6 +174,24 @@ async function CategoryPage({ category, page, sort }) {
     ),
     getSubcategories(category.slug),
   ]);
+  const isRootCategory = !category.parent && subcategories.length > 0;
+  const groupedProducts = isRootCategory
+    ? await Promise.all(
+        subcategories.map(async (sub) => ({
+          category: sub,
+          productsData: await getProductsByCategory(
+            sub.slug,
+            { page: 1, limit: 24 },
+            sort,
+          ),
+        })),
+      )
+    : [];
+  const groupedCount = groupedProducts.reduce(
+    (total, group) => total + group.productsData.totalDocs,
+    0,
+  );
+  const totalProducts = isRootCategory ? groupedCount : productsData.totalDocs;
 
   return (
     <>
@@ -188,13 +207,55 @@ async function CategoryPage({ category, page, sort }) {
             </p>
           )}
           <p className="mt-3 text-xs text-zinc-600">
-            {productsData.totalDocs} proizvoda
+            {totalProducts} proizvoda
           </p>
         </div>
       </div>
 
       <div className="container mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        {subcategories.length > 0 && (
+        {isRootCategory ? (
+          <div className="space-y-12">
+            <div className="flex items-center justify-between border-b border-zinc-900 pb-6">
+              <p className="text-xs text-zinc-600">
+                {totalProducts} proizvoda raspoređeno po kategorijama
+              </p>
+              <ProductSort />
+            </div>
+
+            {groupedProducts.map(({ category: subcategory, productsData: subProducts }, index) => (
+              <section
+                key={subcategory.id}
+                className={index > 0 ? 'border-t border-zinc-800 pt-12' : ''}
+              >
+                <div className="mb-6 flex items-end justify-between gap-4">
+                  <div>
+                    <h2 className="text-2xl font-bold uppercase tracking-[0.18em] text-white">
+                      {subcategory.title}
+                    </h2>
+                    {subcategory.description && (
+                      <p className="mt-2 max-w-2xl text-sm text-zinc-400">
+                        {subcategory.description}
+                      </p>
+                    )}
+                  </div>
+                  <Link
+                    href={`/proizvodi/${category.slug}/${subcategory.slug}`}
+                    className="text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 transition hover:text-white"
+                  >
+                    Pogledaj sve
+                  </Link>
+                </div>
+
+                <ProductGrid
+                  products={subProducts.docs}
+                  columns={4}
+                  emptyTitle={`Nema proizvoda u kategoriji ${subcategory.title}`}
+                  emptyDescription="Dodaj proizvode u ovu potkategoriju da bi se prikazali ovde."
+                />
+              </section>
+            ))}
+          </div>
+        ) : subcategories.length > 0 ? (
           <div className="mb-12">
             <h2 className="mb-5 text-xs font-medium tracking-widest text-zinc-500 uppercase">
               Potkategorije
@@ -205,27 +266,31 @@ async function CategoryPage({ category, page, sort }) {
               ))}
             </div>
           </div>
+        ) : null}
+
+        {!isRootCategory && (
+          <>
+            <div className="mb-6 flex items-center justify-between">
+              <p className="text-xs text-zinc-600">
+                {productsData.totalDocs} proizvoda
+              </p>
+              <ProductSort />
+            </div>
+
+            <ProductGrid
+              products={productsData.docs}
+              columns={4}
+              emptyTitle="Nema proizvoda u ovoj kategoriji"
+              emptyDescription="Probajte drugu kategoriju ili pregledajte sve proizvode."
+            />
+
+            <Pagination
+              currentPage={productsData.page}
+              totalPages={productsData.totalPages}
+              className="mt-12"
+            />
+          </>
         )}
-
-        <div className="mb-6 flex items-center justify-between">
-          <p className="text-xs text-zinc-600">
-            {productsData.totalDocs} proizvoda
-          </p>
-          <ProductSort />
-        </div>
-
-        <ProductGrid
-          products={productsData.docs}
-          columns={4}
-          emptyTitle="Nema proizvoda u ovoj kategoriji"
-          emptyDescription="Probajte drugu kategoriju ili pregledajte sve proizvode."
-        />
-
-        <Pagination
-          currentPage={productsData.page}
-          totalPages={productsData.totalPages}
-          className="mt-12"
-        />
 
         {category.layout && category.layout.length > 0 && (
           <div className="mt-20 border-t border-zinc-900 pt-16">

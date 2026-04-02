@@ -1,22 +1,22 @@
-import Link from 'next/link'
-import { Navigation } from './Navigation'
-import { MobileMenu } from './MobileMenu'
-import { PayloadImage } from '@/components/ui/PayloadImage'
-import { CartTrigger } from '@/components/cart/CartTrigger'
-import { ROUTES, SITE_NAME } from '@/constants'
+import Link from 'next/link';
+import { Navigation } from './Navigation';
+import { MobileMenu } from './MobileMenu';
+import { PayloadImage } from '@/components/ui/PayloadImage';
+import { CartTrigger } from '@/components/cart/CartTrigger';
+import { ROUTES, SITE_NAME } from '@/constants';
 
 function isExternalLink(href) {
-  return /^https?:\/\//i.test(href)
+  return /^https?:\/\//i.test(href);
 }
 
 export function Header({ header }) {
-  const navItems = header?.navItems ?? []
-  const promo = header?.promoBanner
-  const siteName = header?.siteName || SITE_NAME
-  const logo = header?.logo
-  const promoHref = typeof promo?.link === 'string' ? promo.link.trim() : ''
-  const hasPromoLink = Boolean(promoHref)
-  const promoIsExternal = hasPromoLink ? isExternalLink(promoHref) : false
+  const navItems = header?.navItems ?? [];
+  const promo = header?.promoBanner;
+  const siteName = header?.siteName || SITE_NAME;
+  const logo = header?.logo;
+  const promoHref = typeof promo?.link === 'string' ? promo.link.trim() : '';
+  const hasPromoLink = Boolean(promoHref);
+  const promoIsExternal = hasPromoLink ? isExternalLink(promoHref) : false;
 
   return (
     <>
@@ -26,7 +26,9 @@ export function Header({ header }) {
             <Link
               href={promoHref}
               className="group relative block overflow-hidden px-4 py-3"
-              {...(promoIsExternal ? { target: '_blank', rel: 'noreferrer' } : {})}
+              {...(promoIsExternal
+                ? { target: '_blank', rel: 'noreferrer' }
+                : {})}
             >
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.06),transparent_55%)] opacity-70" />
               <div className="mx-auto flex max-w-7xl items-center justify-center gap-3 text-center">
@@ -45,8 +47,19 @@ export function Header({ header }) {
                     className="ml-2 h-3.5 w-3.5 opacity-80 transition-transform group-hover:translate-x-0.5"
                     aria-hidden="true"
                   >
-                    <path d="M4 10h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                    <path d="m10 6 4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path
+                      d="M4 10h10"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="m10 6 4 4-4 4"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </span>
                 <span className="hidden h-px w-10 bg-white/12 sm:block" />
@@ -76,8 +89,8 @@ export function Header({ header }) {
               <PayloadImage
                 media={logo}
                 alt={siteName}
-                width={120}
-                height={40}
+                width={250}
+                height={70}
                 priority
                 className="h-8 w-auto object-contain"
               />
@@ -115,5 +128,5 @@ export function Header({ header }) {
         </div>
       </header>
     </>
-  )
+  );
 }
