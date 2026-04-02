@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(PGPASSWORD=apppassword psql -h 46.225.222.58 -U appuser -d appdb -c \"SELECT id, email, roles FROM users LIMIT 10;\")",
+      "Bash(docker run:*)",
+      "Bash(find /Users/nemanjanakomcic/Documents/basic-suplements/backend/node_modules/.pnpm/@payloadcms+next@3.80.0*/node_modules/@payloadcms/next/dist -name \"*.js\" -path \"*admin*\")"
+    ]
+  }
+}

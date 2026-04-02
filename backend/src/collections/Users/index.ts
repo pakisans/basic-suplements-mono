@@ -44,6 +44,7 @@ export const Users: CollectionConfig = {
       hooks: {
         beforeChange: [ensureFirstUserIsAdmin],
       },
+      saveToJWT: true,
       options: [
         {
           label: 'admin',
