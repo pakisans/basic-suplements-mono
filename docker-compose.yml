@@ -38,6 +38,9 @@ services:
     container_name: app1
     restart: unless-stopped
     env_file: ./backend/.env
+    environment:
+      NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL}
+      REVALIDATE_SECRET: ${REVALIDATE_SECRET}
     ports:
       - '3001:3000'
     volumes:
