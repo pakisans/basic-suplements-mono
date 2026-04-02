@@ -1,4 +1,5 @@
 import { CollectionOverride } from '@payloadcms/plugin-ecommerce/types'
+import { revalidateProducts, revalidateProductsDelete } from '@/hooks/revalidateShop'
 import {
   MetaDescriptionField,
   MetaImageField,
@@ -157,6 +158,11 @@ const updateDefaultProductField = (field: Field): Field => {
 
 export const ProductsCollection: CollectionOverride = ({ defaultCollection }) => ({
   ...defaultCollection,
+  hooks: {
+    ...defaultCollection?.hooks,
+    afterChange: [...(defaultCollection?.hooks?.afterChange ?? []), revalidateProducts],
+    afterDelete: [...(defaultCollection?.hooks?.afterDelete ?? []), revalidateProductsDelete],
+  },
   admin: {
     ...defaultCollection?.admin,
     defaultColumns: ['title', 'price', '_status', 'categories'],

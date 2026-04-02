@@ -8,9 +8,13 @@ import { FooterNewsletter } from '@/blocks/FooterNewsletter/config'
 import { FooterSocial } from '@/blocks/FooterSocial/config'
 import { FooterText } from '@/blocks/FooterText/config'
 import { link } from '@/fields/link'
+import { revalidateFooter } from '@/hooks/revalidateShop'
 
 export const Footer: GlobalConfig = {
   slug: 'footer',
+  hooks: {
+    afterChange: [revalidateFooter],
+  },
   access: {
     read: () => true,
     update: adminOnly,

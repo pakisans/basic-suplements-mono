@@ -4,9 +4,14 @@ import type { CollectionConfig } from 'payload'
 import { adminOnly } from '@/access/adminOnly'
 import { flexibleContent } from '@/fields/flexibleContent'
 import { seoGroup } from '@/fields/seo'
+import { revalidateCategories, revalidateCategoriesDelete } from '@/hooks/revalidateShop'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
+  hooks: {
+    afterChange: [revalidateCategories],
+    afterDelete: [revalidateCategoriesDelete],
+  },
   access: {
     create: adminOnly,
     delete: adminOnly,

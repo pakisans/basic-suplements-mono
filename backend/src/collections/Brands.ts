@@ -4,9 +4,14 @@ import { slugField } from 'payload'
 import { adminOnly } from '@/access/adminOnly'
 import { flexibleContent } from '@/fields/flexibleContent'
 import { seoGroup } from '@/fields/seo'
+import { revalidateBrands, revalidateBrandsDelete } from '@/hooks/revalidateShop'
 
 export const Brands: CollectionConfig = {
   slug: 'brands',
+  hooks: {
+    afterChange: [revalidateBrands],
+    afterDelete: [revalidateBrandsDelete],
+  },
   access: {
     create: adminOnly,
     delete: adminOnly,

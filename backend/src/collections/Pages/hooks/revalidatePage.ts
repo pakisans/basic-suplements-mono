@@ -1,23 +1,7 @@
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
 
-import { revalidatePath } from 'next/cache'
-
 import type { Page } from '../../../payload-types'
-
-const safeRevalidatePath = (path: string, logger?: { warn: (message: string) => void }) => {
-  try {
-    revalidatePath(path)
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error)
-
-    if (message.includes('static generation store missing')) {
-      logger?.warn(`Skipping revalidatePath for ${path} outside Next request context.`)
-      return
-    }
-
-    throw error
-  }
-}
+import { revalidateFrontend } from '@/utilities/revalidateFrontend'
 
 export const revalidatePage: CollectionAfterChangeHook<Page> = ({
   doc,
@@ -25,22 +9,26 @@ export const revalidatePage: CollectionAfterChangeHook<Page> = ({
   req: { payload, context },
 }) => {
   if (!context.disableRevalidate) {
+    const paths: string[] = []
+    const tags: string[] = ['pages']
+
     if (doc._status === 'published') {
       const path = doc.slug === 'home' ? '/' : `/${doc.slug}`
-
-      payload.logger.info(`Revalidating page at path: ${path}`)
-
-      safeRevalidatePath(path, payload.logger)
+      paths.push(path)
+      tags.push(`page-${doc.slug}`)
     }
 
-    // If the page was previously published, we need to revalidate the old path
     if (previousDoc?._status === 'published' && doc._status !== 'published') {
       const oldPath = previousDoc.slug === 'home' ? '/' : `/${previousDoc.slug}`
-
-      payload.logger.info(`Revalidating old page at path: ${oldPath}`)
-
-      safeRevalidatePath(oldPath, payload.logger)
+      paths.push(oldPath)
+      tags.push(`page-${previousDoc.slug}`)
     }
+
+    void revalidateFrontend({
+      logger: payload.logger,
+      paths,
+      tags,
+    })
   }
   return doc
 }
@@ -51,7 +39,14 @@ export const revalidateDelete: CollectionAfterDeleteHook<Page> = ({
 }) => {
   if (!context.disableRevalidate) {
     const path = doc?.slug === 'home' ? '/' : `/${doc?.slug}`
-    safeRevalidatePath(path, payload.logger)
+    const tags = ['pages']
+    if (doc?.slug) tags.push(`page-${doc.slug}`)
+
+    void revalidateFrontend({
+      logger: payload.logger,
+      paths: [path],
+      tags,
+    })
   }
 
   return doc
