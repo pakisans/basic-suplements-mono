@@ -41,7 +41,7 @@ services:
     ports:
       - '3001:3000'
     volumes:
-      - ./backend/public/media:/app/public/media
+      - /var/www/payload-media:/app/public/media
     networks:
       - app_network
     depends_on:
