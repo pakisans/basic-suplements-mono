@@ -23,6 +23,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+      network: host
       args:
         DATABASE_URL_BUILD: ${DATABASE_URL_BUILD}
         PAYLOAD_SECRET: ${PAYLOAD_SECRET}
