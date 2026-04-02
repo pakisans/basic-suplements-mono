@@ -12,8 +12,8 @@ export function CartTrigger({ mobile = false }) {
       onClick={openCart}
       className={
         mobile
-          ? 'inline-flex items-center gap-2 border border-zinc-800 px-3 py-2 text-xs font-medium tracking-widest text-white uppercase transition-colors hover:border-white'
-          : 'ml-2 inline-flex items-center gap-2 border border-white px-4 py-2 text-xs font-medium tracking-widest text-white uppercase transition-colors hover:bg-white hover:text-black'
+          ? 'inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/[0.03] px-3 py-2 text-[11px] font-medium tracking-[0.22em] text-white uppercase transition-colors hover:border-white/30 hover:bg-white/[0.06]'
+          : 'ml-2 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2.5 text-[11px] font-medium tracking-[0.22em] text-white uppercase transition-colors hover:border-white/30 hover:bg-white hover:text-black'
       }
       aria-label={`Otvori korpu${count ? `, ${count} artikala` : ''}`}
     >

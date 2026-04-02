@@ -1,39 +1,33 @@
-'use client'
+'use client';
 
-import { useEffect, useEffectEvent } from 'react'
-import Link from 'next/link'
-import { useCart } from './CartProvider'
-import { CartLineItem } from './CartLineItem'
-import { Button } from '@/components/ui/Button'
-import { EmptyState } from '@/components/ui/EmptyState'
-import { ROUTES, CURRENCY } from '@/constants'
-import { formatCartPrice } from '@/lib/cart/product'
+import { useEffect, useEffectEvent } from 'react';
+import Link from 'next/link';
+import { useCart } from './CartProvider';
+import { CartLineItem } from './CartLineItem';
+import { Button } from '@/components/ui/Button';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { ROUTES, CURRENCY } from '@/constants';
+import { formatCartPrice } from '@/lib/cart/product';
 
 export function CartDrawer() {
-  const {
-    items,
-    isOpen,
-    closeCart,
-    subtotal,
-    updateQuantity,
-    removeItem,
-  } = useCart()
+  const { items, isOpen, closeCart, subtotal, updateQuantity, removeItem } =
+    useCart();
 
   const handleKeyDown = useEffectEvent((event) => {
-    if (event.key === 'Escape') closeCart()
-  })
+    if (event.key === 'Escape') closeCart();
+  });
 
   useEffect(() => {
-    if (!isOpen) return undefined
+    if (!isOpen) return undefined;
 
-    document.body.style.overflow = 'hidden'
-    window.addEventListener('keydown', handleKeyDown)
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      document.body.style.overflow = ''
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [isOpen])
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
 
   return (
     <div
@@ -43,53 +37,77 @@ export function CartDrawer() {
       {/* Backdrop */}
       <div
         onClick={closeCart}
-        className={`absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-500 ${
+        className={`absolute inset-0 bg-black/82 backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isOpen ? 'opacity-100' : 'opacity-0'
         }`}
       />
 
       {/* Drawer panel */}
       <aside
-        className={`absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-zinc-950 shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-          isOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
+        className={`absolute right-0 top-0 flex h-full w-full max-w-[520px] flex-col overflow-hidden border-l border-white/8 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.035),transparent_34%),linear-gradient(180deg,#070707_0%,#020202_52%,#000000_100%)] shadow-[0_40px_120px_-50px_rgba(0,0,0,1)] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform ${
+          isOpen
+            ? 'translate-x-0 scale-100 opacity-100'
+            : 'translate-x-[108%] scale-[0.985] opacity-0'
         }`}
         role="dialog"
         aria-modal="true"
         aria-label="Brza korpa"
       >
-        {/* Top border accent */}
-        <div className={`h-px w-full bg-gradient-to-r from-transparent via-zinc-600 to-transparent transition-opacity duration-700 ${isOpen ? 'opacity-100' : 'opacity-0'}`} />
+        <div
+          className={`h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-opacity duration-700 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
+        />
 
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-zinc-900 px-5 py-4">
+        <div
+          className={`pointer-events-none absolute inset-x-6 top-24 h-40 rounded-full bg-white/[0.025] blur-3xl transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            isOpen ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+          }`}
+        />
+
+        <div
+          className={`relative flex items-center justify-between border-b border-white/6 px-5 py-5 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-6 ${
+            isOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+          }`}
+        >
           <div>
-            <div className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
+            <div className="text-[10px] font-medium tracking-[0.28em] text-zinc-500 uppercase">
               Brza korpa
             </div>
-            <h2 className="mt-0.5 text-base font-semibold text-white">
-              Tvoji artikli
+            <h2 className="mt-1 text-lg font-semibold text-white">
+              Tvoji odabrani komadi
               {items.length > 0 && (
-                <span className="ml-2 inline-flex h-5 w-5 items-center justify-center bg-white text-[10px] font-bold text-black">
+                <span className="ml-2 inline-flex min-w-6 items-center justify-center rounded-full border border-white/10 bg-zinc-100 px-2 py-1 text-[10px] font-bold text-black">
                   {items.reduce((n, i) => n + i.quantity, 0)}
                 </span>
               )}
             </h2>
+            <p className="mt-1 text-sm text-zinc-400">
+              Pregled artikala pre nego što nastaviš na naplatu.
+            </p>
           </div>
           <button
             type="button"
             onClick={closeCart}
-            className="inline-flex h-9 w-9 items-center justify-center border border-zinc-800 text-zinc-500 transition-colors hover:border-zinc-600 hover:text-white"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/8 bg-white/[0.02] text-zinc-500 transition-colors hover:border-white/15 hover:bg-white/[0.04] hover:text-white"
             aria-label="Zatvori"
           >
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <svg
+              viewBox="0 0 24 24"
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            >
               <path d="M6 6 18 18" />
               <path d="M18 6 6 18" />
             </svg>
           </button>
         </div>
 
-        {/* Items */}
-        <div className="flex-1 overflow-y-auto px-5 py-5">
+        <div
+          className={`relative flex-1 overflow-y-auto px-5 py-5 transition-all delay-75 duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-6 ${
+            isOpen ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'
+          }`}
+        >
           {items.length > 0 ? (
             <div className="space-y-4">
               {items.map((item) => (
@@ -108,7 +126,11 @@ export function CartDrawer() {
               title="Korpa je prazna"
               description="Dodaj proizvod iz kataloga i ovde ćeš odmah videti pregled izabranih artikala."
               action={
-                <Button href={ROUTES.products} variant="outline" onClick={closeCart}>
+                <Button
+                  href={ROUTES.products}
+                  variant="outline"
+                  onClick={closeCart}
+                >
                   Pogledaj proizvode
                 </Button>
               }
@@ -116,30 +138,48 @@ export function CartDrawer() {
           )}
         </div>
 
-        {/* Footer */}
         {items.length > 0 && (
-          <div className="border-t border-zinc-900 px-5 py-5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
-                Subtotal
-              </span>
-              <span className="text-lg font-semibold text-white">
-                {formatCartPrice(subtotal)} {CURRENCY.symbol}
-              </span>
+          <div
+            className={`relative border-t border-white/6 bg-black/50 px-5 py-5 backdrop-blur-xl transition-all delay-100 duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-6 sm:py-6 ${
+              isOpen ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+            }`}
+          >
+            <div className="rounded-[28px] border border-white/8 bg-zinc-950/90 p-4 shadow-[0_20px_60px_-35px_rgba(0,0,0,1)]">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-medium tracking-[0.26em] text-zinc-500 uppercase">
+                  Subtotal
+                </span>
+                <span className="text-xl font-semibold text-white">
+                  {formatCartPrice(subtotal)} {CURRENCY.symbol}
+                </span>
+              </div>
+              <p className="mt-2 text-sm text-zinc-400">
+                Dostava i eventualni popusti se obračunavaju na sledećem koraku.
+              </p>
             </div>
-            <p className="mt-1 text-xs text-zinc-600">Dostava se obračunava pri naplati</p>
 
             <div className="mt-4 space-y-3">
-              <Button href={ROUTES.checkout} fullWidth onClick={closeCart}>
+              <Button
+                href={ROUTES.checkout}
+                fullWidth
+                onClick={closeCart}
+                className="rounded-full py-4 text-[11px] tracking-[0.24em] shadow-[0_16px_40px_-24px_rgba(255,255,255,0.4)]"
+              >
                 Nastavi na plaćanje
               </Button>
-              <Button href={ROUTES.cart} variant="outline" fullWidth onClick={closeCart}>
+              <Button
+                href={ROUTES.cart}
+                variant="outline"
+                fullWidth
+                onClick={closeCart}
+                className="rounded-full py-4 text-[11px] tracking-[0.24em]"
+              >
                 Pregledaj korpu
               </Button>
               <Link
                 href={ROUTES.products}
                 onClick={closeCart}
-                className="block text-center text-xs font-medium tracking-widest text-zinc-600 uppercase transition-colors hover:text-white"
+                className="block text-center text-[10px] font-medium tracking-[0.26em] text-zinc-500 uppercase transition-colors hover:text-white"
               >
                 Nastavi kupovinu
               </Link>
@@ -148,5 +188,5 @@ export function CartDrawer() {
         )}
       </aside>
     </div>
-  )
+  );
 }

@@ -81,15 +81,18 @@ export function QuickAddButton({ product }) {
     <>
       {/* Hover trigger — slides up from bottom of image */}
       <div
-        className={`absolute inset-x-0 bottom-0 z-10 transition-transform duration-300 ${
+        data-no-card-nav="true"
+        className={`absolute inset-x-0 bottom-0 z-30 transition-transform duration-300 ${
           isOpen || added
             ? 'translate-y-0'
             : 'translate-y-full group-hover:translate-y-0'
         }`}
+        onPointerDown={(e) => e.stopPropagation()}
       >
         <button
           type="button"
           onClick={handleTrigger}
+          onPointerDown={(e) => e.stopPropagation()}
           disabled={!hasStock}
           className={`flex h-11 w-full items-center justify-center gap-2 text-xs font-medium tracking-widest uppercase backdrop-blur-sm transition-colors ${
             hasStock
@@ -120,8 +123,10 @@ export function QuickAddButton({ product }) {
       {/* Variant picker — overlays the image */}
       {isOpen && (
         <div
-          className="absolute inset-0 z-20 flex flex-col bg-zinc-950/98 p-4"
+          data-no-card-nav="true"
+          className="absolute inset-0 z-40 flex flex-col bg-zinc-950/98 p-4"
           onClick={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
         >
           <div className="mb-3 flex items-start justify-between">
             <div>
@@ -135,6 +140,7 @@ export function QuickAddButton({ product }) {
             <button
               type="button"
               onClick={handleClose}
+              onPointerDown={(e) => e.stopPropagation()}
               className="ml-2 mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center text-zinc-500 transition-colors hover:text-white"
               aria-label="Zatvori"
             >
@@ -175,6 +181,7 @@ export function QuickAddButton({ product }) {
                           type="button"
                           disabled={!available}
                           onClick={(e) => handleOptionSelect(e, group, option.id)}
+                          onPointerDown={(e) => e.stopPropagation()}
                           className={`border px-3 py-1.5 text-xs font-medium transition-colors ${
                             selected
                               ? 'border-white bg-white text-black'
@@ -197,6 +204,7 @@ export function QuickAddButton({ product }) {
             type="button"
             disabled={!canAdd || !hasStock}
             onClick={handleAdd}
+            onPointerDown={(e) => e.stopPropagation()}
             className="mt-3 h-10 w-full bg-white text-xs font-medium tracking-widest text-black uppercase transition-colors hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-40"
           >
             {!hasStock

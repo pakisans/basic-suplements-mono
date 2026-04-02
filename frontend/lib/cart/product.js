@@ -4,6 +4,21 @@ function asResolvedObject(value) {
   return value && typeof value === 'object' ? value : null
 }
 
+function formatVariantTypeLabel(typeName) {
+  const normalized = String(typeName ?? '')
+    .trim()
+    .toLowerCase()
+
+  if (!normalized || normalized === 'option') return 'Opcija'
+  if (normalized === 'boja') return 'Boja'
+  if (normalized === 'velicina') return 'Veličina'
+  if (normalized === 'tezina') return 'Težina'
+  if (normalized === 'ukus') return 'Ukus'
+  if (normalized === 'pakovanje') return 'Pakovanje'
+
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1)
+}
+
 function getVariantList(product) {
   const variants = product?.variants
 
@@ -33,7 +48,7 @@ function getVariantOptionList(variant) {
         label: resolved.label ?? resolved.value ?? `Opcija ${resolved.id}`,
         value: resolved.value ?? resolved.label ?? `option-${resolved.id}`,
         typeId: variantType?.id ?? resolved.variantType ?? null,
-        typeLabel: variantType?.label ?? 'Opcija',
+        typeLabel: variantType?.label ?? formatVariantTypeLabel(variantType?.name),
         typeName: variantType?.name ?? 'option',
       }
     })

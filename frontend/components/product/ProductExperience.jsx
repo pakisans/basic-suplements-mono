@@ -71,13 +71,13 @@ export function ProductExperience({ product }) {
       );
     });
 
-  const hasStock = selectedVariant
-    ? selectedVariant.inventory === null ||
-      selectedVariant.inventory === undefined ||
-      selectedVariant.inventory > 0
-    : product.inventory === null ||
-      product.inventory === undefined ||
-      product.inventory > 0;
+  const hasStock = hasVariants
+    ? selectedVariant
+      ? selectedVariant.inventory === null ||
+        selectedVariant.inventory === undefined ||
+        selectedVariant.inventory > 0
+      : true
+    : true;
 
   const canAddToCart = hasVariants
     ? !missingSelection && Boolean(selectedVariant) && hasStock

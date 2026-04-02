@@ -1,6 +1,23 @@
 import { payloadQuery, payloadFindBySlug } from '@/lib/payload/client'
 import { REVALIDATE } from '@/constants'
 
+const PREFERRED_PARENT_CATEGORY_ORDER = ['suplementi', 'oprema']
+
+function sortParentCategories(categories) {
+  return [...categories].sort((a, b) => {
+    const aIndex = PREFERRED_PARENT_CATEGORY_ORDER.indexOf(a.slug)
+    const bIndex = PREFERRED_PARENT_CATEGORY_ORDER.indexOf(b.slug)
+    const normalizedAIndex = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex
+    const normalizedBIndex = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex
+
+    if (normalizedAIndex !== normalizedBIndex) {
+      return normalizedAIndex - normalizedBIndex
+    }
+
+    return String(a.title).localeCompare(String(b.title), 'sr')
+  })
+}
+
 export async function getCategories(options = {}) {
   const { parentOnly = false, limit = 100, depth = 2 } = options
   const where = {}
@@ -17,6 +34,10 @@ export async function getCategories(options = {}) {
     revalidate: REVALIDATE.categories,
     tags: ['categories'],
   })
+
+  if (parentOnly) {
+    return sortParentCategories(result.docs)
+  }
 
   return result.docs
 }
