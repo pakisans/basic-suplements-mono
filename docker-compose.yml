@@ -1,0 +1,81 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: apppassword
+      POSTGRES_DB: appdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser -d appdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app1:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        DATABASE_URL_BUILD: ${DATABASE_URL_BUILD}
+        PAYLOAD_SECRET: ${PAYLOAD_SECRET}
+        PREVIEW_SECRET: ${PREVIEW_SECRET}
+        PAYLOAD_PUBLIC_SERVER_URL: ${PAYLOAD_PUBLIC_SERVER_URL}
+        NEXT_PUBLIC_SERVER_URL: ${PAYLOAD_PUBLIC_SERVER_URL}
+        STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+        NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+        STRIPE_WEBHOOKS_SIGNING_SECRET: ${STRIPE_WEBHOOKS_SIGNING_SECRET}
+    container_name: app1
+    restart: unless-stopped
+    env_file: ./backend/.env
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./backend/public/media:/app/public/media
+    networks:
+      - app_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  app2:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        PAYLOAD_URL: ${PAYLOAD_URL_BUILD}
+        NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL}
+        REVALIDATE_SECRET: ${REVALIDATE_SECRET}
+        NEXT_PUBLIC_PAYLOAD_URL: ${NEXT_PUBLIC_PAYLOAD_URL}
+    container_name: app2
+    restart: unless-stopped
+    env_file: ./frontend/.env
+    networks:
+      - app_network
+    depends_on:
+      - app1
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+    networks:
+      - app_network
+    depends_on:
+      - app2
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
