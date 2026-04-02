@@ -83,19 +83,20 @@ export function Header({ header }) {
       )}
 
       <header className="sticky top-0 z-30 border-b border-zinc-800 bg-black/95 backdrop-blur-sm">
-        <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link href="/" className="transition-opacity hover:opacity-70">
+        <div className="container mx-auto flex h-[78px] max-w-7xl items-center justify-between px-4 sm:h-[84px] sm:px-6 lg:px-8">
+          <Link href="/" className="flex items-center transition-opacity hover:opacity-85">
             {logo ? (
               <PayloadImage
                 media={logo}
                 alt={siteName}
-                width={250}
-                height={70}
+                width={320}
+                height={110}
                 priority
-                className="h-8 w-auto object-contain"
+                className="h-11 w-auto object-contain sm:h-12 lg:h-14"
+                sizes="(max-width: 640px) 176px, (max-width: 1024px) 208px, 224px"
               />
             ) : (
-              <span className="text-lg font-bold tracking-[0.2em] text-white uppercase">
+              <span className="text-xl font-bold tracking-[0.2em] text-white uppercase sm:text-2xl">
                 {siteName}
               </span>
             )}
