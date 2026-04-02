@@ -24,6 +24,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile
       network: host
+      extra_hosts:
+        - 'host.docker.internal:host-gateway'
       args:
         DATABASE_URL_BUILD: ${DATABASE_URL_BUILD}
         PAYLOAD_SECRET: ${PAYLOAD_SECRET}
