@@ -82,9 +82,9 @@ export function Header({ header }) {
         </div>
       )}
 
-      <header className="sticky top-0 z-30 border-b border-zinc-800 bg-black/95 backdrop-blur-sm">
-        <div className="container mx-auto flex h-[78px] max-w-7xl items-center justify-between px-4 sm:h-[84px] sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center transition-opacity hover:opacity-85">
+      <header className="sticky top-0 z-50 border-b border-zinc-800 bg-black/95 backdrop-blur-sm">
+        <div className="container mx-auto grid h-[78px] max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 sm:h-[84px] sm:px-6 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:gap-6 lg:px-8">
+          <Link href="/" className="flex min-w-0 items-center transition-opacity hover:opacity-85">
             {logo ? (
               <PayloadImage
                 media={logo}
@@ -92,21 +92,21 @@ export function Header({ header }) {
                 width={320}
                 height={110}
                 priority
-                className="h-11 w-auto object-contain sm:h-12 lg:h-14"
+                className="h-10 w-auto max-w-[170px] object-contain sm:h-11 sm:max-w-[190px] lg:h-14 lg:max-w-[230px]"
                 sizes="(max-width: 640px) 176px, (max-width: 1024px) 208px, 224px"
               />
             ) : (
-              <span className="text-xl font-bold tracking-[0.2em] text-white uppercase sm:text-2xl">
+              <span className="truncate text-xl font-bold tracking-[0.2em] text-white uppercase sm:text-2xl">
                 {siteName}
               </span>
             )}
           </Link>
 
-          <div className="hidden items-center gap-8 lg:flex">
+          <div className="hidden min-w-0 items-center justify-center lg:flex">
             <Navigation navItems={navItems} />
           </div>
 
-          <div className="hidden items-center gap-1 lg:flex">
+          <div className="hidden items-center justify-end gap-1 lg:flex">
             <Link
               href={ROUTES.search}
               className="p-2 text-xs font-medium tracking-widest text-zinc-400 uppercase transition-colors hover:text-white"
@@ -122,7 +122,7 @@ export function Header({ header }) {
             <CartTrigger />
           </div>
 
-          <div className="flex items-center gap-2 lg:hidden">
+          <div className="flex items-center justify-end gap-2 lg:hidden">
             <CartTrigger mobile />
             <MobileMenu navItems={navItems} />
           </div>

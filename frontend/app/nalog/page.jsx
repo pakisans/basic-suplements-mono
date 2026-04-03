@@ -1,53 +1,53 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { useAuth } from '@/components/auth/AuthProvider'
-import { updateMe } from '@/services/auth'
-import { ROUTES } from '@/constants'
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useAuth } from '@/components/auth/AuthProvider';
+import { updateMe } from '@/services/auth';
+import { ROUTES } from '@/constants';
 
 export default function AccountPage() {
-  const { user, token, loading, logout, refreshUser } = useAuth()
-  const router = useRouter()
+  const { user, token, loading, logout, refreshUser } = useAuth();
+  const router = useRouter();
 
-  const [editMode, setEditMode] = useState(false)
-  const [name, setName] = useState('')
-  const [saving, setSaving] = useState(false)
-  const [saveError, setSaveError] = useState('')
-  const [saveSuccess, setSaveSuccess] = useState(false)
+  const [editMode, setEditMode] = useState(false);
+  const [name, setName] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
-      router.replace(ROUTES.login)
+      router.replace(ROUTES.login);
     }
-  }, [loading, user, router])
+  }, [loading, user, router]);
 
   useEffect(() => {
-    if (user) setName(user.name ?? '')
-  }, [user])
+    if (user) setName(user.name ?? '');
+  }, [user]);
 
   async function handleSave(e) {
-    e.preventDefault()
-    setSaveError('')
-    setSaveSuccess(false)
-    setSaving(true)
+    e.preventDefault();
+    setSaveError('');
+    setSaveSuccess(false);
+    setSaving(true);
     try {
-      await updateMe(token, user.id, { name })
-      await refreshUser()
-      setEditMode(false)
-      setSaveSuccess(true)
-      setTimeout(() => setSaveSuccess(false), 3000)
+      await updateMe(token, user.id, { name });
+      await refreshUser();
+      setEditMode(false);
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
     } catch (err) {
-      setSaveError(err.message)
+      setSaveError(err.message);
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
   }
 
   async function handleLogout() {
-    await logout()
-    router.push('/')
+    await logout();
+    router.push('/');
   }
 
   if (loading) {
@@ -55,10 +55,10 @@ export default function AccountPage() {
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
         <div className="text-sm text-zinc-500">Učitavanje...</div>
       </div>
-    )
+    );
   }
 
-  if (!user) return null
+  if (!user) return null;
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
@@ -72,7 +72,6 @@ export default function AccountPage() {
       </div>
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[240px_1fr]">
-        {/* Sidebar nav */}
         <nav className="space-y-1">
           {[
             { label: 'Profil', href: ROUTES.account, active: true },
@@ -99,9 +98,7 @@ export default function AccountPage() {
           </button>
         </nav>
 
-        {/* Main content */}
         <div className="space-y-8">
-          {/* Profile section */}
           <section className="border border-zinc-800 p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
@@ -143,7 +140,9 @@ export default function AccountPage() {
                   />
                 </div>
 
-                {saveError && <p className="text-xs text-red-400">{saveError}</p>}
+                {saveError && (
+                  <p className="text-xs text-red-400">{saveError}</p>
+                )}
 
                 <div className="flex gap-3 pt-2">
                   <button
@@ -155,7 +154,10 @@ export default function AccountPage() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => { setEditMode(false); setName(user.name ?? '') }}
+                    onClick={() => {
+                      setEditMode(false);
+                      setName(user.name ?? '');
+                    }}
                     className="h-10 border border-zinc-800 px-6 text-xs font-medium tracking-widest text-zinc-400 uppercase transition-colors hover:text-white"
                   >
                     Otkaži
@@ -165,7 +167,9 @@ export default function AccountPage() {
             ) : (
               <div className="mt-6 space-y-4">
                 {saveSuccess && (
-                  <p className="text-xs text-green-400">Podaci su uspešno sačuvani</p>
+                  <p className="text-xs text-green-400">
+                    Podaci su uspešno sačuvani
+                  </p>
                 )}
                 <div className="flex items-center justify-between border-b border-zinc-900 pb-4">
                   <span className="text-xs text-zinc-500">Ime</span>
@@ -179,7 +183,6 @@ export default function AccountPage() {
             )}
           </section>
 
-          {/* Recent orders preview */}
           <section className="border border-zinc-800 p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
@@ -205,5 +208,5 @@ export default function AccountPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

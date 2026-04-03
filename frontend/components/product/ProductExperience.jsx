@@ -18,25 +18,25 @@ import {
 } from '@/lib/cart/product';
 
 const COLOR_MAP = {
-  'Crna': '#1a1a1a',
-  'Bela': '#f5f5f5',
-  'Belo': '#f5f5f5',
-  'Siva': '#6b7280',
+  Crna: '#1a1a1a',
+  Bela: '#f5f5f5',
+  Belo: '#f5f5f5',
+  Siva: '#6b7280',
   'Svetlo siva': '#9ca3af',
   'Tamno siva': '#374151',
   'Navy Blue': '#1e3a5f',
-  'Plava': '#2563eb',
+  Plava: '#2563eb',
   'Sky Blue': '#38bdf8',
-  'Roza': '#f472b6',
-  'Crvena': '#ef4444',
-  'Narandžasta': '#f97316',
-  'Zelena': '#22c55e',
-  'Mint': '#6ee7b7',
-  'Bež': '#d4b896',
-  'Ruby': '#9f1239',
-  'Transparentna': 'transparent',
+  Roza: '#f472b6',
+  Crvena: '#ef4444',
+  Narandžasta: '#f97316',
+  Zelena: '#22c55e',
+  Mint: '#6ee7b7',
+  Bež: '#d4b896',
+  Ruby: '#9f1239',
+  Transparentna: 'transparent',
   'boja kapucina': '#7c5c3e',
-}
+};
 
 function getInitialSelection(optionGroups) {
   return optionGroups
@@ -85,7 +85,8 @@ export function ProductExperience({ product }) {
   const displayPrice = getDisplayPrice(product, selectedVariant);
 
   // Variant is fully resolved (all groups selected, or product has no variants)
-  const variantResolved = !hasVariants || (!missingSelection && Boolean(selectedVariant));
+  const variantResolved =
+    !hasVariants || (!missingSelection && Boolean(selectedVariant));
 
   function handleOptionSelect(group, optionId) {
     setError('');
@@ -142,7 +143,7 @@ export function ProductExperience({ product }) {
     const selected = group.options.find((o) =>
       selectedOptionIds.some((id) => String(id) === String(o.id)),
     );
-    return selected ? COLOR_MAP[selected.label] ?? null : null;
+    return selected ? (COLOR_MAP[selected.label] ?? null) : null;
   }
 
   return (
@@ -176,9 +177,7 @@ export function ProductExperience({ product }) {
           <div className="space-y-5 border-t border-zinc-900 pt-5">
             {optionGroups.map((group) => {
               const selectedOption = group.options.find((o) =>
-                selectedOptionIds.some(
-                  (id) => String(id) === String(o.id),
-                ),
+                selectedOptionIds.some((id) => String(id) === String(o.id)),
               );
               const isGroupSelected = Boolean(selectedOption);
               const isColorGroup = group.name?.toLowerCase() === 'boja';
@@ -196,7 +195,9 @@ export function ProductExperience({ product }) {
                             style={{ backgroundColor: colorHex }}
                           />
                         )}
-                        <span className="text-white">{selectedOption.label}</span>
+                        <span className="text-white">
+                          {selectedOption.label}
+                        </span>
                       </>
                     ) : (
                       <>
@@ -219,7 +220,6 @@ export function ProductExperience({ product }) {
           </div>
         )}
 
-        {/* Quantity selector */}
         <div className="border-t border-zinc-900 pt-5">
           <div className="mb-3 text-xs font-medium tracking-widest text-zinc-500 uppercase">
             Količina
@@ -247,7 +247,6 @@ export function ProductExperience({ product }) {
           </div>
         </div>
 
-        {/* Stock status — only when variant is resolved */}
         {variantResolved && (
           <div className="flex items-center gap-2">
             {hasStock ? (
@@ -279,14 +278,20 @@ export function ProductExperience({ product }) {
           </Button>
         </div>
 
-        {error && (
-          <p className="text-sm text-red-400">{error}</p>
-        )}
+        {error && <p className="text-sm text-red-400">{error}</p>}
 
         {success && (
           <div className="flex items-center gap-2 border border-emerald-500/20 bg-emerald-500/5 px-4 py-3">
-            <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0 text-emerald-400">
-              <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+            <svg
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className="h-4 w-4 shrink-0 text-emerald-400"
+            >
+              <path
+                fillRule="evenodd"
+                d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+                clipRule="evenodd"
+              />
             </svg>
             <p className="text-sm text-emerald-400">{success}</p>
           </div>

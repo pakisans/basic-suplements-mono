@@ -24,10 +24,8 @@ function HeroPanel({ category, fallbackLabel, fallbackHref, priority }) {
         </div>
       )}
 
-      {/* Gradient samo na dnu gdje je tekst */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
-      {/* Tekst dole-levo */}
       <div className="relative mt-auto p-7 md:p-10">
         <p className="text-3xl font-extrabold uppercase leading-none tracking-tight text-white md:text-5xl lg:text-6xl">
           SHOP

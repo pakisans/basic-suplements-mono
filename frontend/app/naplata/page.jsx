@@ -1,60 +1,82 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { useCart } from '@/components/cart/CartProvider'
-import { PayloadImage } from '@/components/ui/PayloadImage'
-import { CURRENCY, ROUTES } from '@/constants'
-import { formatCartPrice } from '@/lib/cart/product'
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useCart } from '@/components/cart/CartProvider';
+import { useAuth } from '@/components/auth/AuthProvider';
+import { PayloadImage } from '@/components/ui/PayloadImage';
+import { CURRENCY, ROUTES } from '@/constants';
+import { formatCartPrice } from '@/lib/cart/product';
+import { createOrder } from '@/services/orders';
 
 const STEPS = [
   { id: 1, label: 'Kontakt' },
   { id: 2, label: 'Dostava' },
   { id: 3, label: 'Pregled' },
-]
+];
 
-const EMPTY_CONTACT = { firstName: '', lastName: '', email: '', phone: '' }
-const EMPTY_DELIVERY = { street: '', city: '', zip: '', country: 'Srbija', note: '' }
+const EMPTY_CONTACT = { firstName: '', lastName: '', email: '', phone: '' };
+const EMPTY_DELIVERY = {
+  street: '',
+  city: '',
+  zip: '',
+  country: 'Srbija',
+  note: '',
+};
 
 export default function CheckoutPage() {
-  const { items, subtotal, isHydrated, clearCart } = useCart()
-  const router = useRouter()
+  const { items, subtotal, isHydrated, clearCart } = useCart();
+  const { user, token } = useAuth();
+  const router = useRouter();
 
-  const [step, setStep] = useState(1)
-  const [contact, setContact] = useState(EMPTY_CONTACT)
-  const [delivery, setDelivery] = useState(EMPTY_DELIVERY)
-  const [placing, setPlacing] = useState(false)
-  const [done, setDone] = useState(false)
-  const [orderRef] = useState(() => `ORD-${Date.now().toString(36).toUpperCase()}`)
+  const [step, setStep] = useState(1);
+  const [contact, setContact] = useState(EMPTY_CONTACT);
+  const [delivery, setDelivery] = useState(EMPTY_DELIVERY);
+  const [placing, setPlacing] = useState(false);
+  const [error, setError] = useState(null);
+  const [orderResult, setOrderResult] = useState(null);
 
   function updateContact(field, value) {
-    setContact((prev) => ({ ...prev, [field]: value }))
+    setContact((prev) => ({ ...prev, [field]: value }));
   }
 
   function updateDelivery(field, value) {
-    setDelivery((prev) => ({ ...prev, [field]: value }))
+    setDelivery((prev) => ({ ...prev, [field]: value }));
   }
 
   function handleContactSubmit(e) {
-    e.preventDefault()
-    setStep(2)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    e.preventDefault();
+    setStep(2);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function handleDeliverySubmit(e) {
-    e.preventDefault()
-    setStep(3)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    e.preventDefault();
+    setStep(3);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   async function handlePlaceOrder() {
-    setPlacing(true)
-    // TODO: POST to /api/orders when the Orders collection is added to the backend
-    await new Promise((r) => setTimeout(r, 1200))
-    clearCart()
-    setDone(true)
-    setPlacing(false)
+    setPlacing(true);
+    setError(null);
+    try {
+      const order = await createOrder({
+        items,
+        contact,
+        delivery,
+        userId: user?.id ?? null,
+        token: token ?? null,
+      });
+      clearCart();
+      setOrderResult({ id: order.id, accessToken: order.accessToken });
+    } catch (err) {
+      setError(
+        err.message || 'Greška pri kreiranju porudžbine. Pokušajte ponovo.',
+      );
+    } finally {
+      setPlacing(false);
+    }
   }
 
   if (!isHydrated) {
@@ -62,10 +84,10 @@ export default function CheckoutPage() {
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
         <div className="text-sm text-zinc-500">Učitavanje...</div>
       </div>
-    )
+    );
   }
 
-  if (isHydrated && items.length === 0 && !done) {
+  if (isHydrated && items.length === 0 && !orderResult) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center gap-4 px-4">
         <p className="text-sm text-zinc-400">Korpa je prazna</p>
@@ -76,51 +98,88 @@ export default function CheckoutPage() {
           Idi na proizvode →
         </Link>
       </div>
-    )
+    );
   }
 
-  if (done) {
+  if (orderResult) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4">
         <div className="max-w-md w-full text-center">
           <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center border border-zinc-700">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-7 w-7 text-white">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              className="h-7 w-7 text-white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4.5 12.75l6 6 9-13.5"
+              />
             </svg>
           </div>
-          <div className="text-xs font-medium tracking-widest text-zinc-500 uppercase">Porudžbina primljena</div>
-          <h1 className="mt-3 text-2xl font-bold text-white">Hvala na porudžbini!</h1>
+          <div className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
+            Porudžbina primljena
+          </div>
+          <h1 className="mt-3 text-2xl font-bold text-white">
+            Hvala na porudžbini!
+          </h1>
           <p className="mt-3 text-sm text-zinc-400">
-            Broj porudžbine: <span className="font-mono text-white">{orderRef}</span>
+            Broj porudžbine:{' '}
+            <span className="font-mono text-white">#{orderResult.id}</span>
           </p>
           <p className="mt-2 text-sm text-zinc-500">
             Potvrdu ćemo poslati na{' '}
             <span className="text-zinc-300">{contact.email}</span>
           </p>
+          {!user && orderResult.accessToken && (
+            <div className="mt-4 border border-zinc-800 bg-zinc-950 p-4 text-left">
+              <p className="text-[10px] font-medium tracking-widest text-zinc-600 uppercase">
+                Kod za praćenje porudžbine
+              </p>
+              <p className="mt-1 break-all font-mono text-xs text-zinc-300">
+                {orderResult.accessToken}
+              </p>
+              <p className="mt-2 text-[10px] text-zinc-600">
+                Sačuvajte ovaj kod — potreban je za pregled porudžbine bez
+                naloga.
+              </p>
+            </div>
+          )}
           <div className="mt-8 space-y-3">
+            {user ? (
+              <Link
+                href={`${ROUTES.orders}/${orderResult.id}`}
+                className="block h-12 border border-white px-8 leading-[3rem] text-xs font-medium tracking-widest text-white uppercase transition-colors hover:bg-white hover:text-black"
+              >
+                Pregled porudžbine →
+              </Link>
+            ) : (
+              <Link
+                href={`${ROUTES.orders}/${orderResult.id}?accessToken=${orderResult.accessToken}`}
+                className="block h-12 border border-white px-8 leading-[3rem] text-xs font-medium tracking-widest text-white uppercase transition-colors hover:bg-white hover:text-black"
+              >
+                Pregled porudžbine →
+              </Link>
+            )}
             <Link
               href={ROUTES.products}
-              className="block h-12 border border-white px-8 leading-[3rem] text-xs font-medium tracking-widest text-white uppercase transition-colors hover:bg-white hover:text-black"
-            >
-              Nastavi kupovinu
-            </Link>
-            <Link
-              href={ROUTES.account}
               className="block text-xs font-medium tracking-widest text-zinc-500 uppercase transition-colors hover:text-white"
             >
-              Moje porudžbine
+              Nastavi kupovinu
             </Link>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
-  const shippingCost = 0 // free shipping placeholder
+  const shippingCost = 0;
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
-      {/* Step indicator */}
       <div className="mb-10 flex items-center gap-0">
         {STEPS.map((s, i) => (
           <div key={s.id} className="flex items-center">
@@ -140,8 +199,15 @@ export default function CheckoutPage() {
                 }`}
               >
                 {step > s.id ? (
-                  <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
-                    <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" />
+                  <svg
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="h-3.5 w-3.5"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+                    />
                   </svg>
                 ) : (
                   s.id
@@ -156,18 +222,21 @@ export default function CheckoutPage() {
               </span>
             </button>
             {i < STEPS.length - 1 && (
-              <div className={`mx-4 h-px w-10 ${step > s.id ? 'bg-zinc-700' : 'bg-zinc-900'}`} />
+              <div
+                className={`mx-4 h-px w-10 ${step > s.id ? 'bg-zinc-700' : 'bg-zinc-900'}`}
+              />
             )}
           </div>
         ))}
       </div>
 
       <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
-        {/* Main form area */}
         <div>
           {step === 1 && (
             <form onSubmit={handleContactSubmit} className="space-y-6">
-              <h2 className="text-lg font-semibold text-white">Kontakt podaci</h2>
+              <h2 className="text-lg font-semibold text-white">
+                Kontakt podaci
+              </h2>
               <div className="grid grid-cols-2 gap-4">
                 <Field label="Ime" required>
                   <input
@@ -219,7 +288,9 @@ export default function CheckoutPage() {
 
           {step === 2 && (
             <form onSubmit={handleDeliverySubmit} className="space-y-6">
-              <h2 className="text-lg font-semibold text-white">Adresa dostave</h2>
+              <h2 className="text-lg font-semibold text-white">
+                Adresa dostave
+              </h2>
               <Field label="Ulica i broj" required>
                 <input
                   type="text"
@@ -280,11 +351,17 @@ export default function CheckoutPage() {
                       <span className="h-2 w-2 bg-white" />
                     </span>
                     <div>
-                      <div className="text-sm font-medium text-white">Standardna dostava</div>
-                      <div className="text-xs text-zinc-500">3–5 radnih dana</div>
+                      <div className="text-sm font-medium text-white">
+                        Standardna dostava
+                      </div>
+                      <div className="text-xs text-zinc-500">
+                        3–5 radnih dana
+                      </div>
                     </div>
                   </div>
-                  <span className="text-sm font-medium text-white">Besplatno</span>
+                  <span className="text-sm font-medium text-white">
+                    Besplatno
+                  </span>
                 </label>
               </div>
 
@@ -297,19 +374,27 @@ export default function CheckoutPage() {
 
           {step === 3 && (
             <div className="space-y-6">
-              <h2 className="text-lg font-semibold text-white">Pregled porudžbine</h2>
+              <h2 className="text-lg font-semibold text-white">
+                Pregled porudžbine
+              </h2>
 
               <ReviewSection title="Kontakt podaci" onEdit={() => setStep(1)}>
-                <p className="text-sm text-zinc-300">{contact.firstName} {contact.lastName}</p>
+                <p className="text-sm text-zinc-300">
+                  {contact.firstName} {contact.lastName}
+                </p>
                 <p className="text-sm text-zinc-500">{contact.email}</p>
                 <p className="text-sm text-zinc-500">{contact.phone}</p>
               </ReviewSection>
 
               <ReviewSection title="Adresa dostave" onEdit={() => setStep(2)}>
                 <p className="text-sm text-zinc-300">{delivery.street}</p>
-                <p className="text-sm text-zinc-500">{delivery.zip} {delivery.city}, {delivery.country}</p>
+                <p className="text-sm text-zinc-500">
+                  {delivery.zip} {delivery.city}, {delivery.country}
+                </p>
                 {delivery.note && (
-                  <p className="mt-1 text-xs text-zinc-600 italic">{delivery.note}</p>
+                  <p className="mt-1 text-xs text-zinc-600 italic">
+                    {delivery.note}
+                  </p>
                 )}
               </ReviewSection>
 
@@ -322,21 +407,33 @@ export default function CheckoutPage() {
                     <div key={item.key} className="flex items-center gap-3">
                       <div className="relative h-14 w-12 shrink-0 overflow-hidden bg-zinc-900">
                         {item.image && (
-                          <PayloadImage media={item.image} fill className="object-cover" sizes="48px" />
+                          <PayloadImage
+                            media={item.image}
+                            fill
+                            className="object-cover"
+                            sizes="48px"
+                          />
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="truncate text-sm text-white">{item.title}</div>
+                        <div className="truncate text-sm text-white">
+                          {item.title}
+                        </div>
                         {item.selectedOptions.length > 0 && (
                           <div className="text-xs text-zinc-600">
-                            {item.selectedOptions.map((o) => o.label).join(', ')}
+                            {item.selectedOptions
+                              .map((o) => o.label)
+                              .join(', ')}
                           </div>
                         )}
                       </div>
                       <div className="shrink-0 text-right">
-                        <div className="text-xs text-zinc-500">×{item.quantity}</div>
+                        <div className="text-xs text-zinc-500">
+                          ×{item.quantity}
+                        </div>
                         <div className="text-sm text-white">
-                          {formatCartPrice(item.unitPrice * item.quantity)} {CURRENCY.symbol}
+                          {formatCartPrice(item.unitPrice * item.quantity)}{' '}
+                          {CURRENCY.symbol}
                         </div>
                       </div>
                     </div>
@@ -344,33 +441,41 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
+              {error && (
+                <div className="border border-red-900 bg-red-950/40 px-4 py-3 text-xs text-red-400">
+                  {error}
+                </div>
+              )}
               <button
                 type="button"
                 onClick={handlePlaceOrder}
                 disabled={placing}
                 className="h-14 w-full bg-white text-xs font-medium tracking-widest text-black uppercase transition-colors hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {placing ? 'Obrada porudžbine...' : 'Potvrdi porudžbinu'}
+                {placing ? 'Slanje porudžbine...' : 'Potvrdi porudžbinu'}
               </button>
               <BackLink onClick={() => setStep(2)} label="← Nazad" />
             </div>
           )}
         </div>
 
-        {/* Order summary sidebar */}
         <div className="h-fit border border-zinc-800 bg-zinc-950 p-5">
           <div className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
             Sažetak
           </div>
           <div className="mt-5 space-y-3">
             {items.map((item) => (
-              <div key={item.key} className="flex items-center justify-between gap-3 text-sm">
+              <div
+                key={item.key}
+                className="flex items-center justify-between gap-3 text-sm"
+              >
                 <span className="text-zinc-400 truncate">
                   {item.title}
                   <span className="ml-1 text-zinc-600">×{item.quantity}</span>
                 </span>
                 <span className="shrink-0 text-white">
-                  {formatCartPrice(item.unitPrice * item.quantity)} {CURRENCY.symbol}
+                  {formatCartPrice(item.unitPrice * item.quantity)}{' '}
+                  {CURRENCY.symbol}
                 </span>
               </div>
             ))}
@@ -378,41 +483,48 @@ export default function CheckoutPage() {
           <div className="mt-5 border-t border-zinc-900 pt-5 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-zinc-500">Subtotal</span>
-              <span className="text-white">{formatCartPrice(subtotal)} {CURRENCY.symbol}</span>
+              <span className="text-white">
+                {formatCartPrice(subtotal)} {CURRENCY.symbol}
+              </span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-zinc-500">Dostava</span>
-              <span className="text-white">{shippingCost === 0 ? 'Besplatno' : `${shippingCost} ${CURRENCY.symbol}`}</span>
+              <span className="text-white">
+                {shippingCost === 0
+                  ? 'Besplatno'
+                  : `${shippingCost} ${CURRENCY.symbol}`}
+              </span>
             </div>
             <div className="flex justify-between border-t border-zinc-900 pt-3 text-base font-semibold">
               <span className="text-white">Ukupno</span>
-              <span className="text-white">{formatCartPrice(subtotal + shippingCost)} {CURRENCY.symbol}</span>
+              <span className="text-white">
+                {formatCartPrice(subtotal + shippingCost)} {CURRENCY.symbol}
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-// --- Small helpers ---
-
 const inputCls =
-  'h-12 w-full border border-zinc-800 bg-zinc-950 px-4 text-sm text-white placeholder:text-zinc-700 focus:border-zinc-600 focus:outline-none'
+  'h-12 w-full border border-zinc-800 bg-zinc-950 px-4 text-sm text-white placeholder:text-zinc-700 focus:border-zinc-600 focus:outline-none';
 
 function Field({ label, required, children }) {
   return (
     <div>
       <label className="mb-1.5 block text-xs font-medium tracking-widest text-zinc-500 uppercase">
-        {label}{required && <span className="ml-1 text-zinc-700">*</span>}
+        {label}
+        {required && <span className="ml-1 text-zinc-700">*</span>}
       </label>
       {children}
     </div>
-  )
+  );
 }
 
 function StepActions({ children }) {
-  return <div className="flex flex-col gap-3 pt-2">{children}</div>
+  return <div className="flex flex-col gap-3 pt-2">{children}</div>;
 }
 
 function SubmitButton({ children }) {
@@ -423,7 +535,7 @@ function SubmitButton({ children }) {
     >
       {children}
     </button>
-  )
+  );
 }
 
 function BackLink({ href, onClick, label }) {
@@ -435,7 +547,7 @@ function BackLink({ href, onClick, label }) {
       >
         {label}
       </Link>
-    )
+    );
   }
   return (
     <button
@@ -445,14 +557,16 @@ function BackLink({ href, onClick, label }) {
     >
       {label}
     </button>
-  )
+  );
 }
 
 function ReviewSection({ title, onEdit, children }) {
   return (
     <div className="border border-zinc-800 p-4">
       <div className="flex items-center justify-between mb-3">
-        <div className="text-xs font-medium tracking-widest text-zinc-500 uppercase">{title}</div>
+        <div className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
+          {title}
+        </div>
         <button
           type="button"
           onClick={onEdit}
@@ -463,5 +577,5 @@ function ReviewSection({ title, onEdit, children }) {
       </div>
       {children}
     </div>
-  )
+  );
 }

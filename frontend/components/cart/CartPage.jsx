@@ -69,10 +69,19 @@ export function CartPage() {
               fazi checkout toka.
             </p>
             <div className="mt-6 space-y-3">
-              <Button href={ROUTES.checkout} fullWidth>
+              <Button
+                href={ROUTES.checkout}
+                fullWidth
+                className="px-4 py-2.5 text-[10px] tracking-[0.18em] sm:py-3 sm:text-xs sm:tracking-widest"
+              >
                 Nastavi na plaćanje
               </Button>
-              <Button href={ROUTES.products} variant="outline" fullWidth>
+              <Button
+                href={ROUTES.products}
+                variant="outline"
+                fullWidth
+                className="px-4 py-2.5 text-[10px] tracking-[0.18em] sm:py-3 sm:text-xs sm:tracking-widest"
+              >
                 Dodaj još proizvoda
               </Button>
               <Link

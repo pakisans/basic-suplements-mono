@@ -34,7 +34,6 @@ export function CartDrawer() {
       className={`fixed inset-0 z-50 ${isOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
       aria-hidden={!isOpen}
     >
-      {/* Backdrop */}
       <div
         onClick={closeCart}
         className={`absolute inset-0 bg-black/82 backdrop-blur-md transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
@@ -42,9 +41,8 @@ export function CartDrawer() {
         }`}
       />
 
-      {/* Drawer panel */}
       <aside
-        className={`absolute right-0 top-0 flex h-full w-full max-w-[520px] flex-col overflow-hidden border-l border-white/8 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.035),transparent_34%),linear-gradient(180deg,#070707_0%,#020202_52%,#000000_100%)] shadow-[0_40px_120px_-50px_rgba(0,0,0,1)] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform ${
+        className={`absolute right-0 top-0 flex h-full w-full max-w-[560px] flex-col overflow-hidden border-l border-white/8 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.035),transparent_34%),linear-gradient(180deg,#070707_0%,#020202_52%,#000000_100%)] shadow-[0_40px_120px_-50px_rgba(0,0,0,1)] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform ${
           isOpen
             ? 'translate-x-0 scale-100 opacity-100'
             : 'translate-x-[108%] scale-[0.985] opacity-0'
@@ -64,7 +62,7 @@ export function CartDrawer() {
         />
 
         <div
-          className={`relative flex items-center justify-between border-b border-white/6 px-5 py-5 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-6 ${
+          className={`relative flex items-center justify-between border-b border-white/6 px-5 py-5 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-6 lg:px-7 ${
             isOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
           }`}
         >
@@ -104,12 +102,12 @@ export function CartDrawer() {
         </div>
 
         <div
-          className={`relative flex-1 overflow-y-auto px-5 py-5 transition-all delay-75 duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-6 ${
+          className={`relative flex-1 overflow-y-auto px-5 py-5 transition-all delay-75 duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-6 lg:px-7 ${
             isOpen ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'
           }`}
         >
           {items.length > 0 ? (
-            <div className="space-y-4">
+            <div className="space-y-3 lg:space-y-4">
               {items.map((item) => (
                 <CartLineItem
                   key={item.key}
@@ -140,11 +138,11 @@ export function CartDrawer() {
 
         {items.length > 0 && (
           <div
-            className={`relative border-t border-white/6 bg-black/50 px-5 py-5 backdrop-blur-xl transition-all delay-100 duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-6 sm:py-6 ${
+            className={`relative border-t border-white/6 bg-black/50 px-5 py-5 backdrop-blur-xl transition-all delay-100 duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-6 sm:py-6 lg:px-7 ${
               isOpen ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
             }`}
           >
-            <div className="rounded-[28px] border border-white/8 bg-zinc-950/90 p-4 shadow-[0_20px_60px_-35px_rgba(0,0,0,1)]">
+            <div className="rounded-[28px] border border-white/8 bg-zinc-950/90 p-4 lg:p-5 shadow-[0_20px_60px_-35px_rgba(0,0,0,1)]">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-medium tracking-[0.26em] text-zinc-500 uppercase">
                   Subtotal
@@ -160,19 +158,11 @@ export function CartDrawer() {
 
             <div className="mt-4 space-y-3">
               <Button
-                href={ROUTES.checkout}
-                fullWidth
-                onClick={closeCart}
-                className="rounded-full py-4 text-[11px] tracking-[0.24em] shadow-[0_16px_40px_-24px_rgba(255,255,255,0.4)]"
-              >
-                Nastavi na plaćanje
-              </Button>
-              <Button
                 href={ROUTES.cart}
                 variant="outline"
                 fullWidth
                 onClick={closeCart}
-                className="rounded-full py-4 text-[11px] tracking-[0.24em]"
+                className="rounded-full px-4 py-2.5 text-[10px] tracking-[0.18em] sm:py-4 sm:text-[11px] sm:tracking-[0.24em]"
               >
                 Pregledaj korpu
               </Button>
