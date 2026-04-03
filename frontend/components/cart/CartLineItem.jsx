@@ -13,21 +13,34 @@ export function CartLineItem({
   onRemove,
   compact = false,
 }) {
+  const imageFrameClasses = compact
+    ? 'h-44 w-40 sm:h-48 sm:w-44'
+    : 'h-52 w-44 sm:h-56 sm:w-48'
+  const contentMinHeight = compact ? 'sm:min-h-[192px]' : 'sm:min-h-[224px]'
+  const imageSizes = compact ? '176px' : '192px'
+
   return (
-    <div className="group rounded-[28px] border border-white/6 bg-gradient-to-br from-black via-zinc-950 to-black p-3 shadow-[0_20px_60px_-32px_rgba(0,0,0,0.9)] transition-colors hover:border-white/10">
+    <div className="group flex gap-5 rounded-[30px] border border-white/6 bg-gradient-to-br from-black via-zinc-950 to-black p-3.5 shadow-[0_20px_60px_-32px_rgba(0,0,0,0.9)] transition-colors hover:border-white/10">
       <Link
         href={item.productPath}
-        className="relative block h-32 w-28 shrink-0 overflow-hidden rounded-[22px] border border-white/6 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_42%),linear-gradient(180deg,#111111_0%,#060606_100%)] transition-transform duration-500 group-hover:scale-[1.02] sm:h-36 sm:w-32"
+        className={`relative block shrink-0 overflow-hidden rounded-[22px] border border-white/6 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_42%),linear-gradient(180deg,#111111_0%,#060606_100%)] transition-transform duration-500 group-hover:scale-[1.02] ${imageFrameClasses}`}
       >
         {item.image ? (
           <>
-            <div className="absolute inset-[6px] rounded-[18px] bg-black/50" />
+            <div className="absolute inset-[6px] rounded-[18px] bg-black/58" />
             <PayloadImage
               media={item.image}
               fill
-              className="object-contain object-center p-2 transition-transform duration-700 group-hover:scale-105"
-              sizes="128px"
+              className="scale-125 object-cover object-center opacity-35 blur-xl"
+              sizes={imageSizes}
             />
+            <PayloadImage
+              media={item.image}
+              fill
+              className="object-contain object-center p-1 transition-transform duration-700 group-hover:scale-[1.08]"
+              sizes={imageSizes}
+            />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(0,0,0,0.22)_100%)]" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-white/[0.03]" />
           </>
         ) : (
@@ -37,7 +50,7 @@ export function CartLineItem({
         )}
       </Link>
 
-      <div className="mt-3 min-w-0 sm:mt-0 sm:flex sm:min-h-[144px] sm:flex-1 sm:flex-col sm:justify-between">
+      <div className={`min-w-0 flex-1 sm:flex ${contentMinHeight} sm:flex-col sm:justify-between`}>
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <Link
