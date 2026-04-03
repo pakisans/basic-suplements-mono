@@ -20,7 +20,24 @@ export function CartLineItem({
   const imageSizes = compact ? '176px' : '192px'
 
   return (
-    <div className="group flex gap-5 rounded-[30px] border border-white/6 bg-gradient-to-br from-black via-zinc-950 to-black p-3.5 shadow-[0_20px_60px_-32px_rgba(0,0,0,0.9)] transition-colors hover:border-white/10">
+    <div className="group grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-4 rounded-[30px] border border-white/6 bg-gradient-to-br from-black via-zinc-950 to-black p-3.5 shadow-[0_20px_60px_-32px_rgba(0,0,0,0.9)] transition-colors hover:border-white/10 sm:flex sm:gap-5">
+      <div className="col-span-2 flex items-start justify-between gap-4 sm:hidden">
+        <Link
+          href={item.productPath}
+          className="min-w-0 line-clamp-2 text-sm font-semibold tracking-[0.01em] text-white transition-opacity hover:opacity-75"
+        >
+          {item.title}
+        </Link>
+
+        <button
+          type="button"
+          onClick={onRemove}
+          className="inline-flex h-9 shrink-0 items-center justify-center rounded-full border border-white/8 px-3 text-[10px] font-medium tracking-[0.22em] text-zinc-400 uppercase transition-colors hover:border-white/12 hover:bg-white/[0.03] hover:text-white"
+        >
+          Ukloni
+        </button>
+      </div>
+
       <Link
         href={item.productPath}
         className={`relative block shrink-0 overflow-hidden rounded-[22px] border border-white/6 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_42%),linear-gradient(180deg,#111111_0%,#060606_100%)] transition-transform duration-500 group-hover:scale-[1.02] ${imageFrameClasses}`}
@@ -50,8 +67,8 @@ export function CartLineItem({
         )}
       </Link>
 
-      <div className={`min-w-0 flex-1 sm:flex ${contentMinHeight} sm:flex-col sm:justify-between`}>
-        <div className="flex items-start justify-between gap-4">
+      <div className={`min-w-0 sm:flex-1 sm:flex ${contentMinHeight} sm:flex-col sm:justify-between`}>
+        <div className="hidden items-start justify-between gap-4 sm:flex">
           <div className="min-w-0">
             <Link
               href={item.productPath}
@@ -83,7 +100,23 @@ export function CartLineItem({
           </button>
         </div>
 
-        <div className="mt-5 flex items-end justify-between gap-4 border-t border-white/6 pt-4">
+        {item.selectedOptions.length > 0 && (
+          <ul className="flex flex-wrap gap-2 text-[11px] text-zinc-300 sm:hidden">
+            {item.selectedOptions.map((option) => (
+              <li
+                key={`${item.key}-${option.id}`}
+                className="rounded-full border border-white/8 bg-white/[0.03] px-2.5 py-1"
+              >
+                <span className="text-zinc-500">{option.typeLabel}</span>{' '}
+                <span className="text-zinc-100">{option.label}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="col-span-2 min-w-0 border-t border-white/6 pt-4 sm:col-auto sm:row-auto sm:mt-5 sm:flex-1 sm:border-t-0 sm:pt-0">
+        <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between">
           <CartQuantityControl
             quantity={item.quantity}
             onDecrease={onDecrease}
@@ -91,7 +124,7 @@ export function CartLineItem({
             compact={compact}
           />
 
-          <div className="text-right">
+          <div className="text-left sm:text-right">
             <div className="text-[10px] font-medium tracking-[0.22em] text-zinc-500 uppercase">
               Ukupno
             </div>
