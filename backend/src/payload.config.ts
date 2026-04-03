@@ -31,12 +31,12 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
-  serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3001',
-  cors: [
-    'http://46.225.222.58',
-    // process.env.PAYLOAD_PUBLIC_SERVER_URL,
-    // process.env.NEXT_PUBLIC_SERVER_URL,
-  ].filter(Boolean) as string[],
+  // serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3001',
+  // cors: [
+  //   'http://46.225.222.58',
+  //   // process.env.PAYLOAD_PUBLIC_SERVER_URL,
+  //   // process.env.NEXT_PUBLIC_SERVER_URL,
+  // ].filter(Boolean) as string[],
   // csrf: [
   //   'http://localhost:3000',
   //   'http://localhost:3001',
