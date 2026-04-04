@@ -70,7 +70,7 @@ export function CartDrawer() {
             <div className="text-[10px] font-medium tracking-[0.28em] text-zinc-500 uppercase">
               Brza korpa
             </div>
-            <h2 className="mt-1 text-lg font-semibold text-white">
+            <h2 className="mt-1 text-lg font-semibold text-white flx items-center">
               Tvoji odabrani komadi
               {items.length > 0 && (
                 <span className="ml-2 inline-flex min-w-6 items-center justify-center rounded-full border border-white/10 bg-zinc-100 px-2 py-1 text-[10px] font-bold text-black">

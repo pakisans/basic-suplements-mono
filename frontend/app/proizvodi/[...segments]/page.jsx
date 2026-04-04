@@ -222,38 +222,40 @@ async function CategoryPage({ category, page, sort }) {
               <ProductSort />
             </div>
 
-            {groupedProducts.map(({ category: subcategory, productsData: subProducts }, index) => (
-              <section
-                key={subcategory.id}
-                className={index > 0 ? 'border-t border-zinc-800 pt-12' : ''}
-              >
-                <div className="mb-6 flex items-end justify-between gap-4">
-                  <div>
-                    <h2 className="text-2xl font-bold uppercase tracking-[0.18em] text-white">
-                      {subcategory.title}
-                    </h2>
-                    {subcategory.description && (
-                      <p className="mt-2 max-w-2xl text-sm text-zinc-400">
-                        {subcategory.description}
-                      </p>
-                    )}
+            {groupedProducts.map(
+              ({ category: subcategory, productsData: subProducts }, index) => (
+                <section
+                  key={subcategory.id}
+                  className={index > 0 ? 'border-t border-zinc-800 pt-12' : ''}
+                >
+                  <div className="mb-6 flex items-center justify-between gap-4">
+                    <div>
+                      <h2 className="text-2xl font-bold uppercase tracking-[0.18em] text-white">
+                        {subcategory.title}
+                      </h2>
+                      {subcategory.description && (
+                        <p className="mt-2 max-w-2xl text-sm text-zinc-400">
+                          {subcategory.description}
+                        </p>
+                      )}
+                    </div>
+                    <Link
+                      href={`/proizvodi/${category.slug}/${subcategory.slug}`}
+                      className="text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 transition hover:text-white whitespace-nowrap"
+                    >
+                      Pogledaj sve
+                    </Link>
                   </div>
-                  <Link
-                    href={`/proizvodi/${category.slug}/${subcategory.slug}`}
-                    className="text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 transition hover:text-white"
-                  >
-                    Pogledaj sve
-                  </Link>
-                </div>
 
-                <ProductGrid
-                  products={subProducts.docs}
-                  columns={4}
-                  emptyTitle={`Nema proizvoda u kategoriji ${subcategory.title}`}
-                  emptyDescription="Dodaj proizvode u ovu potkategoriju da bi se prikazali ovde."
-                />
-              </section>
-            ))}
+                  <ProductGrid
+                    products={subProducts.docs}
+                    columns={4}
+                    emptyTitle={`Nema proizvoda u kategoriji ${subcategory.title}`}
+                    emptyDescription="Dodaj proizvode u ovu potkategoriju da bi se prikazali ovde."
+                  />
+                </section>
+              ),
+            )}
           </div>
         ) : subcategories.length > 0 ? (
           <div className="mb-12">
