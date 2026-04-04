@@ -24,6 +24,14 @@ export const Footer: GlobalConfig = {
   },
   fields: [
     {
+      name: 'logo',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description: 'Logo koji se prikazuje u footeru. Preporučena veličina: 160×40px.',
+      },
+    },
+    {
       name: 'navItems',
       type: 'array',
       fields: [link({ appearances: false })],
