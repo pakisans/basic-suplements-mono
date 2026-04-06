@@ -14,7 +14,9 @@ export function Header({ header }) {
   const promo = header?.promoBanner;
   const siteName = header?.siteName || SITE_NAME;
   const logo = header?.logo;
-  const promoHref = typeof promo?.link === 'string' ? promo.link.trim() : '';
+  const promoHref =
+    typeof promo?.link.url === 'string' ? promo.link.url.trim() : '';
+
   const hasPromoLink = Boolean(promoHref);
   const promoIsExternal = hasPromoLink ? isExternalLink(promoHref) : false;
 
@@ -84,7 +86,10 @@ export function Header({ header }) {
 
       <header className="sticky top-0 z-50 border-b border-zinc-800 bg-black/95 backdrop-blur-sm">
         <div className="container mx-auto grid h-[78px] max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 sm:h-[84px] sm:px-6 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:gap-6 lg:px-8">
-          <Link href="/" className="flex min-w-0 items-center transition-opacity hover:opacity-85">
+          <Link
+            href="/"
+            className="flex min-w-0 items-center transition-opacity hover:opacity-85"
+          >
             {logo ? (
               <PayloadImage
                 media={logo}

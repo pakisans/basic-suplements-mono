@@ -7,7 +7,15 @@ import { resolveLink } from '@/components/ui/Button';
 
 const SOCIAL_ICONS = {
   instagram: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4"
+    >
       <rect x="2" y="2" width="20" height="20" rx="5" />
       <circle cx="12" cy="12" r="4" />
       <circle cx="17.5" cy="6.5" r="0.75" fill="currentColor" stroke="none" />
@@ -46,17 +54,22 @@ const SOCIAL_ICONS = {
       <circle cx="4" cy="4" r="2" />
     </svg>
   ),
-}
+};
 
 // ─── Block renderers ─────────────────────────────────────────────────────────
 
 function BrandSection({ section, fallbackLogo }) {
-  const logo = section?.logo ?? fallbackLogo
+  const logo = section?.logo ?? fallbackLogo;
   return (
     <div className="flex flex-col gap-4">
       {logo && (
         <div className="w-fit">
-          <PayloadImage media={logo} width={140} height={36} className="h-9 w-auto object-contain brightness-0 invert" />
+          <PayloadImage
+            media={logo}
+            width={320}
+            height={110}
+            className="w-auto object-contain"
+          />
         </div>
       )}
       {section?.tagline && (
@@ -70,7 +83,7 @@ function BrandSection({ section, fallbackLogo }) {
         </p>
       )}
     </div>
-  )
+  );
 }
 
 function ColumnSection({ section }) {
@@ -94,7 +107,7 @@ function ColumnSection({ section }) {
         ))}
       </ul>
     </div>
-  )
+  );
 }
 
 function TextSection({ section }) {
@@ -109,7 +122,7 @@ function TextSection({ section }) {
         <RichText content={section.content} />
       </div>
     </div>
-  )
+  );
 }
 
 function ContactSection({ section }) {
@@ -123,14 +136,20 @@ function ContactSection({ section }) {
       <ul className="space-y-3 text-sm text-zinc-500">
         {section.phone && (
           <li>
-            <a href={`tel:${section.phone}`} className="transition-colors hover:text-white">
+            <a
+              href={`tel:${section.phone}`}
+              className="transition-colors hover:text-white"
+            >
               {section.phone}
             </a>
           </li>
         )}
         {section.email && (
           <li>
-            <a href={`mailto:${section.email}`} className="transition-colors hover:text-white">
+            <a
+              href={`mailto:${section.email}`}
+              className="transition-colors hover:text-white"
+            >
               {section.email}
             </a>
           </li>
@@ -143,7 +162,7 @@ function ContactSection({ section }) {
         )}
       </ul>
     </div>
-  )
+  );
 }
 
 function SocialSection({ section }) {
@@ -165,13 +184,15 @@ function SocialSection({ section }) {
             className="flex h-9 w-9 items-center justify-center border border-zinc-800 text-zinc-500 transition-all duration-150 hover:border-zinc-600 hover:text-white"
           >
             {SOCIAL_ICONS[profile.platform] ?? (
-              <span className="text-[10px] uppercase">{profile.platform.slice(0, 2)}</span>
+              <span className="text-[10px] uppercase">
+                {profile.platform.slice(0, 2)}
+              </span>
             )}
           </a>
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 function NewsletterSection({ section }) {
@@ -179,7 +200,9 @@ function NewsletterSection({ section }) {
     <div>
       <p className="mb-1 text-sm font-semibold text-white">{section.heading}</p>
       {section.description && (
-        <p className="mb-4 text-xs leading-relaxed text-zinc-500">{section.description}</p>
+        <p className="mb-4 text-xs leading-relaxed text-zinc-500">
+          {section.description}
+        </p>
       )}
       <div className="flex">
         <input
@@ -198,43 +221,45 @@ function NewsletterSection({ section }) {
         <p className="mt-2 text-[10px] text-zinc-700">{section.privacyNote}</p>
       )}
     </div>
-  )
+  );
 }
 
 function renderSection(section, i, fallbackLogo) {
   switch (section.blockType) {
     case 'footerBrand':
-      return <BrandSection key={i} section={section} fallbackLogo={fallbackLogo} />
+      return (
+        <BrandSection key={i} section={section} fallbackLogo={fallbackLogo} />
+      );
     case 'footerColumn':
-      return <ColumnSection key={i} section={section} />
+      return <ColumnSection key={i} section={section} />;
     case 'footerText':
-      return <TextSection key={i} section={section} />
+      return <TextSection key={i} section={section} />;
     case 'footerContact':
-      return <ContactSection key={i} section={section} />
+      return <ContactSection key={i} section={section} />;
     case 'footerSocial':
-      return <SocialSection key={i} section={section} />
+      return <SocialSection key={i} section={section} />;
     case 'footerNewsletter':
-      return <NewsletterSection key={i} section={section} />
+      return <NewsletterSection key={i} section={section} />;
     default:
-      return null
+      return null;
   }
 }
 
 // ─── Main Footer ─────────────────────────────────────────────────────────────
 
 export function Footer({ footer }) {
-  const sections = footer?.sections ?? []
-  const bottomBar = footer?.bottomBar
-  const topLogo = footer?.logo
+  const sections = footer?.sections ?? [];
+  const bottomBar = footer?.bottomBar;
+  const topLogo = footer?.logo;
 
   // Split brand section from the rest so we can give it wider column
-  const brandSection = sections.find((s) => s.blockType === 'footerBrand')
-  const otherSections = sections.filter((s) => s.blockType !== 'footerBrand')
+  const brandSection = sections.find((s) => s.blockType === 'footerBrand');
+  const otherSections = sections.filter((s) => s.blockType !== 'footerBrand');
 
   // If we have a logo but no footerBrand block, show logo standalone
-  const showStandaloneLogo = topLogo && !brandSection
+  const showStandaloneLogo = topLogo && !brandSection;
 
-  const hasSections = sections.length > 0 || showStandaloneLogo
+  const hasSections = sections.length > 0 || showStandaloneLogo;
 
   return (
     <footer className="border-t border-zinc-900 bg-black" role="contentinfo">
@@ -257,9 +282,9 @@ export function Footer({ footer }) {
                 <div className="w-fit">
                   <PayloadImage
                     media={topLogo}
-                    width={140}
-                    height={36}
-                    className="h-9 w-auto object-contain brightness-0 invert"
+                    width={320}
+                    height={110}
+                    className="w-auto object-contain"
                   />
                 </div>
               </div>
@@ -285,8 +310,8 @@ export function Footer({ footer }) {
             {bottomBar?.legalLinks?.length > 0 && (
               <nav className="flex items-center gap-5">
                 {bottomBar.legalLinks.map((item, i) => {
-                  const href = item.link?.url ?? item.url ?? '#'
-                  const label = item.link?.label ?? item.label
+                  const href = item.link?.url ?? item.url ?? '#';
+                  const label = item.link?.label ?? item.label;
                   return (
                     <a
                       key={i}
@@ -295,7 +320,7 @@ export function Footer({ footer }) {
                     >
                       {label}
                     </a>
-                  )
+                  );
                 })}
               </nav>
             )}
@@ -303,5 +328,5 @@ export function Footer({ footer }) {
         </div>
       </div>
     </footer>
-  )
+  );
 }
