@@ -15,6 +15,7 @@ import { adminOnlyFieldAccess } from '@/access/adminOnlyFieldAccess'
 import { customerOnlyFieldAccess } from '@/access/customerOnlyFieldAccess'
 import { isAdmin } from '@/access/isAdmin'
 import { isDocumentOwner } from '@/access/isDocumentOwner'
+import { checkRole } from '@/access/utilities'
 import { getCollectionPath } from '@/utilities/getCollectionPath'
 
 const generateTitle: GenerateTitle<Product | Page | Post> = ({ doc }) => {
@@ -93,6 +94,17 @@ export const plugins: Plugin[] = [
     orders: {
       ordersCollectionOverride: ({ defaultCollection }) => ({
         ...defaultCollection,
+        access: {
+          ...defaultCollection.access,
+          // Allow anyone (guest, customer, admin) to place an order
+          create: () => true,
+          // Admin sees all; logged-in customer sees own orders; guest denied (reads via accessToken endpoint)
+          read: ({ req }) => {
+            if (req.user && checkRole(['admin'], req.user)) return true
+            if (req.user?.id) return { customer: { equals: req.user.id } }
+            return false
+          },
+        },
         admin: {
           ...defaultCollection.admin,
           group: 'Ecommerce',
