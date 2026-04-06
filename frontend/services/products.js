@@ -166,19 +166,7 @@ export async function getSaleProducts(limit = 12) {
 }
 
 export function buildProductPath(product) {
-  const categories = product.categories ?? [];
-  const primaryCategory = categories[0];
-
-  if (!primaryCategory || typeof primaryCategory === 'string') {
-    return `/proizvodi/${product.slug}`;
-  }
-
-  const parent = primaryCategory.parent;
-  if (parent && typeof parent !== 'string') {
-    return `/proizvodi/${parent.slug}/${primaryCategory.slug}/${product.slug}`;
-  }
-
-  return `/proizvodi/${primaryCategory.slug}/${product.slug}`;
+  return `/proizvodi/${product.slug}`;
 }
 
 export async function getAllProductSlugs() {

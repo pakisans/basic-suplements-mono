@@ -73,6 +73,17 @@ export async function generateMetadata({ params }) {
         seo: category.seo,
       });
     }
+
+    const product = await getProductBySlug(seg1);
+    if (product) {
+      return buildProductMetadata({
+        title: product.title,
+        image: product.gallery?.[0]?.image ?? null,
+        price: product.price,
+        slug: seg1,
+        meta: product.meta,
+      });
+    }
   }
 
   return {};
@@ -104,9 +115,13 @@ export default async function ProductsSegmentPage({ params, searchParams }) {
   }
 
   if (segments.length === 1) {
-    const category = await getCategoryBySlug(seg1);
-    if (!category) notFound();
-    return <CategoryPage category={category} page={page} sort={sort} />;
+    const [category, product] = await Promise.all([
+      getCategoryBySlug(seg1),
+      getProductBySlug(seg1),
+    ]);
+    if (category) return <CategoryPage category={category} page={page} sort={sort} />;
+    if (product) return <ProductPage product={product} />;
+    notFound();
   }
 
   notFound();
