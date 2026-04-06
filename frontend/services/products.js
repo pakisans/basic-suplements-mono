@@ -53,12 +53,27 @@ export async function getProducts(filters = {}, pagination = {}) {
 }
 
 export async function getProductBySlug(slug) {
-  return payloadFindBySlug('products', slug, {
+  const product = await payloadFindBySlug('products', slug, {
     depth: 3,
     revalidate: REVALIDATE.products,
     tags: [`product-${slug}`, 'products'],
     where: { _status: { equals: 'published' } },
   });
+
+  if (!product) return null;
+
+  const variantsResult = await payloadQuery('variants', {
+    where: { product: { equals: product.id } },
+    limit: 200,
+    depth: 2,
+    revalidate: REVALIDATE.products,
+    tags: [`product-${slug}`, 'products'],
+  });
+
+  return {
+    ...product,
+    variants: variantsResult.docs,
+  };
 }
 
 export async function getProductsByCategory(
