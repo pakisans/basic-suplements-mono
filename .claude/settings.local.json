@@ -5,7 +5,8 @@
       "Bash(docker run:*)",
       "Bash(find /Users/nemanjanakomcic/Documents/basic-suplements/backend/node_modules/.pnpm/@payloadcms+next@3.80.0*/node_modules/@payloadcms/next/dist -name \"*.js\" -path \"*admin*\")",
       "Bash(grep -E \"\\\\.\\(ts|js\\)$\")",
-      "Bash(node -e ':*)"
+      "Bash(node -e ':*)",
+      "Bash(cat /Users/nemanjanakomcic/Documents/basic-suplements/nginx/conf.d/*.conf)"
     ]
   }
 }

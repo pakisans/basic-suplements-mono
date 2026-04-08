@@ -25,11 +25,11 @@ export const ROUTES = {
 };
 
 export const REVALIDATE = {
-  products: 60,
-  categories: 300,
-  pages: 300,
-  posts: 60,
-  globals: 600,
+  products: 30,
+  categories: 30,
+  pages: 60,
+  posts: 30,
+  globals: 60,
 };
 
 export const CURRENCY = {

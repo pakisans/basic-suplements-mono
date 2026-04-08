@@ -7,6 +7,18 @@ services:
       POSTGRES_USER: appuser
       POSTGRES_PASSWORD: apppassword
       POSTGRES_DB: appdb
+    # Tuned for ~1GB allocation on an 8GB host
+    command: >
+      postgres
+      -c shared_buffers=256MB
+      -c effective_cache_size=768MB
+      -c work_mem=16MB
+      -c maintenance_work_mem=64MB
+      -c max_connections=50
+      -c wal_buffers=16MB
+      -c checkpoint_completion_target=0.9
+      -c random_page_cost=1.1
+      -c effective_io_concurrency=200
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -41,6 +53,7 @@ services:
     environment:
       NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL}
       REVALIDATE_SECRET: ${REVALIDATE_SECRET}
+      FRONTEND_INTERNAL_URL: http://app2:3000
     ports:
       - '3001:3000'
     volumes:
@@ -76,6 +89,7 @@ services:
       - '80:80'
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - nginx_cache:/var/cache/nginx
     networks:
       - app_network
     depends_on:
@@ -87,3 +101,4 @@ networks:
 
 volumes:
   postgres_data:
+  nginx_cache:
