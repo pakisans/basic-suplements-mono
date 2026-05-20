@@ -39,12 +39,14 @@ export const ProductItem: React.FC<Props> = ({
   if (isVariant) {
     const imageVariant = product.gallery?.find((item) => {
       if (!item.variantOption) return false
-      const variantOptionID =
-        typeof item.variantOption === 'object' ? item.variantOption.id : item.variantOption
+      const voArr = Array.isArray(item.variantOption) ? item.variantOption : [item.variantOption]
+      const variantOptionIDs = voArr.map((vo) =>
+        typeof vo === 'object' && vo !== null ? (vo as { id: number }).id : vo,
+      )
 
       const hasMatch = variant?.options?.some((option) => {
-        if (typeof option === 'object') return option.id === variantOptionID
-        else return option === variantOptionID
+        const optionID = typeof option === 'object' ? option.id : option
+        return variantOptionIDs.includes(optionID)
       })
 
       return hasMatch

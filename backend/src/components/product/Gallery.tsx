@@ -32,13 +32,12 @@ export const Gallery: React.FC<Props> = ({ gallery }) => {
       const index = gallery.findIndex((item) => {
         if (!item.variantOption) return false
 
-        let variantID: DefaultDocumentIDType
+        const voArr = Array.isArray(item.variantOption) ? item.variantOption : [item.variantOption]
+        const variantIDs = voArr.map((vo) =>
+          typeof vo === 'object' && vo !== null ? String((vo as { id: DefaultDocumentIDType }).id) : String(vo),
+        )
 
-        if (typeof item.variantOption === 'object') {
-          variantID = item.variantOption.id
-        } else variantID = item.variantOption
-
-        return Boolean(values.find((value) => value === String(variantID)))
+        return Boolean(values.find((value) => variantIDs.includes(String(value))))
       })
       if (index !== -1) {
         setCurrent(index)
