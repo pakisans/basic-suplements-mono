@@ -102,6 +102,7 @@ export async function getAllCategorySlugs() {
   return result.docs.map((cat) => ({
     slug: cat.slug,
     parentSlug: cat.parent && typeof cat.parent !== 'string' ? cat.parent.slug : undefined,
+    updatedAt: cat.updatedAt,
   }))
 }
 

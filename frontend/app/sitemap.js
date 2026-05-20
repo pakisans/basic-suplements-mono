@@ -2,55 +2,49 @@ export const dynamic = 'force-dynamic'
 
 import { getAllProductSlugs } from '@/services/products'
 import { getAllCategorySlugs } from '@/services/categories'
-import { getAllPostSlugs } from '@/services/posts'
 import { getAllPageSlugs } from '@/services/pages'
 import { SERVER_URL } from '@/constants'
 
+function lm(dateStr) {
+  return dateStr ? new Date(dateStr) : new Date()
+}
+
 export default async function sitemap() {
-  const [productSlugs, categorySlugs, postSlugs, pageSlugs] = await Promise.all([
+  const [productSlugs, categorySlugs, pageSlugs] = await Promise.all([
     getAllProductSlugs(),
     getAllCategorySlugs(),
-    getAllPostSlugs(),
     getAllPageSlugs(),
   ])
 
-  const lastModified = new Date()
+  const now = new Date()
 
   const staticRoutes = [
-    { url: SERVER_URL, lastModified, changeFrequency: 'daily', priority: 1 },
-    { url: `${SERVER_URL}/products`, lastModified, changeFrequency: 'daily', priority: 0.9 },
-    { url: `${SERVER_URL}/blog`, lastModified, changeFrequency: 'weekly', priority: 0.8 },
+    { url: SERVER_URL, lastModified: now, changeFrequency: 'daily', priority: 1.0 },
+    { url: `${SERVER_URL}/products`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
   ]
 
-  const pageRoutes = pageSlugs.map(({ slug }) => ({
+  const pageRoutes = pageSlugs.map(({ slug, updatedAt }) => ({
     url: `${SERVER_URL}/${slug}`,
-    lastModified,
-    changeFrequency: 'monthly',
-    priority: 0.7,
-  }))
-
-  const categoryRoutes = categorySlugs.map(({ slug, parentSlug }) => ({
-    url: parentSlug
-      ? `${SERVER_URL}/products/${parentSlug}/${slug}`
-      : `${SERVER_URL}/products/${slug}`,
-    lastModified,
-    changeFrequency: 'weekly',
-    priority: 0.8,
-  }))
-
-  const productRoutes = productSlugs.map(({ slug }) => ({
-    url: `${SERVER_URL}/products/${slug}`,
-    lastModified,
-    changeFrequency: 'weekly',
-    priority: 0.7,
-  }))
-
-  const postRoutes = postSlugs.map(({ slug }) => ({
-    url: `${SERVER_URL}/blog/${slug}`,
-    lastModified,
+    lastModified: lm(updatedAt),
     changeFrequency: 'monthly',
     priority: 0.6,
   }))
 
-  return [...staticRoutes, ...pageRoutes, ...categoryRoutes, ...productRoutes, ...postRoutes]
+  const categoryRoutes = categorySlugs.map(({ slug, parentSlug, updatedAt }) => ({
+    url: parentSlug
+      ? `${SERVER_URL}/products/${parentSlug}/${slug}`
+      : `${SERVER_URL}/products/${slug}`,
+    lastModified: lm(updatedAt),
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }))
+
+  const productRoutes = productSlugs.map(({ slug, updatedAt }) => ({
+    url: `${SERVER_URL}/products/${slug}`,
+    lastModified: lm(updatedAt),
+    changeFrequency: 'weekly',
+    priority: 0.7,
+  }))
+
+  return [...staticRoutes, ...pageRoutes, ...categoryRoutes, ...productRoutes]
 }

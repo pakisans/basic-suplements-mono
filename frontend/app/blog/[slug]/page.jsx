@@ -8,7 +8,7 @@ import { PayloadImage } from '@/components/ui/PayloadImage'
 import { PostGrid } from '@/components/blog/PostGrid'
 import { BlockRenderer } from '@/components/blocks/BlockRenderer'
 import { Section, SectionHeading } from '@/components/ui/Section'
-import { buildMetadata } from '@/lib/seo/metadata'
+import { buildMetadata, articleJsonLd, breadcrumbJsonLd } from '@/lib/seo/metadata'
 import { Badge } from '@/components/ui/Badge'
 
 export async function generateStaticParams() {
@@ -49,6 +49,29 @@ export default async function BlogPostPage({ params }) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: articleJsonLd({
+            title: post.title,
+            description: post.excerpt,
+            image: post.meta?.image ?? featuredImage,
+            url: `/blog/${slug}`,
+            publishedAt: post.publishedAt ?? post.createdAt,
+            modifiedAt: post.updatedAt,
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: breadcrumbJsonLd([
+            { name: 'Home', url: '/' },
+            { name: 'Blog', url: '/blog' },
+            { name: post.title },
+          ]),
+        }}
+      />
       <div className="border-b border-zinc-900">
         <div className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
           <Breadcrumbs

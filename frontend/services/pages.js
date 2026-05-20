@@ -25,5 +25,5 @@ export async function getAllPageSlugs() {
     revalidate: REVALIDATE.pages,
   })
 
-  return result.docs.map((p) => ({ slug: p.slug }))
+  return result.docs.map((p) => ({ slug: p.slug, updatedAt: p.updatedAt }))
 }

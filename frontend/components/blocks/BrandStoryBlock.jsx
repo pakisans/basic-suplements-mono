@@ -2,12 +2,22 @@ import Link from 'next/link';
 import { PayloadImage } from '@/components/ui/PayloadImage';
 import { RichText } from '@/components/ui/RichText';
 
-function TextContent({ eyebrow, heading, description, stats, cta, darkStats }) {
+function TextContent({
+  eyebrow,
+  heading,
+  description,
+  stats,
+  cta,
+  darkStats,
+  textOnImage,
+}) {
   return (
     <div className="flex flex-col justify-center gap-8">
       <div className="space-y-5">
         {eyebrow && (
-          <p className="text-[10px] font-semibold tracking-[0.4em] text-zinc-500 uppercase">
+          <p
+            className={`text-[10px] font-semibold tracking-[0.4em] uppercase ${textOnImage ? 'text-zinc-400 lg:text-zinc-500' : 'text-zinc-500'}`}
+          >
             {eyebrow}
           </p>
         )}
@@ -16,16 +26,21 @@ function TextContent({ eyebrow, heading, description, stats, cta, darkStats }) {
         </h2>
         <div className="h-px w-12 bg-white/20" />
         {description && (
-          <div className="max-w-lg text-[15px] leading-relaxed text-zinc-400 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-4 [&_li]:mb-1">
+          <div className="max-w-lg text-[15px] leading-relaxed lg:text-base [&_p]:mb-3 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-4 [&_li]:mb-1 [&_p]:text-white lg:[&_p]:text-zinc-400 [&_li]:text-zinc-400 lg:[&_li]:text-zinc-400">
             <RichText content={description} />
           </div>
         )}
       </div>
 
       {stats.length > 0 && (
-        <div className={`grid grid-cols-2 gap-px ring-1 ring-white/10 ${darkStats ? 'bg-white/8' : 'bg-white/5'}`}>
+        <div
+          className={`grid grid-cols-2 gap-px ring-1 ring-white/10 ${darkStats ? 'bg-white/8' : 'bg-white/5'}`}
+        >
           {stats.map((stat, i) => (
-            <div key={i} className={`flex flex-col gap-1.5 px-6 py-5 ${darkStats ? 'bg-zinc-950' : 'bg-black/40 backdrop-blur-sm'}`}>
+            <div
+              key={i}
+              className={`flex flex-col gap-1.5 px-6 py-5 ${darkStats ? 'bg-zinc-950' : 'bg-black/40 backdrop-blur-sm'}`}
+            >
               <span className="text-3xl font-extrabold tracking-tight text-white md:text-4xl">
                 {stat.value}
               </span>
@@ -63,7 +78,16 @@ function TextContent({ eyebrow, heading, description, stats, cta, darkStats }) {
 }
 
 export function BrandStoryBlock({ block }) {
-  const { eyebrow, heading, description, image, stats = [], layout = 'image-right', imageFit = 'cover', cta } = block;
+  const {
+    eyebrow,
+    heading,
+    description,
+    image,
+    stats = [],
+    layout = 'image-right',
+    imageFit = 'cover',
+    cta,
+  } = block;
   const reverse = layout === 'image-left';
 
   if (imageFit === 'contain' && image) {
@@ -71,16 +95,28 @@ export function BrandStoryBlock({ block }) {
     return (
       <section className="relative overflow-hidden bg-zinc-950 py-24 md:py-36">
         {/* Image — right or left portion, slightly inset vertically */}
-        <div className={`absolute inset-y-6 md:inset-y-10 ${imageOnRight ? 'right-0 left-[42%]' : 'left-0 right-[42%]'} overflow-hidden`}>
-          <PayloadImage media={image} fill className="object-cover object-center" />
-          {/* fade toward text side */}
-          <div className={`absolute inset-0 ${imageOnRight ? 'bg-linear-to-r from-zinc-950 via-zinc-950/30 to-transparent' : 'bg-linear-to-l from-zinc-950 via-zinc-950/30 to-transparent'}`} />
+        <div
+          className={`absolute inset-y-6 md:inset-y-10 ${imageOnRight ? 'right-0 left-0 lg:left-[42%]' : 'left-0 right-0 lg:right-[42%]'} overflow-hidden`}
+        >
+          <PayloadImage
+            media={image}
+            fill
+            className="object-cover object-center"
+          />
+          {/* mobile: heavy bottom-to-top overlay so text on top is readable */}
+          <div className="absolute inset-0 bg-zinc-950/75 lg:hidden" />
+          {/* desktop: fade toward text side */}
+          <div
+            className={`absolute inset-0 hidden lg:block ${imageOnRight ? 'bg-linear-to-r from-zinc-950 via-zinc-950/30 to-transparent' : 'bg-linear-to-l from-zinc-950 via-zinc-950/30 to-transparent'}`}
+          />
         </div>
 
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
 
         <div className="container relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className={`flex ${imageOnRight ? 'justify-start' : 'justify-end'}`}>
+          <div
+            className={`flex ${imageOnRight ? 'justify-start' : 'justify-end'}`}
+          >
             <div className="w-full max-w-xl">
               <TextContent
                 eyebrow={eyebrow}
@@ -89,6 +125,7 @@ export function BrandStoryBlock({ block }) {
                 stats={stats}
                 cta={cta}
                 darkStats={false}
+                textOnImage={true}
               />
             </div>
           </div>
@@ -128,8 +165,12 @@ export function BrandStoryBlock({ block }) {
                 </>
               ) : (
                 <div className="absolute inset-0">
-                  <div className="absolute inset-0 opacity-5"
-                    style={{ backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.3) 39px,rgba(255,255,255,.3) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.3) 39px,rgba(255,255,255,.3) 40px)' }}
+                  <div
+                    className="absolute inset-0 opacity-5"
+                    style={{
+                      backgroundImage:
+                        'repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.3) 39px,rgba(255,255,255,.3) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.3) 39px,rgba(255,255,255,.3) 40px)',
+                    }}
                   />
                 </div>
               )}

@@ -13,6 +13,17 @@ export async function getBrands(limit = 50) {
   return result.docs
 }
 
+export async function getAllBrandSlugs() {
+  const result = await payloadQuery('brands', {
+    sort: 'title',
+    limit: 1000,
+    depth: 0,
+    revalidate: REVALIDATE.categories,
+  })
+
+  return result.docs.map((b) => ({ slug: b.slug, updatedAt: b.updatedAt }))
+}
+
 export async function getBrandBySlug(slug) {
   return payloadFindBySlug('brands', slug, {
     depth: 3,

@@ -177,5 +177,5 @@ export async function getAllProductSlugs() {
     revalidate: REVALIDATE.products,
   });
 
-  return result.docs.map((p) => ({ slug: p.slug }));
+  return result.docs.map((p) => ({ slug: p.slug, updatedAt: p.updatedAt }));
 }

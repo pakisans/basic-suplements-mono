@@ -1,27 +1,27 @@
-'use client'
+'use client';
 
-import { Suspense, useEffect, useRef, useState, useTransition } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import Link from 'next/link'
-import { PayloadImage } from '@/components/ui/PayloadImage'
-import { ROUTES } from '@/constants'
-import { buildProductPath } from '@/services/products'
+import { Suspense, useEffect, useRef, useState, useTransition } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { PayloadImage } from '@/components/ui/PayloadImage';
+import { ROUTES } from '@/constants';
+import { buildProductPath } from '@/services/products';
 
 function escapeRegExp(value) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function HighlightText({ text, query, className = '' }) {
-  const content = String(text ?? '')
-  const trimmedQuery = query.trim()
-  const normalizedQuery = trimmedQuery.toLowerCase()
+  const content = String(text ?? '');
+  const trimmedQuery = query.trim();
+  const normalizedQuery = trimmedQuery.toLowerCase();
 
   if (!trimmedQuery) {
-    return <span className={className}>{content}</span>
+    return <span className={className}>{content}</span>;
   }
 
-  const regex = new RegExp(`(${escapeRegExp(trimmedQuery)})`, 'ig')
-  const parts = content.split(regex)
+  const regex = new RegExp(`(${escapeRegExp(trimmedQuery)})`, 'ig');
+  const parts = content.split(regex);
 
   return (
     <span className={className}>
@@ -35,116 +35,121 @@ function HighlightText({ text, query, className = '' }) {
         ),
       )}
     </span>
-  )
+  );
 }
 
 function SearchContent() {
-  const searchParams = useSearchParams()
-  const router = useRouter()
-  const query = searchParams.get('q') ?? ''
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const query = searchParams.get('q') ?? '';
 
-  const [inputValue, setInputValue] = useState(query)
-  const [products, setProducts] = useState([])
-  const [posts, setPosts] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [searched, setSearched] = useState(false)
-  const [activeTab, setActiveTab] = useState('all')
-  const [isPending, startTransition] = useTransition()
-  const abortRef = useRef(null)
-
-  useEffect(() => {
-    setInputValue(query)
-  }, [query])
+  const [inputValue, setInputValue] = useState(query);
+  const [products, setProducts] = useState([]);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searched, setSearched] = useState(false);
+  const [activeTab, setActiveTab] = useState('all');
+  const [isPending, startTransition] = useTransition();
+  const abortRef = useRef(null);
 
   useEffect(() => {
-    setActiveTab('all')
-  }, [query])
+    setInputValue(query);
+  }, [query]);
 
   useEffect(() => {
-    const trimmed = query.trim()
+    setActiveTab('all');
+  }, [query]);
+
+  useEffect(() => {
+    const trimmed = query.trim();
 
     if (!trimmed) {
-      abortRef.current?.abort()
-      setProducts([])
-      setPosts([])
-      setSearched(false)
-      setLoading(false)
-      return
+      abortRef.current?.abort();
+      setProducts([]);
+      setPosts([]);
+      setSearched(false);
+      setLoading(false);
+      return;
     }
 
-    const controller = new AbortController()
-    abortRef.current?.abort()
-    abortRef.current = controller
+    const controller = new AbortController();
+    abortRef.current?.abort();
+    abortRef.current = controller;
 
     const timeoutId = setTimeout(async () => {
-      setLoading(true)
-      setSearched(true)
+      setLoading(true);
+      setSearched(true);
 
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(trimmed)}`, {
-          signal: controller.signal,
-          cache: 'no-store',
-        })
+        const res = await fetch(
+          `/api/search?q=${encodeURIComponent(trimmed)}`,
+          {
+            signal: controller.signal,
+            cache: 'no-store',
+          },
+        );
 
-        if (!res.ok) throw new Error('Search request failed')
+        if (!res.ok) throw new Error('Search request failed');
 
-        const data = await res.json()
+        const data = await res.json();
 
         if (!controller.signal.aborted) {
-          setProducts(data.products ?? [])
-          setPosts(data.posts ?? [])
+          setProducts(data.products ?? []);
+          setPosts(data.posts ?? []);
         }
       } catch (error) {
         if (!controller.signal.aborted) {
-          setProducts([])
-          setPosts([])
+          setProducts([]);
+          setPosts([]);
         }
       } finally {
         if (!controller.signal.aborted) {
-          setLoading(false)
+          setLoading(false);
         }
       }
-    }, 180)
+    }, 180);
 
     return () => {
-      clearTimeout(timeoutId)
-      controller.abort()
-    }
-  }, [query])
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
+  }, [query]);
 
   function handleSubmit(e) {
-    e.preventDefault()
-    const nextQuery = inputValue.trim()
+    e.preventDefault();
+    const nextQuery = inputValue.trim();
 
     startTransition(() => {
       if (!nextQuery) {
-        router.replace(ROUTES.search)
-        return
+        router.replace(ROUTES.search);
+        return;
       }
 
-      router.replace(`${ROUTES.search}?q=${encodeURIComponent(nextQuery)}`)
-    })
+      router.replace(`${ROUTES.search}?q=${encodeURIComponent(nextQuery)}`);
+    });
   }
 
   function handleInputChange(e) {
-    const nextValue = e.target.value
-    setInputValue(nextValue)
+    const nextValue = e.target.value;
+    setInputValue(nextValue);
 
     startTransition(() => {
       if (!nextValue.trim()) {
-        router.replace(ROUTES.search)
-        return
+        router.replace(ROUTES.search);
+        return;
       }
 
-      router.replace(`${ROUTES.search}?q=${encodeURIComponent(nextValue.trim())}`)
-    })
+      router.replace(
+        `${ROUTES.search}?q=${encodeURIComponent(nextValue.trim())}`,
+      );
+    });
   }
 
-  const totalResults = products.length + posts.length
-  const hasProducts = products.length > 0
-  const hasPosts = posts.length > 0
-  const visibleProducts = activeTab === 'posts' ? [] : products
-  const visiblePosts = activeTab === 'products' ? [] : posts
+  const totalResults = products.length + posts.length;
+  const hasProducts = products.length > 0;
+  const hasPosts = posts.length > 0;
+  const visibleProducts = activeTab === 'posts' ? [] : products;
+  const visiblePosts = activeTab === 'products' ? [] : posts;
 
   return (
     <div className="container mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -157,7 +162,9 @@ function SearchContent() {
         </h1>
         {searched && !loading && (
           <p className="mt-2 text-sm text-zinc-500">
-            {totalResults > 0 ? `${totalResults} result${totalResults !== 1 ? 's' : ''}` : 'No results found'}
+            {totalResults > 0
+              ? `${totalResults} result${totalResults !== 1 ? 's' : ''}`
+              : 'No results found'}
           </p>
         )}
       </div>
@@ -184,8 +191,16 @@ function SearchContent() {
         <div className="mt-6 flex flex-wrap gap-2">
           {[
             { key: 'all', label: `All (${totalResults})` },
-            { key: 'products', label: `Products (${products.length})`, disabled: !hasProducts },
-            { key: 'posts', label: `Blog (${posts.length})`, disabled: !hasPosts },
+            {
+              key: 'products',
+              label: `Products (${products.length})`,
+              disabled: !hasProducts,
+            },
+            {
+              key: 'posts',
+              label: `Blog (${posts.length})`,
+              disabled: !hasPosts,
+            },
           ].map((tab) => (
             <button
               key={tab.key}
@@ -205,13 +220,16 @@ function SearchContent() {
       )}
 
       {loading && (
-        <div className="mt-16 text-center text-sm text-zinc-500">Searching...</div>
+        <div className="mt-16 text-center text-sm text-zinc-500">
+          Searching...
+        </div>
       )}
 
       {!loading && searched && totalResults === 0 && (
         <div className="mt-16 text-center">
           <p className="text-sm text-zinc-400">
-            No results for <span className="text-white">&quot;{query}&quot;</span>
+            No results for{' '}
+            <span className="text-white">&quot;{query}&quot;</span>
           </p>
           <p className="mt-2 text-xs text-zinc-600">
             Try a different term or browse our catalog
@@ -253,11 +271,11 @@ function SearchContent() {
                     query={query}
                     className="text-sm font-medium text-white transition-opacity group-hover:opacity-70"
                   />
-                  {product.price != null && (
+                  {/* {product.price != null && (
                     <div className="text-sm text-zinc-400">
                       {product.price.toLocaleString('en-US')} RSD
                     </div>
-                  )}
+                  )} */}
                 </div>
               </Link>
             ))}
@@ -313,17 +331,19 @@ function SearchContent() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
-        <div className="text-sm text-zinc-500">Loading...</div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
+          <div className="text-sm text-zinc-500">Loading...</div>
+        </div>
+      }
+    >
       <SearchContent />
     </Suspense>
-  )
+  );
 }

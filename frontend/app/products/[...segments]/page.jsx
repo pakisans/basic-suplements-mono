@@ -136,11 +136,23 @@ async function ProductPage({ product }) {
   const primaryImage = product.gallery?.[0]?.image;
   const imageUrl = getMediaUrl(primaryImage ?? null);
 
+  const allImages = (product.gallery ?? [])
+    .map((g) => getMediaUrl(g.image))
+    .filter(Boolean);
+
+  const categories = Array.isArray(product.categories) ? product.categories : [];
+  const firstCategory = categories[0] && typeof categories[0] !== 'string' ? categories[0] : null;
+
   const productBreadcrumbItems = [
     { name: 'Home', url: '/' },
     { name: 'Products', url: '/products' },
-    { name: product.title, url: '' },
+    ...(firstCategory ? [{ name: firstCategory.title, url: `/products/${firstCategory.slug}` }] : []),
+    { name: product.title },
   ];
+
+  const productPath = firstCategory
+    ? `/products/${firstCategory.slug}/${product.slug}`
+    : `/products/${product.slug}`;
 
   return (
     <>
@@ -149,10 +161,11 @@ async function ProductPage({ product }) {
         dangerouslySetInnerHTML={{
           __html: productJsonLd({
             name: product.title,
-            image: imageUrl,
-            price: product.price,
+            description: product.meta?.description,
+            images: allImages.length ? allImages : imageUrl ? [imageUrl] : [],
+            sku: product.slug,
             brand: brandName,
-            url: `/products/${product.slug}`,
+            url: productPath,
           }),
         }}
       />

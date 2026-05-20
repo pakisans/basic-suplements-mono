@@ -10,6 +10,13 @@ export const DEFAULT_LOCALE = 'en';
 export const SITE_NAME = 'Basic Supplements';
 export const SITE_DESCRIPTION = 'Premium sports nutrition and supplements. Fuel your performance.';
 export const SITE_TAGLINE = 'Fuel Your Performance';
+export const SITE_LOCALE = 'en_RS';
+export const SITE_SOCIAL = {
+  instagram: 'https://www.instagram.com/basic.supplements',
+  facebook: 'https://www.facebook.com/basicsupplements',
+  tiktok: 'https://www.tiktok.com/@basic.supplements',
+  youtube: 'https://www.youtube.com/@basicsupplements',
+};
 
 export const ROUTES = {
   home: '/',

@@ -75,5 +75,5 @@ export async function getAllPostSlugs() {
     revalidate: REVALIDATE.posts,
   })
 
-  return result.docs.map((p) => ({ slug: p.slug }))
+  return result.docs.map((p) => ({ slug: p.slug, updatedAt: p.updatedAt }))
 }
