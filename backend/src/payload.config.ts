@@ -19,6 +19,7 @@ import { PostCategories } from '@/collections/PostCategories'
 import { Posts } from '@/collections/Posts'
 import { Brands } from '@/collections/Brands'
 import { Coupons } from '@/collections/Coupons'
+import { Markets } from '@/collections/Markets'
 import { Media } from '@/collections/Media'
 import { Pages } from '@/collections/Pages'
 import { Tags } from '@/collections/Tags'
@@ -49,7 +50,7 @@ export default buildConfig({
   admin: {
     user: Users.slug,
   },
-  collections: [Users, Pages, Posts, Categories, PostCategories, Brands, Tags, Coupons, Media],
+  collections: [Users, Pages, Posts, Categories, PostCategories, Brands, Tags, Coupons, Markets, Media],
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
@@ -95,16 +96,16 @@ export default buildConfig({
   globals: [Header, Footer],
   localization: {
     locales: [
-      {
-        code: 'sr',
-        label: 'Srpski',
-      },
+      // {
+      //   code: 'sr',
+      //   label: 'Srpski',
+      // },
       {
         code: 'en',
         label: 'English',
       },
     ],
-    defaultLocale: 'sr',
+    defaultLocale: 'en',
     fallback: true,
   },
   plugins,

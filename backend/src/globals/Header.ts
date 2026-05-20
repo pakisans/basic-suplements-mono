@@ -28,6 +28,13 @@ export const Header: GlobalConfig = {
       relationTo: 'media',
     },
     {
+      name: 'topBar',
+      type: 'array',
+      label: 'Top Bar Links',
+      fields: [link({ appearances: false })],
+      maxRows: 8,
+    },
+    {
       name: 'navItems',
       type: 'array',
       fields: [
@@ -40,7 +47,7 @@ export const Header: GlobalConfig = {
           fields: [link({ appearances: false })],
         },
       ],
-      maxRows: 6,
+      maxRows: 10,
     },
     {
       name: 'promoBanner',

@@ -239,6 +239,7 @@ export const ProductsCollection: CollectionOverride = ({ defaultCollection }) =>
                   name: 'variantOption',
                   type: 'relationship',
                   relationTo: 'variantOptions',
+                  hasMany: true,
                   admin: {
                     condition: (data) => {
                       return data?.enableVariants === true && data?.variantTypes?.length > 0

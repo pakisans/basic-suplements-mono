@@ -22,7 +22,11 @@
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
     "import:wc": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/scripts/import-wc.ts",
     "seed:content": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/scripts/seed-content.ts",
-    "seed:bs": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed-basic-supplements.ts"
+    "seed:bs": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed-basic-supplements.ts",
+    "seed:bs:en": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed-basic-supplements-en.ts",
+    "translate:products": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/translate-products.ts",
+    "translate:products:free": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/translate-products-gtranslate.ts",
+    "seed:real-data": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/scripts/seed-real-data.ts"
   },
   "dependencies": {
     "@payloadcms/admin-bar": "3.80.0",

@@ -80,6 +80,7 @@ export interface Config {
     brands: Brand;
     tags: Tag;
     coupons: Coupon;
+    markets: Market;
     media: Media;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -118,6 +119,7 @@ export interface Config {
     brands: BrandsSelect<false> | BrandsSelect<true>;
     tags: TagsSelect<false> | TagsSelect<true>;
     coupons: CouponsSelect<false> | CouponsSelect<true>;
+    markets: MarketsSelect<false> | MarketsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -137,7 +139,7 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('sr' | 'en') | ('sr' | 'en')[];
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | 'en' | 'en'[];
   globals: {
     header: Header;
     footer: Footer;
@@ -146,7 +148,7 @@ export interface Config {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
   };
-  locale: 'sr' | 'en';
+  locale: 'en';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -294,12 +296,14 @@ export interface Product {
   gallery?:
     | {
         image: number | Media;
-        variantOption?: (number | null) | VariantOption;
+        variantOption?: (number | VariantOption)[] | null;
         id?: string | null;
       }[]
     | null;
   layout?:
     | (
+        | AmbassadorBlock
+        | BrandStoryBlock
         | BannerBlock
         | CallToActionBlock
         | ContentBlock
@@ -441,6 +445,98 @@ export interface VariantType {
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AmbassadorBlock".
+ */
+export interface AmbassadorBlock {
+  layout?: ('media-right' | 'media-left') | null;
+  eyebrow?: string | null;
+  heading: string;
+  role?: string | null;
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  video: {
+    platform?: ('youtube' | 'vimeo' | 'direct') | null;
+    url: string;
+    /**
+     * Optional — shown as fallback if video cannot be embedded
+     */
+    thumbnail?: (number | null) | Media;
+  };
+  /**
+   * Optional button below the description
+   */
+  cta?: {
+    label?: string | null;
+    url?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ambassador';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BrandStoryBlock".
+ */
+export interface BrandStoryBlock {
+  layout?: ('image-right' | 'image-left') | null;
+  /**
+   * Cover crops the image to fill the frame. Contain shows the full image on a dark background — ideal for product shots.
+   */
+  imageFit?: ('cover' | 'contain') | null;
+  eyebrow?: string | null;
+  heading: string;
+  description: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  image?: (number | null) | Media;
+  /**
+   * Up to 4 key figures displayed in a 2×2 grid
+   */
+  stats?:
+    | {
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional button below the text
+   */
+  cta?: {
+    label?: string | null;
+    url?: string | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'brandStory';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -600,6 +696,8 @@ export interface Page {
   };
   layout?:
     | (
+        | AmbassadorBlock
+        | BrandStoryBlock
         | BannerBlock
         | CallToActionBlock
         | ContentBlock
@@ -653,6 +751,8 @@ export interface Category {
    */
   content?:
     | (
+        | AmbassadorBlock
+        | BrandStoryBlock
         | BannerBlock
         | CallToActionBlock
         | ContentBlock
@@ -762,6 +862,8 @@ export interface Brand {
    */
   content?:
     | (
+        | AmbassadorBlock
+        | BrandStoryBlock
         | BannerBlock
         | CallToActionBlock
         | ContentBlock
@@ -1200,6 +1302,8 @@ export interface Post {
   };
   layout?:
     | (
+        | AmbassadorBlock
+        | BrandStoryBlock
         | BannerBlock
         | CallToActionBlock
         | ContentBlock
@@ -1249,6 +1353,8 @@ export interface PostCategory {
    */
   content?:
     | (
+        | AmbassadorBlock
+        | BrandStoryBlock
         | BannerBlock
         | CallToActionBlock
         | ContentBlock
@@ -1456,6 +1562,29 @@ export interface Coupon {
   createdAt: string;
 }
 /**
+ * Markets / distributors displayed in the Country Gate popup on the website.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "markets".
+ */
+export interface Market {
+  id: number;
+  label: string;
+  flag: string;
+  active?: boolean | null;
+  /**
+   * ISO 3166-1 alpha-2 codes separated by commas. e.g. RS or HR,AT,DE,FR
+   */
+  countryCode: string;
+  url: string;
+  /**
+   * Lower number = displayed first. Recommended markets should be placed at the top.
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
@@ -1527,6 +1656,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'coupons';
         value: number | Coupon;
+      } | null)
+    | ({
+        relationTo: 'markets';
+        value: number | Market;
       } | null)
     | ({
         relationTo: 'media';
@@ -1673,6 +1806,8 @@ export interface PagesSelect<T extends boolean = true> {
   layout?:
     | T
     | {
+        ambassador?: T | AmbassadorBlockSelect<T>;
+        brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
@@ -1700,6 +1835,59 @@ export interface PagesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AmbassadorBlock_select".
+ */
+export interface AmbassadorBlockSelect<T extends boolean = true> {
+  layout?: T;
+  eyebrow?: T;
+  heading?: T;
+  role?: T;
+  description?: T;
+  video?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        thumbnail?: T;
+      };
+  cta?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BrandStoryBlock_select".
+ */
+export interface BrandStoryBlockSelect<T extends boolean = true> {
+  layout?: T;
+  imageFit?: T;
+  eyebrow?: T;
+  heading?: T;
+  description?: T;
+  image?: T;
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  cta?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+      };
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1912,6 +2100,8 @@ export interface PostsSelect<T extends boolean = true> {
   layout?:
     | T
     | {
+        ambassador?: T | AmbassadorBlockSelect<T>;
+        brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
@@ -1954,6 +2144,8 @@ export interface CategoriesSelect<T extends boolean = true> {
   content?:
     | T
     | {
+        ambassador?: T | AmbassadorBlockSelect<T>;
+        brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
@@ -1992,6 +2184,8 @@ export interface PostCategoriesSelect<T extends boolean = true> {
   content?:
     | T
     | {
+        ambassador?: T | AmbassadorBlockSelect<T>;
+        brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
@@ -2030,6 +2224,8 @@ export interface BrandsSelect<T extends boolean = true> {
   content?:
     | T
     | {
+        ambassador?: T | AmbassadorBlockSelect<T>;
+        brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
@@ -2083,6 +2279,20 @@ export interface CouponsSelect<T extends boolean = true> {
   usageCount?: T;
   targetProducts?: T;
   targetCategories?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "markets_select".
+ */
+export interface MarketsSelect<T extends boolean = true> {
+  label?: T;
+  flag?: T;
+  active?: T;
+  countryCode?: T;
+  url?: T;
+  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2332,6 +2542,8 @@ export interface ProductsSelect<T extends boolean = true> {
   layout?:
     | T
     | {
+        ambassador?: T | AmbassadorBlockSelect<T>;
+        brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
         cta?: T | CallToActionBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
@@ -2550,6 +2762,42 @@ export interface Header {
   id: number;
   siteName?: string | null;
   logo?: (number | null) | Media;
+  topBar?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'products';
+                value: number | Product;
+              } | null)
+            | ({
+                relationTo: 'categories';
+                value: number | Category;
+              } | null)
+            | ({
+                relationTo: 'brands';
+                value: number | Brand;
+              } | null)
+            | ({
+                relationTo: 'posts';
+                value: number | Post;
+              } | null)
+            | ({
+                relationTo: 'post-categories';
+                value: number | PostCategory;
+              } | null);
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
   navItems?:
     | {
         link: {
@@ -2894,6 +3142,20 @@ export interface FooterNewsletterBlock {
 export interface HeaderSelect<T extends boolean = true> {
   siteName?: T;
   logo?: T;
+  topBar?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        id?: T;
+      };
   navItems?:
     | T
     | {

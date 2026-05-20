@@ -1,7 +1,9 @@
 import type { Block, Field } from 'payload'
 
+import { Ambassador } from '@/blocks/Ambassador/config'
 import { Archive } from '@/blocks/ArchiveBlock/config'
 import { Banner } from '@/blocks/Banner/config'
+import { BrandStory } from '@/blocks/BrandStory/config'
 import { CallToAction } from '@/blocks/CallToAction/config'
 import { Carousel } from '@/blocks/Carousel/config'
 import { Code } from '@/blocks/Code/config'
@@ -16,6 +18,8 @@ import { ThreeItemGrid } from '@/blocks/ThreeItemGrid/config'
 import { Video } from '@/blocks/Video/config'
 
 export const defaultContentBlocks: Block[] = [
+  Ambassador,
+  BrandStory,
   Banner,
   CallToAction,
   Content,
