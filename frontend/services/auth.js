@@ -10,7 +10,7 @@ export async function loginUser(email, password) {
     cache: 'no-store',
   })
   const data = await res.json()
-  if (!res.ok) throw new Error(data.message || 'Neispravni podaci za prijavu')
+  if (!res.ok) throw new Error(data.message || 'Invalid login credentials')
   return data // { token, user, exp }
 }
 
@@ -45,14 +45,14 @@ export async function registerUser({ name, email, password }) {
     const msg =
       data.message ||
       data.errors?.[0]?.message ||
-      'Greška pri registraciji'
+      'Registration failed'
     throw new Error(msg)
   }
   return loginUser(email, password)
 }
 
 export async function updateMe(token, id, updates) {
-  if (!token) throw new Error('Nije prijavljen')
+  if (!token) throw new Error('Not logged in')
   const res = await fetch(`${API}/${id}`, {
     method: 'PATCH',
     headers: {
@@ -63,6 +63,6 @@ export async function updateMe(token, id, updates) {
     cache: 'no-store',
   })
   const data = await res.json()
-  if (!res.ok) throw new Error(data.message || 'Greška pri ažuriranju')
+  if (!res.ok) throw new Error(data.message || 'Failed to update profile')
   return data.doc ?? data
 }

@@ -2,16 +2,17 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useAuth } from '@/components/auth/AuthProvider'
 import { getMyOrders } from '@/services/orders'
 import { CURRENCY, ROUTES } from '@/constants'
 
 const STATUS_LABEL = {
-  processing: 'U obradi',
-  completed: 'Završena',
-  cancelled: 'Otkazana',
-  refunded: 'Refundirana',
+  processing: 'Processing',
+  completed: 'Completed',
+  cancelled: 'Cancelled',
+  refunded: 'Refunded',
 }
 
 const STATUS_CLASS = {
@@ -23,7 +24,7 @@ const STATUS_CLASS = {
 
 function formatDate(iso) {
   if (!iso) return '—'
-  return new Date(iso).toLocaleDateString('sr-RS', {
+  return new Date(iso).toLocaleDateString('en-US', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
@@ -50,7 +51,7 @@ export default function OrdersPage() {
   if (loading || fetching) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
-        <div className="text-sm text-zinc-500">Učitavanje...</div>
+        <div className="text-sm text-zinc-500">Loading...</div>
       </div>
     )
   }
@@ -60,15 +61,15 @@ export default function OrdersPage() {
   return (
     <div className="container mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="border-b border-zinc-900 pb-8">
-        <div className="text-xs font-medium tracking-widest text-zinc-500 uppercase">Nalog</div>
-        <h1 className="mt-3 text-3xl font-bold tracking-tight text-white">Moje porudžbine</h1>
+        <div className="text-xs font-medium tracking-widest text-zinc-500 uppercase">Account</div>
+        <h1 className="mt-3 text-3xl font-bold tracking-tight text-white">My Orders</h1>
       </div>
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[240px_1fr]">
         <nav className="space-y-1">
           {[
-            { label: 'Profil', href: ROUTES.account },
-            { label: 'Porudžbine', href: ROUTES.orders, active: true },
+            { label: 'Profile', href: ROUTES.account },
+            { label: 'Orders', href: ROUTES.orders, active: true },
           ].map((item) => (
             <Link
               key={item.href}
@@ -94,15 +95,15 @@ export default function OrdersPage() {
                   <path d="M9 12h6M9 16h4" />
                 </svg>
               </div>
-              <p className="text-sm text-zinc-400">Još nema porudžbina</p>
+              <p className="text-sm text-zinc-400">No orders yet</p>
               <p className="mt-1 text-xs text-zinc-600">
-                Kada završiš kupovinu, porudžbine će se pojaviti ovde
+                Once you complete a purchase, your orders will appear here
               </p>
               <Link
                 href={ROUTES.products}
                 className="mt-6 inline-block text-xs font-medium tracking-widest text-zinc-400 uppercase transition-colors hover:text-white"
               >
-                Idi na proizvode →
+                Browse products →
               </Link>
             </div>
           ) : (
@@ -122,7 +123,7 @@ export default function OrdersPage() {
                       <div>
                         <div className="flex items-center gap-3">
                           <span className="text-sm font-semibold text-white">
-                            Porudžbina #{order.id}
+                            Order #{order.id}
                           </span>
                           <span className={`px-2 py-0.5 text-[10px] font-medium tracking-widest uppercase ${STATUS_CLASS[status] ?? STATUS_CLASS.processing}`}>
                             {STATUS_LABEL[status] ?? status}
@@ -130,13 +131,13 @@ export default function OrdersPage() {
                         </div>
                         <div className="mt-1.5 flex items-center gap-4 text-xs text-zinc-500">
                           <span>{formatDate(order.createdAt)}</span>
-                          <span>{itemCount} {itemCount === 1 ? 'artikal' : 'artikala'}</span>
+                          <span>{itemCount} {itemCount === 1 ? 'item' : 'items'}</span>
                         </div>
                       </div>
                       {total != null && (
                         <div className="shrink-0 text-right">
                           <div className="text-sm font-semibold text-white">
-                            {total.toLocaleString('sr-RS')} {CURRENCY.symbol}
+                            {total.toLocaleString('en-US')} {CURRENCY.symbol}
                           </div>
                         </div>
                       )}
@@ -149,10 +150,11 @@ export default function OrdersPage() {
                           return (
                             <div key={idx} className="relative h-12 w-10 shrink-0 overflow-hidden bg-zinc-900">
                               {img && (
-                                <img
+                                <Image
                                   src={`${process.env.NEXT_PUBLIC_PAYLOAD_URL}${img.url}`}
                                   alt={item.product?.title ?? ''}
-                                  className="h-full w-full object-cover"
+                                  fill
+                                  className="object-cover"
                                 />
                               )}
                             </div>

@@ -1,7 +1,7 @@
 import { Section, SectionHeading } from '@/components/ui/Section';
 import { ProductCard } from './ProductCard';
 
-export function RelatedProducts({ products, title = 'Slični proizvodi' }) {
+export function RelatedProducts({ products, title = 'Related Products' }) {
   if (!products?.length) return null;
 
   return (

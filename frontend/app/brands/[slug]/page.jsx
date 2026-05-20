@@ -19,14 +19,14 @@ export async function generateMetadata({ params }) {
     title: brand.title,
     description: brand.description ?? undefined,
     image: brand.logo ?? undefined,
-    canonical: `/brendovi/${slug}`,
+    canonical: `/brands/${slug}`,
   })
 }
 
 export default async function BrandPage({ params, searchParams }) {
   const { slug } = await params
   const sp = await searchParams
-  const page = parseInt(sp.stranica ?? '1')
+  const page = parseInt(sp.page ?? '1')
 
   const [brand, productsData] = await Promise.all([
     getBrandBySlug(slug),
@@ -62,7 +62,7 @@ export default async function BrandPage({ params, searchParams }) {
         <ProductGrid
           products={productsData.docs}
           columns={4}
-          emptyTitle="Nema proizvoda ovog brenda"
+          emptyTitle="No products from this brand"
         />
       </div>
 

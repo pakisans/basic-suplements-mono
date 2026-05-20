@@ -61,7 +61,7 @@ export default async function BlogPostPage({ params }) {
           {categories.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
               {categories.map((cat) => (
-                <Link key={cat.id} href={`/blog/kategorija/${cat.slug}`}>
+                <Link key={cat.id} href={`/blog/category/${cat.slug}`}>
                   <Badge variant="info">{cat.title}</Badge>
                 </Link>
               ))}
@@ -79,7 +79,7 @@ export default async function BlogPostPage({ params }) {
             {post.readTime && (
               <>
                 <span>·</span>
-                <span>{post.readTime} min čitanja</span>
+                <span>{post.readTime} min read</span>
               </>
             )}
           </div>
@@ -120,7 +120,7 @@ export default async function BlogPostPage({ params }) {
 
       {relatedPosts.length > 0 && (
         <Section className="border-t border-zinc-900">
-          <SectionHeading title="Slični članci" />
+          <SectionHeading title="Related articles" />
           <PostGrid posts={relatedPosts} columns={3} />
         </Section>
       )}

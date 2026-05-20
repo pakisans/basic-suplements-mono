@@ -5,22 +5,22 @@ export const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 export const PAYLOAD_URL =
   typeof window === 'undefined' ? INTERNAL_PAYLOAD_URL : PUBLIC_PAYLOAD_URL;
 
-export const DEFAULT_LOCALE = 'sr';
+export const DEFAULT_LOCALE = 'en';
 
-export const SITE_NAME = 'Prodavnica';
-export const SITE_DESCRIPTION = 'Online prodavnica';
-export const SITE_TAGLINE = 'Kvalitet koji traje';
+export const SITE_NAME = 'Basic Supplements';
+export const SITE_DESCRIPTION = 'Premium sports nutrition and supplements. Fuel your performance.';
+export const SITE_TAGLINE = 'Fuel Your Performance';
 
 export const ROUTES = {
   home: '/',
-  products: '/proizvodi',
+  products: '/products',
   blog: '/blog',
-  brands: '/brendovi',
-  cart: '/korpa',
-  checkout: '/naplata',
-  search: '/pretraga',
-  account: '/nalog',
-  orders: '/nalog/porudzbine',
+  brands: '/brands',
+  cart: '/cart',
+  checkout: '/checkout',
+  search: '/search',
+  account: '/account',
+  orders: '/account/orders',
   login: '/login',
 };
 
@@ -63,12 +63,12 @@ export const SOCIAL_PLATFORMS = {
 };
 
 export const BADGE_LABELS = {
-  new: 'Novo',
-  sale: 'Akcija',
-  bestseller: 'Bestseler',
-  featured: 'Istaknuto',
-  limited: 'Ograničeno',
-  preorder: 'Prednarudžba',
+  new: 'New',
+  sale: 'Sale',
+  bestseller: 'Bestseller',
+  featured: 'Featured',
+  limited: 'Limited',
+  preorder: 'Pre-order',
 };
 
 export const VISIBILITY_OPTIONS = {
@@ -78,12 +78,12 @@ export const VISIBILITY_OPTIONS = {
 };
 
 export const SORT_OPTIONS = [
-  { value: 'createdAt', label: 'Najnovije' },
-  { value: '-createdAt', label: 'Najstarije' },
-  { value: 'price', label: 'Cena: manja prema većoj' },
-  { value: '-price', label: 'Cena: veća prema manjoj' },
-  { value: 'title', label: 'Naziv A-Z' },
-  { value: '-title', label: 'Naziv Z-A' },
+  { value: '-createdAt', label: 'Newest first' },
+  { value: 'createdAt',  label: 'Oldest first' },
+  { value: 'price',      label: 'Price: low to high' },
+  { value: '-price',     label: 'Price: high to low' },
+  { value: 'title',      label: 'Name A–Z' },
+  { value: '-title',     label: 'Name Z–A' },
 ];
 
 export const SPACER_SIZES = {

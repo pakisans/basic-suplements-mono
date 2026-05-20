@@ -4,6 +4,8 @@ import { Footer } from '@/components/layout/Footer';
 import { CartProvider } from '@/components/cart/CartProvider';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { AuthProvider } from '@/components/auth/AuthProvider';
+import { CatalogModeProvider } from '@/components/catalog/CatalogModeProvider';
+import { CountryGate } from '@/components/catalog/CountryGate';
 import { getHeader, getFooter } from '@/services/globals';
 import { SITE_NAME, SITE_DESCRIPTION, SERVER_URL } from '@/constants';
 import { organizationJsonLd } from '@/lib/seo/metadata';
@@ -18,7 +20,7 @@ export const metadata = {
   openGraph: {
     siteName: SITE_NAME,
     type: 'website',
-    locale: 'sr_RS',
+    locale: 'en_US',
   },
 };
 
@@ -26,7 +28,7 @@ export default async function RootLayout({ children }) {
   const [header, footer] = await Promise.all([getHeader(), getFooter()]);
 
   return (
-    <html lang="sr">
+    <html lang="en">
       <head>
         <script
           type="application/ld+json"
@@ -34,14 +36,17 @@ export default async function RootLayout({ children }) {
         />
       </head>
       <body className="flex flex-col min-h-screen">
-        <AuthProvider>
-          <CartProvider>
-            <Header header={header} />
-            <main className="flex-1">{children}</main>
-            <Footer footer={footer} />
-            <CartDrawer />
-          </CartProvider>
-        </AuthProvider>
+        <CatalogModeProvider>
+          <AuthProvider>
+            <CartProvider>
+              <CountryGate />
+              <Header header={header} />
+              <main className="flex-1">{children}</main>
+              <Footer footer={footer} />
+              <CartDrawer />
+            </CartProvider>
+          </AuthProvider>
+        </CatalogModeProvider>
       </body>
     </html>
   );

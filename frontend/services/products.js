@@ -166,7 +166,7 @@ export async function getSaleProducts(limit = 12) {
 }
 
 export function buildProductPath(product) {
-  return `/proizvodi/${product.slug}`;
+  return `/products/${product.slug}`;
 }
 
 export async function getAllProductSlugs() {

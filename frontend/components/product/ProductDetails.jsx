@@ -14,7 +14,7 @@ export function ProductDetails({ product }) {
     <div className="space-y-5">
       {brand && (
         <div className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
-          Brend: <span className="text-zinc-300">{brand.title}</span>
+          Brand: <span className="text-zinc-300">{brand.title}</span>
         </div>
       )}
 
@@ -40,7 +40,7 @@ export function ProductDetails({ product }) {
             onClick={() => setExpanded((v) => !v)}
             className="text-xs font-medium tracking-widest text-zinc-400 uppercase transition-colors hover:text-white"
           >
-            {expanded ? 'Prikaži manje ↑' : 'Prikaži više ↓'}
+            {expanded ? 'Show less ↑' : 'Show more ↓'}
           </button>
         </div>
       )}

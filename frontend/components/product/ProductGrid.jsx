@@ -11,8 +11,8 @@ const columnClasses = {
 export function ProductGrid({
   products,
   columns = 4,
-  emptyTitle = 'Nema proizvoda',
-  emptyDescription = 'Trenutno nema dostupnih proizvoda.',
+  emptyTitle = 'No products',
+  emptyDescription = 'No products currently available.',
   className = '',
 }) {
   if (!products?.length) {
@@ -20,7 +20,7 @@ export function ProductGrid({
       <EmptyState
         title={emptyTitle}
         description={emptyDescription}
-        action={<Button href="/proizvodi">Pogledaj sve proizvode</Button>}
+        action={<Button href="/products">View all products</Button>}
       />
     );
   }

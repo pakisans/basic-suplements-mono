@@ -3,9 +3,9 @@ import { CartPage } from '@/components/cart/CartPage';
 import { buildMetadata } from '@/lib/seo/metadata';
 
 export const metadata = buildMetadata({
-  title: 'Korpa',
-  description: 'Pregled izabranih artikala i priprema za nastavak kupovine.',
-  canonical: '/korpa',
+  title: 'Cart',
+  description: 'Review your selected items and continue to checkout.',
+  canonical: '/cart',
 });
 
 export default function CartRoutePage() {

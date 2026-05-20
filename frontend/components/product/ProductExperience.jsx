@@ -7,6 +7,7 @@ import { ProductDetails } from './ProductDetails';
 import { Button } from '@/components/ui/Button';
 import { VariantSelector } from './VariantSelector';
 import { useCart } from '@/components/cart/CartProvider';
+import { useCatalogMode } from '@/components/catalog/CatalogModeProvider';
 import {
   createCartItem,
   getDisplayPrice,
@@ -18,24 +19,42 @@ import {
 } from '@/lib/cart/product';
 
 const COLOR_MAP = {
+  // Serbian names
   Crna: '#1a1a1a',
   Bela: '#f5f5f5',
   Belo: '#f5f5f5',
   Siva: '#6b7280',
   'Svetlo siva': '#9ca3af',
   'Tamno siva': '#374151',
-  'Navy Blue': '#1e3a5f',
   Plava: '#2563eb',
-  'Sky Blue': '#38bdf8',
   Roza: '#f472b6',
   Crvena: '#ef4444',
   Narandžasta: '#f97316',
   Zelena: '#22c55e',
-  Mint: '#6ee7b7',
   Bež: '#d4b896',
-  Ruby: '#9f1239',
   Transparentna: 'transparent',
   'boja kapucina': '#7c5c3e',
+  // English names
+  Black: '#1a1a1a',
+  White: '#f5f5f5',
+  Gray: '#6b7280',
+  Grey: '#6b7280',
+  'Light Gray': '#9ca3af',
+  'Light Grey': '#9ca3af',
+  'Dark Gray': '#374151',
+  'Dark Grey': '#374151',
+  'Navy Blue': '#1e3a5f',
+  Blue: '#2563eb',
+  'Sky Blue': '#38bdf8',
+  Pink: '#f472b6',
+  Red: '#ef4444',
+  Orange: '#f97316',
+  Green: '#22c55e',
+  Mint: '#6ee7b7',
+  Beige: '#d4b896',
+  Ruby: '#9f1239',
+  Transparent: 'transparent',
+  Cappuccino: '#7c5c3e',
 };
 
 function getInitialSelection(optionGroups) {
@@ -46,6 +65,7 @@ function getInitialSelection(optionGroups) {
 
 export function ProductExperience({ product }) {
   const { addItem } = useCart();
+  const { isCatalogOnly, resetGate } = useCatalogMode();
   const optionGroups = getProductOptionGroups(product);
   const hasVariants = productHasVariants(product);
   const [selectedOptionIds, setSelectedOptionIds] = useState(() =>
@@ -103,19 +123,19 @@ export function ProductExperience({ product }) {
 
   function handleAddToCart() {
     if (missingSelection) {
-      setError('Izaberi sve obavezne opcije pre dodavanja u korpu.');
+      setError('Please select all required options before adding to cart.');
       setSuccess('');
       return;
     }
 
     if (hasVariants && !selectedVariant) {
-      setError('Odabrana kombinacija trenutno nije dostupna.');
+      setError('The selected combination is currently unavailable.');
       setSuccess('');
       return;
     }
 
     if (!hasStock) {
-      setError('Izabrana varijanta trenutno nije na stanju.');
+      setError('The selected variant is currently out of stock.');
       setSuccess('');
       return;
     }
@@ -126,8 +146,8 @@ export function ProductExperience({ product }) {
 
     const msg =
       quantity > 1
-        ? `Dodato ${quantity} kom. u korpu.`
-        : 'Proizvod je dodat u korpu.';
+        ? `Added ${quantity} items to cart.`
+        : 'Product added to cart.';
     setSuccess(msg);
     setError('');
 
@@ -167,7 +187,7 @@ export function ProductExperience({ product }) {
         <h1 className="text-3xl font-bold tracking-tight text-white md:text-4xl">
           {product.title}
         </h1>
-        <ProductPrice price={displayPrice} size="xl" />
+        {!isCatalogOnly && <ProductPrice price={displayPrice} size="xl" />}
 
         <div className="border-t border-zinc-900 pt-5">
           <ProductDetails product={product} />
@@ -180,7 +200,7 @@ export function ProductExperience({ product }) {
                 selectedOptionIds.some((id) => String(id) === String(o.id)),
               );
               const isGroupSelected = Boolean(selectedOption);
-              const isColorGroup = group.name?.toLowerCase() === 'boja';
+              const isColorGroup = group.name?.toLowerCase() === 'boja' || group.name?.toLowerCase() === 'color';
               const colorHex = isColorGroup ? getSelectedColorHex(group) : null;
 
               return (
@@ -202,7 +222,7 @@ export function ProductExperience({ product }) {
                     ) : (
                       <>
                         <span className="text-amber-400">
-                          Izaberite {group.label}
+                          Select {group.label}
                         </span>
                         <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
                       </>
@@ -220,80 +240,90 @@ export function ProductExperience({ product }) {
           </div>
         )}
 
-        <div className="border-t border-zinc-900 pt-5">
-          <div className="mb-3 text-xs font-medium tracking-widest text-zinc-500 uppercase">
-            Količina
-          </div>
-          <div className="inline-flex border border-zinc-800">
-            <button
-              type="button"
-              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-              className="flex h-12 w-12 items-center justify-center border-r border-zinc-800 text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white active:scale-95"
-              aria-label="Smanji količinu"
-            >
-              −
-            </button>
-            <div className="flex h-12 min-w-[3rem] items-center justify-center px-4 text-sm font-semibold text-white">
-              {quantity}
+        {!isCatalogOnly && (
+          <div className="border-t border-zinc-900 pt-5">
+            <div className="mb-3 text-xs font-medium tracking-widest text-zinc-500 uppercase">
+              Quantity
             </div>
-            <button
-              type="button"
-              onClick={() => setQuantity((q) => q + 1)}
-              className="flex h-12 w-12 items-center justify-center border-l border-zinc-800 text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white active:scale-95"
-              aria-label="Povećaj količinu"
-            >
-              +
-            </button>
+            <div className="inline-flex border border-zinc-800">
+              <button
+                type="button"
+                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                className="flex h-12 w-12 items-center justify-center border-r border-zinc-800 text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white active:scale-95"
+                aria-label="Decrease quantity"
+              >
+                −
+              </button>
+              <div className="flex h-12 min-w-[3rem] items-center justify-center px-4 text-sm font-semibold text-white">
+                {quantity}
+              </div>
+              <button
+                type="button"
+                onClick={() => setQuantity((q) => q + 1)}
+                className="flex h-12 w-12 items-center justify-center border-l border-zinc-800 text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white active:scale-95"
+                aria-label="Increase quantity"
+              >
+                +
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
-        {variantResolved && (
+        {!isCatalogOnly && variantResolved && (
           <div className="flex items-center gap-2">
             {hasStock ? (
               <>
                 <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                <span className="text-xs text-emerald-400">Na stanju</span>
+                <span className="text-xs text-emerald-400">In stock</span>
               </>
             ) : (
               <>
                 <span className="h-2 w-2 rounded-full bg-red-500" />
-                <span className="text-xs text-red-400">Nema na stanju</span>
+                <span className="text-xs text-red-400">Out of stock</span>
               </>
             )}
           </div>
         )}
 
-        <div className="mt-2 flex flex-col gap-3 sm:flex-row">
-          <Button
-            size="lg"
-            fullWidth
-            disabled={!canAddToCart}
-            onClick={handleAddToCart}
-          >
-            {!hasStock
-              ? 'Nema na stanju'
-              : missingSelection
-                ? 'Izaberi opcije'
-                : 'Dodaj u korpu'}
-          </Button>
-        </div>
-
-        {error && <p className="text-sm text-red-400">{error}</p>}
-
-        {success && (
-          <div className="flex items-center gap-2 border border-emerald-500/20 bg-emerald-500/5 px-4 py-3">
-            <svg
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="h-4 w-4 shrink-0 text-emerald-400"
+        {!isCatalogOnly && (
+          <div className="mt-2 flex flex-col gap-3 sm:flex-row">
+            <Button
+              size="lg"
+              fullWidth
+              disabled={!canAddToCart}
+              onClick={handleAddToCart}
             >
-              <path
-                fillRule="evenodd"
-                d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
-                clipRule="evenodd"
-              />
+              {!hasStock
+                ? 'Out of stock'
+                : missingSelection
+                  ? 'Select options'
+                  : 'Add to cart'}
+            </Button>
+          </div>
+        )}
+
+        {!isCatalogOnly && error && <p className="text-sm text-red-400">{error}</p>}
+        {!isCatalogOnly && success && (
+          <div className="flex items-center gap-2 border border-emerald-500/20 bg-emerald-500/5 px-4 py-3">
+            <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0 text-emerald-400">
+              <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
             </svg>
             <p className="text-sm text-emerald-400">{success}</p>
+          </div>
+        )}
+
+        {isCatalogOnly && (
+          <div className="border border-dashed border-zinc-700 px-5 py-4 text-center">
+            <p className="text-sm text-zinc-400">
+              To purchase, please{' '}
+              <button
+                onClick={resetGate}
+                className="underline underline-offset-2 transition-colors hover:text-white"
+              >
+                select your country
+              </button>
+              .
+            </p>
           </div>
         )}
       </div>

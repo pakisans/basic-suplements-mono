@@ -8,18 +8,18 @@ export function ProductSort() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const currentSort = searchParams.get('sortiranje') ?? '-createdAt';
+  const currentSort = searchParams.get('sort') ?? '-createdAt';
 
   function handleChange(value) {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('sortiranje', value);
-    params.delete('stranica');
+    params.set('sort', value);
+    params.delete('page');
     router.push(`${pathname}?${params.toString()}`);
   }
 
   return (
     <Select
-      label="Sortiraj:"
+      label="Sort:"
       options={SORT_OPTIONS}
       value={currentSort}
       onChange={handleChange}

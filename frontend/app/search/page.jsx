@@ -150,14 +150,14 @@ function SearchContent() {
     <div className="container mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="border-b border-zinc-900 pb-8">
         <div className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
-          Pretraga
+          Search
         </div>
         <h1 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl">
-          {query ? `Rezultati za "${query}"` : 'Pronađi šta tražiš'}
+          {query ? `Results for "${query}"` : 'Find what you need'}
         </h1>
         {searched && !loading && (
           <p className="mt-2 text-sm text-zinc-500">
-            {totalResults > 0 ? `${totalResults} rezultata` : 'Nema rezultata'}
+            {totalResults > 0 ? `${totalResults} result${totalResults !== 1 ? 's' : ''}` : 'No results found'}
           </p>
         )}
       </div>
@@ -167,7 +167,7 @@ function SearchContent() {
           type="search"
           value={inputValue}
           onChange={handleInputChange}
-          placeholder="Unesi naziv proizvoda, branda, teme..."
+          placeholder="Search products, brands, topics..."
           autoFocus
           className="h-14 flex-1 border border-r-0 border-zinc-800 bg-zinc-950 px-6 text-sm text-white placeholder:text-zinc-600 focus:border-zinc-600 focus:outline-none"
         />
@@ -176,15 +176,15 @@ function SearchContent() {
           disabled={isPending}
           className="h-14 border border-zinc-800 bg-zinc-900 px-8 text-xs font-medium tracking-widest text-white uppercase transition-colors hover:bg-white hover:text-black"
         >
-          Traži
+          Search
         </button>
       </form>
 
       {searched && !loading && totalResults > 0 && (
         <div className="mt-6 flex flex-wrap gap-2">
           {[
-            { key: 'all', label: `Sve (${totalResults})` },
-            { key: 'products', label: `Proizvodi (${products.length})`, disabled: !hasProducts },
+            { key: 'all', label: `All (${totalResults})` },
+            { key: 'products', label: `Products (${products.length})`, disabled: !hasProducts },
             { key: 'posts', label: `Blog (${posts.length})`, disabled: !hasPosts },
           ].map((tab) => (
             <button
@@ -205,22 +205,22 @@ function SearchContent() {
       )}
 
       {loading && (
-        <div className="mt-16 text-center text-sm text-zinc-500">Pretraga...</div>
+        <div className="mt-16 text-center text-sm text-zinc-500">Searching...</div>
       )}
 
       {!loading && searched && totalResults === 0 && (
         <div className="mt-16 text-center">
           <p className="text-sm text-zinc-400">
-            Nema rezultata za <span className="text-white">&quot;{query}&quot;</span>
+            No results for <span className="text-white">&quot;{query}&quot;</span>
           </p>
           <p className="mt-2 text-xs text-zinc-600">
-            Pokušaj sa drugačijim pojmom ili pregledaj naš katalog
+            Try a different term or browse our catalog
           </p>
           <Link
             href={ROUTES.products}
             className="mt-6 inline-block text-xs font-medium tracking-widest text-zinc-400 uppercase transition-colors hover:text-white"
           >
-            Pogledaj sve proizvode →
+            View all products →
           </Link>
         </div>
       )}
@@ -228,7 +228,7 @@ function SearchContent() {
       {!loading && visibleProducts.length > 0 && (
         <section className="mt-12">
           <h2 className="mb-6 text-xs font-medium tracking-widest text-zinc-500 uppercase">
-            Proizvodi ({products.length})
+            Products ({products.length})
           </h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {visibleProducts.map((product) => (
@@ -255,7 +255,7 @@ function SearchContent() {
                   />
                   {product.price != null && (
                     <div className="text-sm text-zinc-400">
-                      {product.price.toLocaleString('sr-RS')} RSD
+                      {product.price.toLocaleString('en-US')} RSD
                     </div>
                   )}
                 </div>
@@ -268,7 +268,7 @@ function SearchContent() {
       {!loading && visiblePosts.length > 0 && (
         <section className="mt-12">
           <h2 className="mb-6 text-xs font-medium tracking-widest text-zinc-500 uppercase">
-            Blog ({posts.length})
+            Blog posts ({posts.length})
           </h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {visiblePosts.map((post) => (
@@ -309,7 +309,7 @@ function SearchContent() {
 
       {!query && !loading && (
         <div className="mt-16 text-center text-sm text-zinc-600">
-          Unesi pojam iznad da bi pokrenuo pretragu
+          Enter a term above to start searching
         </div>
       )}
     </div>
@@ -320,7 +320,7 @@ export default function SearchPage() {
   return (
     <Suspense fallback={
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
-        <div className="text-sm text-zinc-500">Učitavanje...</div>
+        <div className="text-sm text-zinc-500">Loading...</div>
       </div>
     }>
       <SearchContent />

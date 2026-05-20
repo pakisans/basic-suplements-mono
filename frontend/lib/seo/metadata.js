@@ -68,7 +68,7 @@ export function buildProductMetadata(options = {}) {
     title: metaTitle,
     description: metaDescription,
     image: metaImage,
-    canonical: `/proizvodi/${slug}`,
+    canonical: `/products/${slug}`,
   });
 
   return {
@@ -88,7 +88,7 @@ export function buildCategoryMetadata(options = {}) {
     title: seo?.title ?? title,
     description: seo?.description ?? description,
     image: seo?.image ?? image,
-    canonical: `/proizvodi/${path}`,
+    canonical: `/products/${path}`,
   });
 }
 

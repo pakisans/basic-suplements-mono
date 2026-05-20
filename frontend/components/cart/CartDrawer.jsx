@@ -49,7 +49,7 @@ export function CartDrawer() {
         }`}
         role="dialog"
         aria-modal="true"
-        aria-label="Brza korpa"
+        aria-label="Quick Cart"
       >
         <div
           className={`h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-opacity duration-700 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
@@ -68,10 +68,10 @@ export function CartDrawer() {
         >
           <div>
             <div className="text-[10px] font-medium tracking-[0.28em] text-zinc-500 uppercase">
-              Brza korpa
+              Quick Cart
             </div>
             <h2 className="mt-1 text-lg font-semibold text-white flx items-center">
-              Tvoji odabrani komadi
+              Your selected items
               {items.length > 0 && (
                 <span className="ml-2 inline-flex min-w-6 items-center justify-center rounded-full border border-white/10 bg-zinc-100 px-2 py-1 text-[10px] font-bold text-black">
                   {items.reduce((n, i) => n + i.quantity, 0)}
@@ -79,14 +79,14 @@ export function CartDrawer() {
               )}
             </h2>
             <p className="mt-1 text-sm text-zinc-400">
-              Pregled artikala pre nego što nastaviš na naplatu.
+              Review your items before proceeding to checkout.
             </p>
           </div>
           <button
             type="button"
             onClick={closeCart}
             className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/8 bg-white/[0.02] text-zinc-500 transition-colors hover:border-white/15 hover:bg-white/[0.04] hover:text-white"
-            aria-label="Zatvori"
+            aria-label="Close"
           >
             <svg
               viewBox="0 0 24 24"
@@ -121,15 +121,15 @@ export function CartDrawer() {
             </div>
           ) : (
             <EmptyState
-              title="Korpa je prazna"
-              description="Dodaj proizvod iz kataloga i ovde ćeš odmah videti pregled izabranih artikala."
+              title="Your cart is empty"
+              description="Add a product from the catalog and your selected items will appear here."
               action={
                 <Button
                   href={ROUTES.products}
                   variant="outline"
                   onClick={closeCart}
                 >
-                  Pogledaj proizvode
+                  Browse products
                 </Button>
               }
             />
@@ -152,7 +152,7 @@ export function CartDrawer() {
                 </span>
               </div>
               <p className="mt-2 text-sm text-zinc-400">
-                Dostava i eventualni popusti se obračunavaju na sledećem koraku.
+                Shipping and any discounts are calculated at the next step.
               </p>
             </div>
 
@@ -164,14 +164,14 @@ export function CartDrawer() {
                 onClick={closeCart}
                 className="rounded-full px-4 py-2.5 text-[10px] tracking-[0.18em] sm:py-4 sm:text-[11px] sm:tracking-[0.24em]"
               >
-                Pregledaj korpu
+                View cart
               </Button>
               <Link
                 href={ROUTES.products}
                 onClick={closeCart}
                 className="block text-center text-[10px] font-medium tracking-[0.26em] text-zinc-500 uppercase transition-colors hover:text-white"
               >
-                Nastavi kupovinu
+                Continue shopping
               </Link>
             </div>
           </div>

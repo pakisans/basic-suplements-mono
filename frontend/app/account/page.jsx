@@ -53,7 +53,7 @@ export default function AccountPage() {
   if (loading) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
-        <div className="text-sm text-zinc-500">Učitavanje...</div>
+        <div className="text-sm text-zinc-500">Loading...</div>
       </div>
     );
   }
@@ -64,18 +64,18 @@ export default function AccountPage() {
     <div className="container mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="border-b border-zinc-900 pb-8">
         <div className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
-          Nalog
+          Account
         </div>
         <h1 className="mt-3 text-3xl font-bold tracking-tight text-white">
-          Zdravo, {user.name || 'korisniče'}
+          Hello, {user.name || 'there'}
         </h1>
       </div>
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[240px_1fr]">
         <nav className="space-y-1">
           {[
-            { label: 'Profil', href: ROUTES.account, active: true },
-            { label: 'Porudžbine', href: ROUTES.orders },
+            { label: 'Profile', href: ROUTES.account, active: true },
+            { label: 'Orders', href: ROUTES.orders },
           ].map((item) => (
             <Link
               key={item.href}
@@ -94,7 +94,7 @@ export default function AccountPage() {
             onClick={handleLogout}
             className="block w-full border-l-2 border-transparent py-2 pl-4 text-left text-xs font-medium tracking-widest text-zinc-500 uppercase transition-colors hover:border-red-500 hover:text-red-400"
           >
-            Odjavi se
+            Sign out
           </button>
         </nav>
 
@@ -102,7 +102,7 @@ export default function AccountPage() {
           <section className="border border-zinc-800 p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
-                Lični podaci
+                Personal details
               </h2>
               {!editMode && (
                 <button
@@ -110,7 +110,7 @@ export default function AccountPage() {
                   onClick={() => setEditMode(true)}
                   className="text-xs font-medium tracking-widest text-zinc-400 uppercase transition-colors hover:text-white"
                 >
-                  Izmeni
+                  Edit
                 </button>
               )}
             </div>
@@ -119,7 +119,7 @@ export default function AccountPage() {
               <form onSubmit={handleSave} className="mt-6 space-y-4">
                 <div>
                   <label className="mb-1.5 block text-xs font-medium tracking-widest text-zinc-500 uppercase">
-                    Ime i prezime
+                    Full name
                   </label>
                   <input
                     type="text"
@@ -150,7 +150,7 @@ export default function AccountPage() {
                     disabled={saving}
                     className="h-10 bg-white px-6 text-xs font-medium tracking-widest text-black uppercase transition-colors hover:bg-zinc-200 disabled:opacity-50"
                   >
-                    {saving ? 'Čuvanje...' : 'Sačuvaj'}
+                    {saving ? 'Saving...' : 'Save'}
                   </button>
                   <button
                     type="button"
@@ -160,7 +160,7 @@ export default function AccountPage() {
                     }}
                     className="h-10 border border-zinc-800 px-6 text-xs font-medium tracking-widest text-zinc-400 uppercase transition-colors hover:text-white"
                   >
-                    Otkaži
+                    Cancel
                   </button>
                 </div>
               </form>
@@ -168,11 +168,11 @@ export default function AccountPage() {
               <div className="mt-6 space-y-4">
                 {saveSuccess && (
                   <p className="text-xs text-green-400">
-                    Podaci su uspešno sačuvani
+                    Changes saved successfully
                   </p>
                 )}
                 <div className="flex items-center justify-between border-b border-zinc-900 pb-4">
-                  <span className="text-xs text-zinc-500">Ime</span>
+                  <span className="text-xs text-zinc-500">Name</span>
                   <span className="text-sm text-white">{user.name || '—'}</span>
                 </div>
                 <div className="flex items-center justify-between">
@@ -186,22 +186,22 @@ export default function AccountPage() {
           <section className="border border-zinc-800 p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
-                Poslednje porudžbine
+                Recent orders
               </h2>
               <Link
                 href={ROUTES.orders}
                 className="text-xs font-medium tracking-widest text-zinc-400 uppercase transition-colors hover:text-white"
               >
-                Sve porudžbine
+                All orders
               </Link>
             </div>
             <div className="mt-8 text-center">
-              <p className="text-sm text-zinc-500">Još nema porudžbina</p>
+              <p className="text-sm text-zinc-500">No orders yet</p>
               <Link
                 href={ROUTES.products}
                 className="mt-4 inline-block text-xs font-medium tracking-widest text-zinc-400 uppercase transition-colors hover:text-white"
               >
-                Idi na proizvode →
+                Browse products →
               </Link>
             </div>
           </section>

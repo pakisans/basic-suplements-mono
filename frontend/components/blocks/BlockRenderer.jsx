@@ -1,6 +1,10 @@
+import { AmbassadorBlock } from './AmbassadorBlock';
 import { BannerBlock } from './BannerBlock';
+import { BrandStoryBlock } from './BrandStoryBlock';
 import { CallToActionBlock } from './CallToActionBlock';
+import { CodeBlock } from './CodeBlock';
 import { ContentBlock } from './ContentBlock';
+import { FormBlock } from './FormBlock';
 import { MediaBlockComponent } from './MediaBlockComponent';
 import { CarouselBlock } from './CarouselBlock';
 import { ThreeItemGridBlock } from './ThreeItemGridBlock';
@@ -27,6 +31,10 @@ export function BlockRenderer({ blocks, className = '' }) {
 
 function BlockItem({ block }) {
   switch (block.blockType) {
+    case 'ambassador':
+      return <AmbassadorBlock block={block} />;
+    case 'brandStory':
+      return <BrandStoryBlock block={block} />;
     case 'banner':
       return <BannerBlock block={block} />;
     case 'cta':
@@ -53,6 +61,10 @@ function BlockItem({ block }) {
       return <VideoBlock block={block} />;
     case 'spacer':
       return <SpacerBlock block={block} />;
+    case 'code':
+      return <CodeBlock block={block} />;
+    case 'formBlock':
+      return <FormBlock block={block} />;
     default:
       return null;
   }

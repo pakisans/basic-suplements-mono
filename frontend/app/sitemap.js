@@ -18,7 +18,7 @@ export default async function sitemap() {
 
   const staticRoutes = [
     { url: SERVER_URL, lastModified, changeFrequency: 'daily', priority: 1 },
-    { url: `${SERVER_URL}/proizvodi`, lastModified, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${SERVER_URL}/products`, lastModified, changeFrequency: 'daily', priority: 0.9 },
     { url: `${SERVER_URL}/blog`, lastModified, changeFrequency: 'weekly', priority: 0.8 },
   ]
 
@@ -31,15 +31,15 @@ export default async function sitemap() {
 
   const categoryRoutes = categorySlugs.map(({ slug, parentSlug }) => ({
     url: parentSlug
-      ? `${SERVER_URL}/proizvodi/${parentSlug}/${slug}`
-      : `${SERVER_URL}/proizvodi/${slug}`,
+      ? `${SERVER_URL}/products/${parentSlug}/${slug}`
+      : `${SERVER_URL}/products/${slug}`,
     lastModified,
     changeFrequency: 'weekly',
     priority: 0.8,
   }))
 
   const productRoutes = productSlugs.map(({ slug }) => ({
-    url: `${SERVER_URL}/proizvodi/${slug}`,
+    url: `${SERVER_URL}/products/${slug}`,
     lastModified,
     changeFrequency: 'weekly',
     priority: 0.7,

@@ -112,10 +112,10 @@ export function QuickAddButton({ product }) {
                   d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
                 />
               </svg>
-              Dodato
+              Added
             </>
           ) : !hasStock ? (
-            'Nema na stanju'
+            'Out of stock'
           ) : (
             <>
               <svg
@@ -125,7 +125,7 @@ export function QuickAddButton({ product }) {
               >
                 <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
               </svg>
-              {hasVariants ? 'Izaberi opciju' : 'Brzo dodaj'}
+              {hasVariants ? 'Select option' : 'Quick add'}
             </>
           )}
         </button>
@@ -141,7 +141,7 @@ export function QuickAddButton({ product }) {
           <div className="flex items-start justify-between gap-2 border-b border-zinc-800/60 px-3.5 py-3">
             <div className="min-w-0 flex-1">
               <p className="text-[9px] font-medium tracking-widest text-zinc-600 uppercase">
-                Brza korpa
+                Quick Add
               </p>
               <p className="mt-0.5 text-[13px] font-semibold leading-snug text-white">
                 {product.title}
@@ -227,10 +227,10 @@ export function QuickAddButton({ product }) {
               className="h-9 w-full bg-white text-[11px] font-semibold tracking-widest text-black uppercase transition-colors hover:bg-zinc-100 disabled:cursor-not-allowed disabled:bg-zinc-800 disabled:text-zinc-500"
             >
               {!hasStock
-                ? 'Nema na stanju'
+                ? 'Out of stock'
                 : !canAdd
-                  ? 'Izaberi opciju'
-                  : 'Dodaj u korpu'}
+                  ? 'Select option'
+                  : 'Add to cart'}
             </button>
           </div>
         </div>

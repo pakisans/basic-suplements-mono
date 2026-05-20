@@ -92,8 +92,8 @@ export async function generateMetadata({ params }) {
 export default async function ProductsSegmentPage({ params, searchParams }) {
   const { segments } = await params;
   const sp = await searchParams;
-  const page = parseInt(sp.stranica ?? '1');
-  const sort = sp.sortiranje ?? '-createdAt';
+  const page = parseInt(sp.page ?? '1');
+  const sort = sp.sort ?? '-createdAt';
   const [seg1, seg2, seg3] = segments;
 
   if (segments.length === 3) {
@@ -119,7 +119,8 @@ export default async function ProductsSegmentPage({ params, searchParams }) {
       getCategoryBySlug(seg1),
       getProductBySlug(seg1),
     ]);
-    if (category) return <CategoryPage category={category} page={page} sort={sort} />;
+    if (category)
+      return <CategoryPage category={category} page={page} sort={sort} />;
     if (product) return <ProductPage product={product} />;
     notFound();
   }
@@ -136,8 +137,8 @@ async function ProductPage({ product }) {
   const imageUrl = getMediaUrl(primaryImage ?? null);
 
   const productBreadcrumbItems = [
-    { name: 'Početna', url: '/' },
-    { name: 'Proizvodi', url: '/proizvodi' },
+    { name: 'Home', url: '/' },
+    { name: 'Products', url: '/products' },
     { name: product.title, url: '' },
   ];
 
@@ -151,7 +152,7 @@ async function ProductPage({ product }) {
             image: imageUrl,
             price: product.price,
             brand: brandName,
-            url: `/proizvodi/${product.slug}`,
+            url: `/products/${product.slug}`,
           }),
         }}
       />
@@ -221,9 +222,7 @@ async function CategoryPage({ category, page, sort }) {
               {category.description}
             </p>
           )}
-          <p className="mt-3 text-xs text-zinc-600">
-            {totalProducts} proizvoda
-          </p>
+          <p className="mt-3 text-xs text-zinc-600">{totalProducts} products</p>
         </div>
       </div>
 
@@ -232,7 +231,7 @@ async function CategoryPage({ category, page, sort }) {
           <div className="space-y-12">
             <div className="flex items-center justify-between border-b border-zinc-900 pb-6">
               <p className="text-xs text-zinc-600">
-                {totalProducts} proizvoda raspoređeno po kategorijama
+                {totalProducts} products across categories
               </p>
               <ProductSort />
             </div>
@@ -255,18 +254,18 @@ async function CategoryPage({ category, page, sort }) {
                       )}
                     </div>
                     <Link
-                      href={`/proizvodi/${category.slug}/${subcategory.slug}`}
+                      href={`/products/${category.slug}/${subcategory.slug}`}
                       className="text-xs font-medium uppercase tracking-[0.2em] text-zinc-400 transition hover:text-white whitespace-nowrap"
                     >
-                      Pogledaj sve
+                      View all
                     </Link>
                   </div>
 
                   <ProductGrid
                     products={subProducts.docs}
                     columns={4}
-                    emptyTitle={`Nema proizvoda u kategoriji ${subcategory.title}`}
-                    emptyDescription="Dodaj proizvode u ovu potkategoriju da bi se prikazali ovde."
+                    emptyTitle={`No products in ${subcategory.title}`}
+                    emptyDescription="Add products to this subcategory to display them here."
                   />
                 </section>
               ),
@@ -275,7 +274,7 @@ async function CategoryPage({ category, page, sort }) {
         ) : subcategories.length > 0 ? (
           <div className="mb-12">
             <h2 className="mb-5 text-xs font-medium tracking-widest text-zinc-500 uppercase">
-              Potkategorije
+              Subcategories
             </h2>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
               {subcategories.map((sub) => (
@@ -289,7 +288,7 @@ async function CategoryPage({ category, page, sort }) {
           <>
             <div className="mb-6 flex items-center justify-between">
               <p className="text-xs text-zinc-600">
-                {productsData.totalDocs} proizvoda
+                {productsData.totalDocs} products
               </p>
               <ProductSort />
             </div>
@@ -297,8 +296,8 @@ async function CategoryPage({ category, page, sort }) {
             <ProductGrid
               products={productsData.docs}
               columns={4}
-              emptyTitle="Nema proizvoda u ovoj kategoriji"
-              emptyDescription="Probajte drugu kategoriju ili pregledajte sve proizvode."
+              emptyTitle="No products in this category"
+              emptyDescription="Try another category or browse all products."
             />
 
             <Pagination

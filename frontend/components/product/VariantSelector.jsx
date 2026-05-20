@@ -4,24 +4,42 @@ import { useState } from 'react'
 import { isOptionAvailableForSelection } from '@/lib/cart/product'
 
 const COLOR_MAP = {
+  // Serbian names
   'Crna': '#1a1a1a',
   'Bela': '#f5f5f5',
   'Belo': '#f5f5f5',
   'Siva': '#6b7280',
   'Svetlo siva': '#9ca3af',
   'Tamno siva': '#374151',
-  'Navy Blue': '#1e3a5f',
   'Plava': '#2563eb',
-  'Sky Blue': '#38bdf8',
   'Roza': '#f472b6',
   'Crvena': '#ef4444',
   'Narandžasta': '#f97316',
   'Zelena': '#22c55e',
-  'Mint': '#6ee7b7',
   'Bež': '#d4b896',
-  'Ruby': '#9f1239',
   'Transparentna': 'transparent',
   'boja kapucina': '#7c5c3e',
+  // English names
+  'Black': '#1a1a1a',
+  'White': '#f5f5f5',
+  'Gray': '#6b7280',
+  'Grey': '#6b7280',
+  'Light Gray': '#9ca3af',
+  'Light Grey': '#9ca3af',
+  'Dark Gray': '#374151',
+  'Dark Grey': '#374151',
+  'Navy Blue': '#1e3a5f',
+  'Blue': '#2563eb',
+  'Sky Blue': '#38bdf8',
+  'Pink': '#f472b6',
+  'Red': '#ef4444',
+  'Orange': '#f97316',
+  'Green': '#22c55e',
+  'Mint': '#6ee7b7',
+  'Beige': '#d4b896',
+  'Ruby': '#9f1239',
+  'Transparent': 'transparent',
+  'Cappuccino': '#7c5c3e',
 }
 
 const SIZE_ORDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL']
@@ -105,7 +123,7 @@ function WeightPill({ option, selected, available, onSelect, basePrice }) {
       </span>
       {priceDiff != null && priceDiff !== 0 && (
         <span className={`mt-0.5 text-[10px] ${selected ? 'text-zinc-600' : 'text-zinc-500'}`}>
-          {priceDiff > 0 ? `+${priceDiff.toLocaleString('sr-RS')}` : priceDiff.toLocaleString('sr-RS')} RSD
+          {priceDiff > 0 ? `+${priceDiff.toLocaleString('en-US')}` : priceDiff.toLocaleString('en-US')} RSD
         </span>
       )}
     </button>
@@ -171,8 +189,8 @@ function FlavorGrid({ group, selectedOptionIds, product, onSelect }) {
           className="mt-2 text-xs text-zinc-500 hover:text-white transition-colors"
         >
           {expanded
-            ? 'Prikaži manje ↑'
-            : `Prikaži sve (${group.options.length}) ↓`}
+            ? 'Show less ↑'
+            : `Show all (${group.options.length}) ↓`}
         </button>
       )}
     </div>

@@ -18,14 +18,14 @@ export async function generateMetadata({ params }) {
     title: `Blog — ${category.title}`,
     description: category.description ?? undefined,
     image: category.image ?? undefined,
-    canonical: `/blog/kategorija/${slug}`,
+    canonical: `/blog/category/${slug}`,
   })
 }
 
 export default async function BlogCategoryPage({ params, searchParams }) {
   const { slug } = await params
   const sp = await searchParams
-  const page = parseInt(sp.stranica ?? '1')
+  const page = parseInt(sp.page ?? '1')
 
   const [category, postsData, allCategories] = await Promise.all([
     getPostCategoryBySlug(slug),
@@ -56,10 +56,10 @@ export default async function BlogCategoryPage({ params, searchParams }) {
         {allCategories.length > 0 && (
           <div className="mb-8 flex flex-wrap gap-2">
             <Link href="/blog">
-              <Badge variant="default">Sve</Badge>
+              <Badge variant="default">All</Badge>
             </Link>
             {allCategories.map((cat) => (
-              <Link key={cat.id} href={`/blog/kategorija/${cat.slug}`}>
+              <Link key={cat.id} href={`/blog/category/${cat.slug}`}>
                 <Badge variant={cat.slug === slug ? 'featured' : 'info'}>{cat.title}</Badge>
               </Link>
             ))}

@@ -6,9 +6,11 @@ import { PayloadImage } from '@/components/ui/PayloadImage'
 import { ProductBadges } from '@/components/ui/Badge'
 import { ProductPrice } from './ProductPrice'
 import { QuickAddButton } from './QuickAddButton'
+import { useCatalogMode } from '@/components/catalog/CatalogModeProvider'
 
 export function ProductCard({ product, className = '', priority = false }) {
   const router = useRouter()
+  const { isCatalogOnly } = useCatalogMode()
   const href = buildProductPath(product)
   const primaryImage = product.gallery?.[0]?.image
 
@@ -61,19 +63,21 @@ export function ProductCard({ product, className = '', priority = false }) {
           </div>
         )}
 
-        <QuickAddButton product={product} />
+        {!isCatalogOnly && <QuickAddButton product={product} />}
       </div>
 
       <div className="relative z-0 space-y-1.5">
         <h3 className="line-clamp-2 text-sm font-medium text-white transition-opacity group-hover:opacity-60">
           {product.title}
         </h3>
-        <ProductPrice
-          price={product.price}
-          salePrice={product.salePrice}
-          saleStartDate={product.saleStartDate}
-          saleEndDate={product.saleEndDate}
-        />
+        {!isCatalogOnly && (
+          <ProductPrice
+            price={product.price}
+            salePrice={product.salePrice}
+            saleStartDate={product.saleStartDate}
+            saleEndDate={product.saleEndDate}
+          />
+        )}
       </div>
     </article>
   )

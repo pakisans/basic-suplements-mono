@@ -19,7 +19,7 @@ export function Pagination({ currentPage, totalPages, className = '' }) {
           );
         }
 
-        const href = `?stranica=${page}`;
+        const href = `?page=${page}`;
         const active = page === currentPage;
 
         return (

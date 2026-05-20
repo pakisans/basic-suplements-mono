@@ -2,16 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { getOrderById } from '@/services/orders';
 import { CURRENCY, ROUTES } from '@/constants';
 
 const STATUS_LABEL = {
-  processing: 'U obradi',
-  completed: 'Završena',
-  cancelled: 'Otkazana',
-  refunded: 'Refundirana',
+  processing: 'Processing',
+  completed: 'Completed',
+  cancelled: 'Cancelled',
+  refunded: 'Refunded',
 };
 
 const STATUS_CLASS = {
@@ -23,7 +24,7 @@ const STATUS_CLASS = {
 
 function formatDate(iso) {
   if (!iso) return '—';
-  return new Date(iso).toLocaleString('sr-RS', {
+  return new Date(iso).toLocaleString('en-US', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
@@ -46,7 +47,6 @@ export default function OrderDetailPage() {
 
   useEffect(() => {
     if (loading) return;
-    // Must be logged in OR have accessToken to view
     if (!user && !accessToken) {
       router.replace(ROUTES.login);
       return;
@@ -63,7 +63,7 @@ export default function OrderDetailPage() {
   if (loading || fetching) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
-        <div className="text-sm text-zinc-500">Učitavanje...</div>
+        <div className="text-sm text-zinc-500">Loading...</div>
       </div>
     );
   }
@@ -71,12 +71,12 @@ export default function OrderDetailPage() {
   if (notFound || !order) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center gap-4 px-4 text-center">
-        <p className="text-sm text-zinc-400">Porudžbina nije pronađena.</p>
+        <p className="text-sm text-zinc-400">Order not found.</p>
         <Link
           href={user ? ROUTES.orders : ROUTES.products}
           className="text-xs font-medium tracking-widest text-zinc-500 uppercase hover:text-white"
         >
-          {user ? '← Moje porudžbine' : '← Idi na proizvode'}
+          {user ? '← My orders' : '← Browse products'}
         </Link>
       </div>
     );
@@ -93,11 +93,11 @@ export default function OrderDetailPage() {
           href={user ? ROUTES.orders : ROUTES.products}
           className="text-xs font-medium tracking-widest text-zinc-600 uppercase transition-colors hover:text-white"
         >
-          ← {user ? 'Moje porudžbine' : 'Nastavi kupovinu'}
+          ← {user ? 'My orders' : 'Continue shopping'}
         </Link>
         <div className="mt-4 flex flex-wrap items-center gap-4">
           <h1 className="text-3xl font-bold tracking-tight text-white">
-            Porudžbina #{order.id}
+            Order #{order.id}
           </h1>
           <span
             className={`px-2.5 py-1 text-[10px] font-medium tracking-widest uppercase ${STATUS_CLASS[status] ?? STATUS_CLASS.processing}`}
@@ -114,7 +114,7 @@ export default function OrderDetailPage() {
         <div className="space-y-6">
           <div>
             <div className="mb-3 text-xs font-medium tracking-widest text-zinc-500 uppercase">
-              Artikli
+              Items
             </div>
             <div className="divide-y divide-zinc-900 border border-zinc-800">
               {order.items?.map((item, idx) => {
@@ -131,17 +131,18 @@ export default function OrderDetailPage() {
                   <div key={idx} className="flex items-center gap-4 p-4">
                     <div className="relative h-16 w-14 shrink-0 overflow-hidden bg-zinc-900">
                       {img && (
-                        <img
+                        <Image
                           src={`${process.env.NEXT_PUBLIC_PAYLOAD_URL}${img.url}`}
                           alt={product?.title ?? ''}
-                          className="h-full w-full object-cover"
+                          fill
+                          className="object-cover"
                         />
                       )}
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="text-sm font-medium text-white">
                         {product?.title ??
-                          `Proizvod #${typeof product === 'number' ? product : product?.id}`}
+                          `Product #${typeof product === 'number' ? product : product?.id}`}
                       </div>
                       {variant?.options?.length > 0 && (
                         <div className="mt-0.5 text-xs text-zinc-500">
@@ -155,7 +156,7 @@ export default function OrderDetailPage() {
                       </div>
                       {price != null && (
                         <div className="text-sm text-white">
-                          {(price * item.quantity).toLocaleString('sr-RS')}{' '}
+                          {(price * item.quantity).toLocaleString('en-US')}{' '}
                           {CURRENCY.symbol}
                         </div>
                       )}
@@ -169,7 +170,7 @@ export default function OrderDetailPage() {
           {addr && (
             <div>
               <div className="mb-3 text-xs font-medium tracking-widest text-zinc-500 uppercase">
-                Adresa dostave
+                Shipping address
               </div>
               <div className="border border-zinc-800 p-4 text-sm">
                 <p className="font-medium text-white">
@@ -198,7 +199,7 @@ export default function OrderDetailPage() {
         <div className="h-fit space-y-4">
           <div className="border border-zinc-800 bg-zinc-950 p-5">
             <div className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
-              Sažetak
+              Summary
             </div>
             <div className="mt-4 space-y-2 text-sm">
               <div className="flex justify-between">
@@ -208,20 +209,20 @@ export default function OrderDetailPage() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">Artikala</span>
+                <span className="text-zinc-500">Items</span>
                 <span className="text-white">
                   {order.items?.reduce((s, i) => s + (i.quantity ?? 1), 0) ?? 0}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-zinc-500">Dostava</span>
-                <span className="text-white">Besplatno</span>
+                <span className="text-zinc-500">Shipping</span>
+                <span className="text-white">Free</span>
               </div>
               {total != null && (
                 <div className="flex justify-between border-t border-zinc-900 pt-3 text-base font-semibold">
-                  <span className="text-white">Ukupno</span>
+                  <span className="text-white">Total</span>
                   <span className="text-white">
-                    {total.toLocaleString('sr-RS')} {CURRENCY.symbol}
+                    {total.toLocaleString('en-US')} {CURRENCY.symbol}
                   </span>
                 </div>
               )}
@@ -231,7 +232,7 @@ export default function OrderDetailPage() {
           {!user && accessToken && (
             <div className="border border-zinc-800 p-4">
               <p className="text-[10px] font-medium tracking-widest text-zinc-600 uppercase">
-                Kod za praćenje
+                Tracking code
               </p>
               <p className="mt-1 break-all font-mono text-[11px] text-zinc-400">
                 {accessToken}

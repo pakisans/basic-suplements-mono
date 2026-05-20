@@ -12,13 +12,14 @@ export function ProductGallery({
   const items = gallery ?? [];
   const matchingIndex = activeOptionIds.length
     ? items.findIndex((item) => {
-        const option = item?.variantOption;
-
-        if (option && typeof option === 'object') {
-          return activeOptionIds.includes(option.id);
-        }
-
-        return activeOptionIds.includes(option);
+        const options = item?.variantOption;
+        if (!options) return false;
+        // hasMany → array of option objects or IDs
+        const arr = Array.isArray(options) ? options : [options];
+        return arr.some((opt) => {
+          const id = opt && typeof opt === 'object' ? opt.id : opt;
+          return activeOptionIds.includes(id);
+        });
       })
     : -1;
   const resolvedIndex =

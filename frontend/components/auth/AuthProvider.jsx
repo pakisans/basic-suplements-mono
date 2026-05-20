@@ -12,14 +12,15 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const stored = typeof window !== 'undefined' ? localStorage.getItem(TOKEN_KEY) : null
-    if (!stored) { setLoading(false); return }
-
-    getMe(stored).then((u) => {
+    async function init() {
+      const stored = typeof window !== 'undefined' ? localStorage.getItem(TOKEN_KEY) : null
+      if (!stored) { setLoading(false); return }
+      const u = await getMe(stored)
       if (u) { setUser(u); setToken(stored) }
       else localStorage.removeItem(TOKEN_KEY)
       setLoading(false)
-    })
+    }
+    init()
   }, [])
 
   const login = useCallback(async (email, password) => {

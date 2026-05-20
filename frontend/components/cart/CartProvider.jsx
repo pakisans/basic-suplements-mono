@@ -15,7 +15,7 @@ function normalizeCartItem(item) {
     key: String(item.key),
     productId: item.productId,
     productSlug: typeof item.productSlug === 'string' ? item.productSlug : '',
-    productPath: typeof item.productPath === 'string' ? item.productPath : '/proizvodi',
+    productPath: typeof item.productPath === 'string' ? item.productPath : '/products',
     title: String(item.title),
     variantId: item.variantId ?? null,
     selectedOptions: Array.isArray(item.selectedOptions)

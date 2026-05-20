@@ -11,9 +11,9 @@ import { formatCartPrice } from '@/lib/cart/product';
 import { createOrder } from '@/services/orders';
 
 const STEPS = [
-  { id: 1, label: 'Kontakt' },
-  { id: 2, label: 'Dostava' },
-  { id: 3, label: 'Pregled' },
+  { id: 1, label: 'Contact' },
+  { id: 2, label: 'Delivery' },
+  { id: 3, label: 'Review' },
 ];
 
 const EMPTY_CONTACT = { firstName: '', lastName: '', email: '', phone: '' };
@@ -21,7 +21,7 @@ const EMPTY_DELIVERY = {
   street: '',
   city: '',
   zip: '',
-  country: 'Srbija',
+  country: 'Serbia',
   note: '',
 };
 
@@ -72,7 +72,7 @@ export default function CheckoutPage() {
       setOrderResult({ id: order.id, accessToken: order.accessToken });
     } catch (err) {
       setError(
-        err.message || 'Greška pri kreiranju porudžbine. Pokušajte ponovo.',
+        err.message || 'Failed to place order. Please try again.',
       );
     } finally {
       setPlacing(false);
@@ -82,7 +82,7 @@ export default function CheckoutPage() {
   if (!isHydrated) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
-        <div className="text-sm text-zinc-500">Učitavanje...</div>
+        <div className="text-sm text-zinc-500">Loading...</div>
       </div>
     );
   }
@@ -90,12 +90,12 @@ export default function CheckoutPage() {
   if (isHydrated && items.length === 0 && !orderResult) {
     return (
       <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center gap-4 px-4">
-        <p className="text-sm text-zinc-400">Korpa je prazna</p>
+        <p className="text-sm text-zinc-400">Your cart is empty</p>
         <Link
           href={ROUTES.products}
           className="text-xs font-medium tracking-widest text-zinc-400 uppercase transition-colors hover:text-white"
         >
-          Idi na proizvode →
+          Browse products →
         </Link>
       </div>
     );
@@ -121,30 +121,29 @@ export default function CheckoutPage() {
             </svg>
           </div>
           <div className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
-            Porudžbina primljena
+            Order received
           </div>
           <h1 className="mt-3 text-2xl font-bold text-white">
-            Hvala na porudžbini!
+            Thank you for your order!
           </h1>
           <p className="mt-3 text-sm text-zinc-400">
-            Broj porudžbine:{' '}
+            Order number:{' '}
             <span className="font-mono text-white">#{orderResult.id}</span>
           </p>
           <p className="mt-2 text-sm text-zinc-500">
-            Potvrdu ćemo poslati na{' '}
+            A confirmation will be sent to{' '}
             <span className="text-zinc-300">{contact.email}</span>
           </p>
           {!user && orderResult.accessToken && (
             <div className="mt-4 border border-zinc-800 bg-zinc-950 p-4 text-left">
               <p className="text-[10px] font-medium tracking-widest text-zinc-600 uppercase">
-                Kod za praćenje porudžbine
+                Order tracking code
               </p>
               <p className="mt-1 break-all font-mono text-xs text-zinc-300">
                 {orderResult.accessToken}
               </p>
               <p className="mt-2 text-[10px] text-zinc-600">
-                Sačuvajte ovaj kod — potreban je za pregled porudžbine bez
-                naloga.
+                Save this code — you will need it to view your order without an account.
               </p>
             </div>
           )}
@@ -154,21 +153,21 @@ export default function CheckoutPage() {
                 href={`${ROUTES.orders}/${orderResult.id}`}
                 className="block h-12 border border-white px-8 leading-[3rem] text-xs font-medium tracking-widest text-white uppercase transition-colors hover:bg-white hover:text-black"
               >
-                Pregled porudžbine →
+                View order →
               </Link>
             ) : (
               <Link
                 href={`${ROUTES.orders}/${orderResult.id}?accessToken=${orderResult.accessToken}`}
                 className="block h-12 border border-white px-8 leading-[3rem] text-xs font-medium tracking-widest text-white uppercase transition-colors hover:bg-white hover:text-black"
               >
-                Pregled porudžbine →
+                View order →
               </Link>
             )}
             <Link
               href={ROUTES.products}
               className="block text-xs font-medium tracking-widest text-zinc-500 uppercase transition-colors hover:text-white"
             >
-              Nastavi kupovinu
+              Continue shopping
             </Link>
           </div>
         </div>
@@ -235,27 +234,27 @@ export default function CheckoutPage() {
           {step === 1 && (
             <form onSubmit={handleContactSubmit} className="space-y-6">
               <h2 className="text-lg font-semibold text-white">
-                Kontakt podaci
+                Contact details
               </h2>
               <div className="grid grid-cols-2 gap-4">
-                <Field label="Ime" required>
+                <Field label="First name" required>
                   <input
                     type="text"
                     required
                     value={contact.firstName}
                     onChange={(e) => updateContact('firstName', e.target.value)}
                     className={inputCls}
-                    placeholder="Petar"
+                    placeholder="John"
                   />
                 </Field>
-                <Field label="Prezime" required>
+                <Field label="Last name" required>
                   <input
                     type="text"
                     required
                     value={contact.lastName}
                     onChange={(e) => updateContact('lastName', e.target.value)}
                     className={inputCls}
-                    placeholder="Petrović"
+                    placeholder="Smith"
                   />
                 </Field>
               </div>
@@ -266,22 +265,22 @@ export default function CheckoutPage() {
                   value={contact.email}
                   onChange={(e) => updateContact('email', e.target.value)}
                   className={inputCls}
-                  placeholder="ime@email.com"
+                  placeholder="name@email.com"
                 />
               </Field>
-              <Field label="Telefon" required>
+              <Field label="Phone" required>
                 <input
                   type="tel"
                   required
                   value={contact.phone}
                   onChange={(e) => updateContact('phone', e.target.value)}
                   className={inputCls}
-                  placeholder="+381 60 000 0000"
+                  placeholder="+1 555 000 0000"
                 />
               </Field>
               <StepActions>
-                <SubmitButton>Nastavi na dostavu →</SubmitButton>
-                <BackLink href={ROUTES.cart} label="← Nazad na korpu" />
+                <SubmitButton>Continue to delivery →</SubmitButton>
+                <BackLink href={ROUTES.cart} label="← Back to cart" />
               </StepActions>
             </form>
           )}
@@ -289,41 +288,41 @@ export default function CheckoutPage() {
           {step === 2 && (
             <form onSubmit={handleDeliverySubmit} className="space-y-6">
               <h2 className="text-lg font-semibold text-white">
-                Adresa dostave
+                Shipping address
               </h2>
-              <Field label="Ulica i broj" required>
+              <Field label="Street address" required>
                 <input
                   type="text"
                   required
                   value={delivery.street}
                   onChange={(e) => updateDelivery('street', e.target.value)}
                   className={inputCls}
-                  placeholder="Knez Mihailova 10"
+                  placeholder="123 Main Street"
                 />
               </Field>
               <div className="grid grid-cols-2 gap-4">
-                <Field label="Grad" required>
+                <Field label="City" required>
                   <input
                     type="text"
                     required
                     value={delivery.city}
                     onChange={(e) => updateDelivery('city', e.target.value)}
                     className={inputCls}
-                    placeholder="Beograd"
+                    placeholder="New York"
                   />
                 </Field>
-                <Field label="Poštanski broj" required>
+                <Field label="Postal code" required>
                   <input
                     type="text"
                     required
                     value={delivery.zip}
                     onChange={(e) => updateDelivery('zip', e.target.value)}
                     className={inputCls}
-                    placeholder="11000"
+                    placeholder="10001"
                   />
                 </Field>
               </div>
-              <Field label="Zemlja">
+              <Field label="Country">
                 <input
                   type="text"
                   value={delivery.country}
@@ -331,19 +330,19 @@ export default function CheckoutPage() {
                   className={inputCls}
                 />
               </Field>
-              <Field label="Napomena (opciono)">
+              <Field label="Note (optional)">
                 <textarea
                   value={delivery.note}
                   onChange={(e) => updateDelivery('note', e.target.value)}
                   rows={3}
                   className={`${inputCls} h-auto resize-none py-3`}
-                  placeholder="Npr. zvoni 2x, ostavi kod portira..."
+                  placeholder="e.g. leave at door, ring twice..."
                 />
               </Field>
 
               <div className="border border-zinc-800 p-4">
                 <div className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
-                  Način dostave
+                  Shipping method
                 </div>
                 <label className="mt-4 flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
@@ -352,22 +351,22 @@ export default function CheckoutPage() {
                     </span>
                     <div>
                       <div className="text-sm font-medium text-white">
-                        Standardna dostava
+                        Standard delivery
                       </div>
                       <div className="text-xs text-zinc-500">
-                        3–5 radnih dana
+                        3–5 business days
                       </div>
                     </div>
                   </div>
                   <span className="text-sm font-medium text-white">
-                    Besplatno
+                    Free
                   </span>
                 </label>
               </div>
 
               <StepActions>
-                <SubmitButton>Nastavi na pregled →</SubmitButton>
-                <BackLink onClick={() => setStep(1)} label="← Nazad" />
+                <SubmitButton>Continue to review →</SubmitButton>
+                <BackLink onClick={() => setStep(1)} label="← Back" />
               </StepActions>
             </form>
           )}
@@ -375,10 +374,10 @@ export default function CheckoutPage() {
           {step === 3 && (
             <div className="space-y-6">
               <h2 className="text-lg font-semibold text-white">
-                Pregled porudžbine
+                Review order
               </h2>
 
-              <ReviewSection title="Kontakt podaci" onEdit={() => setStep(1)}>
+              <ReviewSection title="Contact details" onEdit={() => setStep(1)}>
                 <p className="text-sm text-zinc-300">
                   {contact.firstName} {contact.lastName}
                 </p>
@@ -386,7 +385,7 @@ export default function CheckoutPage() {
                 <p className="text-sm text-zinc-500">{contact.phone}</p>
               </ReviewSection>
 
-              <ReviewSection title="Adresa dostave" onEdit={() => setStep(2)}>
+              <ReviewSection title="Shipping address" onEdit={() => setStep(2)}>
                 <p className="text-sm text-zinc-300">{delivery.street}</p>
                 <p className="text-sm text-zinc-500">
                   {delivery.zip} {delivery.city}, {delivery.country}
@@ -400,7 +399,7 @@ export default function CheckoutPage() {
 
               <div className="border border-zinc-800 p-4">
                 <div className="mb-4 text-xs font-medium tracking-widest text-zinc-500 uppercase">
-                  Artikli ({items.length})
+                  Items ({items.length})
                 </div>
                 <div className="space-y-3">
                   {items.map((item) => (
@@ -452,16 +451,16 @@ export default function CheckoutPage() {
                 disabled={placing}
                 className="h-14 w-full bg-white text-xs font-medium tracking-widest text-black uppercase transition-colors hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {placing ? 'Slanje porudžbine...' : 'Potvrdi porudžbinu'}
+                {placing ? 'Placing order...' : 'Place order'}
               </button>
-              <BackLink onClick={() => setStep(2)} label="← Nazad" />
+              <BackLink onClick={() => setStep(2)} label="← Back" />
             </div>
           )}
         </div>
 
         <div className="h-fit border border-zinc-800 bg-zinc-950 p-5">
           <div className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
-            Sažetak
+            Summary
           </div>
           <div className="mt-5 space-y-3">
             {items.map((item) => (
@@ -488,15 +487,15 @@ export default function CheckoutPage() {
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-zinc-500">Dostava</span>
+              <span className="text-zinc-500">Shipping</span>
               <span className="text-white">
                 {shippingCost === 0
-                  ? 'Besplatno'
+                  ? 'Free'
                   : `${shippingCost} ${CURRENCY.symbol}`}
               </span>
             </div>
             <div className="flex justify-between border-t border-zinc-900 pt-3 text-base font-semibold">
-              <span className="text-white">Ukupno</span>
+              <span className="text-white">Total</span>
               <span className="text-white">
                 {formatCartPrice(subtotal + shippingCost)} {CURRENCY.symbol}
               </span>
@@ -572,7 +571,7 @@ function ReviewSection({ title, onEdit, children }) {
           onClick={onEdit}
           className="text-xs font-medium tracking-widest text-zinc-500 uppercase transition-colors hover:text-white"
         >
-          Izmeni
+          Edit
         </button>
       </div>
       {children}

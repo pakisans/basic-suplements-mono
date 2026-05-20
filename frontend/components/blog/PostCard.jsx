@@ -51,7 +51,7 @@ export function PostCard({ post, className = '', priority = false }) {
         {categories.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {categories.slice(0, 2).map((cat) => (
-              <Link key={cat.id} href={`/blog/kategorija/${cat.slug}`}>
+              <Link key={cat.id} href={`/blog/category/${cat.slug}`}>
                 <Badge variant="info">{cat.title}</Badge>
               </Link>
             ))}
@@ -77,7 +77,7 @@ export function PostCard({ post, className = '', priority = false }) {
           {post.readTime && (
             <>
               <span>·</span>
-              <span>{post.readTime} min čitanja</span>
+              <span>{post.readTime} min read</span>
             </>
           )}
         </div>

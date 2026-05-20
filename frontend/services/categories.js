@@ -14,7 +14,7 @@ function sortParentCategories(categories) {
       return normalizedAIndex - normalizedBIndex
     }
 
-    return String(a.title).localeCompare(String(b.title), 'sr')
+    return String(a.title).localeCompare(String(b.title), 'en')
   })
 }
 
@@ -107,8 +107,8 @@ export async function getAllCategorySlugs() {
 
 export function buildCategoryPath(category) {
   if (category.parent && typeof category.parent !== 'string') {
-    return `/proizvodi/${category.parent.slug}/${category.slug}`
+    return `/products/${category.parent.slug}/${category.slug}`
   }
 
-  return `/proizvodi/${category.slug}`
+  return `/products/${category.slug}`
 }

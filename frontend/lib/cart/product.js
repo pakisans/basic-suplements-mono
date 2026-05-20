@@ -9,12 +9,12 @@ function formatVariantTypeLabel(typeName) {
     .trim()
     .toLowerCase()
 
-  if (!normalized || normalized === 'option') return 'Opcija'
-  if (normalized === 'boja') return 'Boja'
-  if (normalized === 'velicina') return 'Veličina'
-  if (normalized === 'tezina') return 'Težina'
-  if (normalized === 'ukus') return 'Ukus'
-  if (normalized === 'pakovanje') return 'Pakovanje'
+  if (!normalized || normalized === 'option') return 'Option'
+  if (normalized === 'boja' || normalized === 'color') return 'Color'
+  if (normalized === 'velicina' || normalized === 'size') return 'Size'
+  if (normalized === 'tezina' || normalized === 'weight') return 'Weight'
+  if (normalized === 'ukus' || normalized === 'flavor') return 'Flavor'
+  if (normalized === 'pakovanje' || normalized === 'packaging') return 'Packaging'
 
   return normalized.charAt(0).toUpperCase() + normalized.slice(1)
 }
@@ -45,7 +45,7 @@ function getVariantOptionList(variant) {
 
       return {
         id: resolved.id,
-        label: resolved.label ?? resolved.value ?? `Opcija ${resolved.id}`,
+        label: resolved.label ?? resolved.value ?? `Option ${resolved.id}`,
         value: resolved.value ?? resolved.label ?? `option-${resolved.id}`,
         typeId: variantType?.id ?? resolved.variantType ?? null,
         typeLabel: variantType?.label ?? formatVariantTypeLabel(variantType?.name),
@@ -99,7 +99,7 @@ export function getProductOptionGroups(product) {
     groupsById.set(variantType.id, {
       id: variantType.id,
       name: variantType.name ?? `option-${variantType.id}`,
-      label: variantType.label ?? 'Opcija',
+      label: variantType.label ?? 'Option',
       options: [],
     })
     typeOrder.push(variantType.id)
@@ -113,7 +113,7 @@ export function getProductOptionGroups(product) {
         groupsById.set(typeId, {
           id: typeId,
           name: option.typeName ?? `option-${typeId}`,
-          label: option.typeLabel ?? 'Opcija',
+          label: option.typeLabel ?? 'Option',
           options: [],
         })
         typeOrder.push(typeId)
@@ -227,7 +227,7 @@ export function getSelectedImage(product, selectedOptionIds = []) {
 }
 
 export function formatCartPrice(value) {
-  return new Intl.NumberFormat('sr-RS').format(value ?? 0)
+  return new Intl.NumberFormat('en-US').format(value ?? 0)
 }
 
 export function getCartSubtotal(items = []) {

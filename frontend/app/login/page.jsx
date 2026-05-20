@@ -34,11 +34,11 @@ export default function LoginPage() {
     e.preventDefault()
     setError('')
     if (registerForm.password !== registerForm.confirm) {
-      setError('Lozinke se ne poklapaju')
+      setError('Passwords do not match')
       return
     }
     if (registerForm.password.length < 6) {
-      setError('Lozinka mora imati najmanje 6 karaktera')
+      setError('Password must be at least 6 characters')
       return
     }
     setLoading(true)
@@ -61,10 +61,10 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <div className="text-xs font-medium tracking-widest text-zinc-500 uppercase">
-            Dobrodošli
+            Welcome
           </div>
           <h1 className="mt-3 text-2xl font-bold tracking-tight text-white">
-            {tab === 'login' ? 'Prijavi se' : 'Kreiraj nalog'}
+            {tab === 'login' ? 'Sign In' : 'Create Account'}
           </h1>
         </div>
 
@@ -78,7 +78,7 @@ export default function LoginPage() {
                 : 'text-zinc-500 hover:text-white'
             }`}
           >
-            Prijava
+            Sign In
           </button>
           <button
             type="button"
@@ -89,7 +89,7 @@ export default function LoginPage() {
                 : 'text-zinc-500 hover:text-white'
             }`}
           >
-            Registracija
+            Register
           </button>
         </div>
 
@@ -105,12 +105,12 @@ export default function LoginPage() {
                 value={loginForm.email}
                 onChange={(e) => setLoginForm((f) => ({ ...f, email: e.target.value }))}
                 className="h-12 w-full border border-zinc-800 bg-zinc-950 px-4 text-sm text-white placeholder:text-zinc-700 focus:border-zinc-600 focus:outline-none"
-                placeholder="ime@email.com"
+                placeholder="name@email.com"
               />
             </div>
             <div>
               <label className="mb-1.5 block text-xs font-medium tracking-widest text-zinc-500 uppercase">
-                Lozinka
+                Password
               </label>
               <input
                 type="password"
@@ -131,14 +131,14 @@ export default function LoginPage() {
               disabled={loading}
               className="h-12 w-full bg-white text-xs font-medium tracking-widest text-black uppercase transition-colors hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading ? 'Prijavljivanje...' : 'Prijavi se'}
+              {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
         ) : (
           <form onSubmit={handleRegister} className="space-y-4">
             <div>
               <label className="mb-1.5 block text-xs font-medium tracking-widest text-zinc-500 uppercase">
-                Ime i prezime
+                Full name
               </label>
               <input
                 type="text"
@@ -146,7 +146,7 @@ export default function LoginPage() {
                 value={registerForm.name}
                 onChange={(e) => setRegisterForm((f) => ({ ...f, name: e.target.value }))}
                 className="h-12 w-full border border-zinc-800 bg-zinc-950 px-4 text-sm text-white placeholder:text-zinc-700 focus:border-zinc-600 focus:outline-none"
-                placeholder="Petar Petrović"
+                placeholder="John Smith"
               />
             </div>
             <div>
@@ -159,12 +159,12 @@ export default function LoginPage() {
                 value={registerForm.email}
                 onChange={(e) => setRegisterForm((f) => ({ ...f, email: e.target.value }))}
                 className="h-12 w-full border border-zinc-800 bg-zinc-950 px-4 text-sm text-white placeholder:text-zinc-700 focus:border-zinc-600 focus:outline-none"
-                placeholder="ime@email.com"
+                placeholder="name@email.com"
               />
             </div>
             <div>
               <label className="mb-1.5 block text-xs font-medium tracking-widest text-zinc-500 uppercase">
-                Lozinka
+                Password
               </label>
               <input
                 type="password"
@@ -172,12 +172,12 @@ export default function LoginPage() {
                 value={registerForm.password}
                 onChange={(e) => setRegisterForm((f) => ({ ...f, password: e.target.value }))}
                 className="h-12 w-full border border-zinc-800 bg-zinc-950 px-4 text-sm text-white placeholder:text-zinc-700 focus:border-zinc-600 focus:outline-none"
-                placeholder="Min. 6 karaktera"
+                placeholder="Min. 6 characters"
               />
             </div>
             <div>
               <label className="mb-1.5 block text-xs font-medium tracking-widest text-zinc-500 uppercase">
-                Potvrdi lozinku
+                Confirm password
               </label>
               <input
                 type="password"
@@ -198,15 +198,15 @@ export default function LoginPage() {
               disabled={loading}
               className="h-12 w-full bg-white text-xs font-medium tracking-widest text-black uppercase transition-colors hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading ? 'Kreiranje naloga...' : 'Kreiraj nalog'}
+              {loading ? 'Creating account...' : 'Create Account'}
             </button>
           </form>
         )}
 
         <p className="mt-6 text-center text-xs text-zinc-600">
-          Nastavkom prihvataš{' '}
-          <Link href="/uslovi" className="text-zinc-400 hover:text-white">
-            uslove korišćenja
+          By continuing you agree to our{' '}
+          <Link href="/terms" className="text-zinc-400 hover:text-white">
+            terms of service
           </Link>
         </p>
       </div>

@@ -37,7 +37,7 @@ export async function createOrder({ items, contact, delivery, userId, token }) {
     throw new Error(
       data.errors?.[0]?.message ||
         data.message ||
-        'Greška pri kreiranju porudžbine',
+        'Failed to create order',
     );
   }
   return data.doc;

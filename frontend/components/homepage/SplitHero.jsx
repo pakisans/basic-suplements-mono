@@ -6,12 +6,12 @@ function HeroPanel({ category, fallbackLabel, fallbackHref, priority }) {
   const href = category ? buildCategoryPath(category) : fallbackHref;
   const label = category?.title ?? fallbackLabel;
   const image = category?.image ?? null;
-
+  console.log(label);
   return (
     <Link
       href={href}
       className="group relative flex min-h-[75vh] flex-1 cursor-pointer flex-col overflow-hidden rounded-sm bg-zinc-900 md:min-h-[88vh]"
-      aria-label={`Kupuj: ${label}`}
+      aria-label={`Shop: ${label}`}
     >
       {image && (
         <div className="absolute inset-0">
@@ -45,18 +45,18 @@ export function SplitHero({ categories = [] }) {
   return (
     <section
       className="mx-auto flex max-w-[1600px] flex-col gap-3 px-3 py-3 md:flex-row md:gap-3"
-      aria-label="Kategorije prodavnice"
+      aria-label="Shop categories"
     >
       <HeroPanel
         category={first}
         fallbackLabel="Supplements"
-        fallbackHref="/proizvodi"
+        fallbackHref="/products"
         priority
       />
       <HeroPanel
         category={second}
         fallbackLabel="Apparel"
-        fallbackHref="/proizvodi"
+        fallbackHref="/products"
         priority={false}
       />
     </section>

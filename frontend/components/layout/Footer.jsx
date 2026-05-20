@@ -207,7 +207,7 @@ function NewsletterSection({ section }) {
       <div className="flex">
         <input
           type="email"
-          placeholder="Vaša e-mail adresa"
+          placeholder="Your email address"
           className="h-10 min-w-0 flex-1 border border-zinc-800 bg-zinc-950 px-3 text-sm text-white placeholder:text-zinc-700 focus:border-zinc-600 focus:outline-none"
         />
         <button
@@ -304,7 +304,7 @@ export function Footer({ footer }) {
           <div className="flex flex-col items-center justify-between gap-3 md:flex-row">
             <p className="text-xs text-zinc-600">
               {bottomBar?.copyright ??
-                `© ${new Date().getFullYear()} Basic Supplements. Sva prava zadržana.`}
+                `© ${new Date().getFullYear()} Basic Supplements. All rights reserved.`}
             </p>
 
             {bottomBar?.legalLinks?.length > 0 && (

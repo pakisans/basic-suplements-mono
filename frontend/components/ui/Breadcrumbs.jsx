@@ -9,7 +9,7 @@ export function Breadcrumbs({ items, className = '' }) {
       <ol className="flex flex-wrap items-center gap-2 text-xs text-zinc-600">
         <li>
           <Link href="/" className="transition-colors hover:text-white">
-            Početna
+            Home
           </Link>
         </li>
         {items.map((item, index) => (

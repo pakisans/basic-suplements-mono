@@ -43,13 +43,13 @@ export default async function HomePage() {
           {featuredProducts.length > 0 && (
             <Section>
               <SectionHeading
-                title="Istaknuti proizvodi"
-                subtitle="Ručno odabrani za vas"
+                title="Featured Products"
+                subtitle="Handpicked for you"
               />
               <ProductGrid products={featuredProducts} columns={4} />
               <div className="mt-12 text-center">
-                <Button href="/proizvodi" variant="outline">
-                  Svi proizvodi
+                <Button href="/products" variant="outline">
+                  All Products
                 </Button>
               </div>
             </Section>
@@ -57,7 +57,7 @@ export default async function HomePage() {
 
           {newProducts.length > 0 && (
             <Section className="border-t border-zinc-900">
-              <SectionHeading title="Novo u ponudi" />
+              <SectionHeading title="New arrivals" />
               <ProductGrid products={newProducts} columns={4} />
             </Section>
           )}

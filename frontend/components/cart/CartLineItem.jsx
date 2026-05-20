@@ -94,14 +94,14 @@ export function CartLineItem({
 
           <div className="mt-4 text-left">
             <div className="text-[10px] font-medium tracking-[0.22em] text-zinc-500 uppercase">
-              Ukupno
+              Total
             </div>
             <div className="mt-1 text-base font-semibold text-white">
               {formatCartPrice(item.unitPrice * item.quantity)}{' '}
               {CURRENCY.symbol}
             </div>
             <div className="mt-1 text-xs text-zinc-500">
-              {formatCartPrice(item.unitPrice)} {CURRENCY.symbol} / kom
+              {formatCartPrice(item.unitPrice)} {CURRENCY.symbol} / ea
             </div>
           </div>
         </div>
@@ -180,13 +180,13 @@ export function CartLineItem({
 
             <div className="text-right">
               <div className={`font-medium tracking-[0.22em] text-zinc-500 uppercase ${compact ? 'text-[9px]' : 'text-[10px]'}`}>
-                Ukupno
+                Total
               </div>
               <div className={`mt-1 font-semibold text-white ${compact ? 'text-sm' : 'text-base'}`}>
                 {formatCartPrice(item.unitPrice * item.quantity)} {CURRENCY.symbol}
               </div>
               <div className={`mt-1 text-zinc-500 ${compact ? 'text-[11px]' : 'text-xs'}`}>
-                {formatCartPrice(item.unitPrice)} {CURRENCY.symbol} / kom
+                {formatCartPrice(item.unitPrice)} {CURRENCY.symbol} / ea
               </div>
             </div>
           </div>

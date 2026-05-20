@@ -9,7 +9,7 @@ export function ProductBreadcrumb({ product }) {
       ? categories[0]
       : null;
 
-  const items = [{ label: 'Proizvodi', href: '/proizvodi' }];
+  const items = [{ label: 'Products', href: '/products' }];
 
   if (primaryCategory) {
     const parent =
@@ -18,7 +18,7 @@ export function ProductBreadcrumb({ product }) {
         : null;
 
     if (parent) {
-      items.push({ label: parent.title, href: `/proizvodi/${parent.slug}` });
+      items.push({ label: parent.title, href: `/products/${parent.slug}` });
     }
 
     items.push({

@@ -1,0 +1,146 @@
+import Link from 'next/link';
+import { PayloadImage } from '@/components/ui/PayloadImage';
+import { RichText } from '@/components/ui/RichText';
+
+function TextContent({ eyebrow, heading, description, stats, cta, darkStats }) {
+  return (
+    <div className="flex flex-col justify-center gap-8">
+      <div className="space-y-5">
+        {eyebrow && (
+          <p className="text-[10px] font-semibold tracking-[0.4em] text-zinc-500 uppercase">
+            {eyebrow}
+          </p>
+        )}
+        <h2 className="text-5xl font-extrabold leading-none tracking-tight text-white md:text-6xl">
+          {heading}
+        </h2>
+        <div className="h-px w-12 bg-white/20" />
+        {description && (
+          <div className="max-w-lg text-[15px] leading-relaxed text-zinc-400 [&_p]:mb-3 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-4 [&_li]:mb-1">
+            <RichText content={description} />
+          </div>
+        )}
+      </div>
+
+      {stats.length > 0 && (
+        <div className={`grid grid-cols-2 gap-px ring-1 ring-white/10 ${darkStats ? 'bg-white/8' : 'bg-white/5'}`}>
+          {stats.map((stat, i) => (
+            <div key={i} className={`flex flex-col gap-1.5 px-6 py-5 ${darkStats ? 'bg-zinc-950' : 'bg-black/40 backdrop-blur-sm'}`}>
+              <span className="text-3xl font-extrabold tracking-tight text-white md:text-4xl">
+                {stat.value}
+              </span>
+              <span className="text-[10px] font-semibold tracking-[0.3em] text-zinc-400 uppercase">
+                {stat.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {cta?.label && cta?.url && (
+        <div>
+          <Link
+            href={cta.url}
+            className="group inline-flex items-center gap-3 border border-white/20 px-7 py-3.5 text-[11px] font-bold tracking-[0.2em] text-white uppercase transition-all hover:border-white hover:bg-white hover:text-black"
+          >
+            {cta.label}
+            <svg
+              viewBox="0 0 16 16"
+              fill="currentColor"
+              className="h-3 w-3 transition-transform group-hover:translate-x-0.5"
+            >
+              <path
+                fillRule="evenodd"
+                d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function BrandStoryBlock({ block }) {
+  const { eyebrow, heading, description, image, stats = [], layout = 'image-right', imageFit = 'cover', cta } = block;
+  const reverse = layout === 'image-left';
+
+  if (imageFit === 'contain' && image) {
+    const imageOnRight = !reverse;
+    return (
+      <section className="relative overflow-hidden bg-zinc-950 py-24 md:py-36">
+        {/* Image — right or left portion, slightly inset vertically */}
+        <div className={`absolute inset-y-6 md:inset-y-10 ${imageOnRight ? 'right-0 left-[42%]' : 'left-0 right-[42%]'} overflow-hidden`}>
+          <PayloadImage media={image} fill className="object-cover object-center" />
+          {/* fade toward text side */}
+          <div className={`absolute inset-0 ${imageOnRight ? 'bg-linear-to-r from-zinc-950 via-zinc-950/30 to-transparent' : 'bg-linear-to-l from-zinc-950 via-zinc-950/30 to-transparent'}`} />
+        </div>
+
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
+
+        <div className="container relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className={`flex ${imageOnRight ? 'justify-start' : 'justify-end'}`}>
+            <div className="w-full max-w-xl">
+              <TextContent
+                eyebrow={eyebrow}
+                heading={heading}
+                description={description}
+                stats={stats}
+                cta={cta}
+                darkStats={false}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
+      </section>
+    );
+  }
+
+  return (
+    <section className="relative overflow-hidden bg-zinc-950 py-20 md:py-28">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_110%,rgba(255,255,255,0.03),transparent)]" />
+
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div
+          className={`flex flex-col gap-12 lg:flex-row lg:items-stretch lg:gap-20 ${reverse ? 'lg:flex-row-reverse' : ''}`}
+        >
+          <div className="flex flex-1">
+            <TextContent
+              eyebrow={eyebrow}
+              heading={heading}
+              description={description}
+              stats={stats}
+              cta={cta}
+              darkStats={true}
+            />
+          </div>
+
+          <div className="relative flex-1 min-h-105 lg:min-h-0">
+            <div className="relative h-full overflow-hidden bg-zinc-900 ring-1 ring-white/10">
+              {image ? (
+                <>
+                  <PayloadImage media={image} fill className="object-cover" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
+                </>
+              ) : (
+                <div className="absolute inset-0">
+                  <div className="absolute inset-0 opacity-5"
+                    style={{ backgroundImage: 'repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(255,255,255,.3) 39px,rgba(255,255,255,.3) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(255,255,255,.3) 39px,rgba(255,255,255,.3) 40px)' }}
+                  />
+                </div>
+              )}
+            </div>
+            <div className="pointer-events-none absolute -bottom-3 -right-3 h-16 w-16 border-b border-r border-white/10" />
+            <div className="pointer-events-none absolute -left-3 -top-3 h-16 w-16 border-l border-t border-white/10" />
+          </div>
+        </div>
+      </div>
+
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
+    </section>
+  );
+}

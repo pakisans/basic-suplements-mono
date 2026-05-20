@@ -15,7 +15,7 @@ export function CartQuantityControl({
         onClick={onDecrease}
         className={`${buttonPadding} rounded-full text-sm text-zinc-400 transition-colors hover:bg-white/8 hover:text-white disabled:cursor-not-allowed disabled:opacity-40`}
         disabled={quantity <= 1}
-        aria-label="Smanji količinu"
+        aria-label="Decrease quantity"
       >
         -
       </button>
@@ -26,7 +26,7 @@ export function CartQuantityControl({
         type="button"
         onClick={onIncrease}
         className={`${buttonPadding} rounded-full text-sm text-zinc-400 transition-colors hover:bg-white/8 hover:text-white`}
-        aria-label="Povećaj količinu"
+        aria-label="Increase quantity"
       >
         +
       </button>
