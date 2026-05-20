@@ -2,7 +2,7 @@ import { Media } from '@/components/Media'
 import { OrderStatus } from '@/components/OrderStatus'
 import { Price } from '@/components/Price'
 import { Button } from '@/components/ui/button'
-import { Media as MediaType, Order, Product, Variant } from '@/payload-types'
+import { Media as MediaType, Order, Product, Variant, VariantOption } from '@/payload-types'
 import { formatDateTime } from '@/utilities/formatDateTime'
 import Link from 'next/link'
 
@@ -39,9 +39,11 @@ export const ProductItem: React.FC<Props> = ({
   if (isVariant) {
     const imageVariant = product.gallery?.find((item) => {
       if (!item.variantOption) return false
-      const voArr = Array.isArray(item.variantOption) ? item.variantOption : [item.variantOption]
-      const variantOptionIDs = voArr.map((vo) =>
-        typeof vo === 'object' && vo !== null ? (vo as { id: number }).id : vo,
+      const voArr: (number | VariantOption)[] = Array.isArray(item.variantOption)
+        ? item.variantOption
+        : [item.variantOption]
+      const variantOptionIDs = voArr.map((vo: number | VariantOption) =>
+        typeof vo === 'object' ? vo.id : vo,
       )
 
       const hasMatch = variant?.options?.some((option) => {

@@ -1,6 +1,6 @@
 'use client'
 
-import type { Media as MediaType, Product } from '@/payload-types'
+import type { Media as MediaType, Product, VariantOption } from '@/payload-types'
 
 import { Media } from '@/components/Media'
 import { GridTileImage } from '@/components/Grid/tile'
@@ -32,9 +32,11 @@ export const Gallery: React.FC<Props> = ({ gallery }) => {
       const index = gallery.findIndex((item) => {
         if (!item.variantOption) return false
 
-        const voArr = Array.isArray(item.variantOption) ? item.variantOption : [item.variantOption]
-        const variantIDs = voArr.map((vo) =>
-          typeof vo === 'object' && vo !== null ? String((vo as { id: DefaultDocumentIDType }).id) : String(vo),
+        const voArr: (number | VariantOption)[] = Array.isArray(item.variantOption)
+          ? item.variantOption
+          : [item.variantOption]
+        const variantIDs = voArr.map((vo: number | VariantOption) =>
+          typeof vo === 'object' ? String(vo.id) : String(vo),
         )
 
         return Boolean(values.find((value) => variantIDs.includes(String(value))))

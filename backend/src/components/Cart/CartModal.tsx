@@ -20,7 +20,7 @@ import { DeleteItemButton } from './DeleteItemButton'
 import { EditItemQuantityButton } from './EditItemQuantityButton'
 import { OpenCartButton } from './OpenCart'
 import { Button } from '@/components/ui/button'
-import { Product } from '@/payload-types'
+import { Product, VariantOption } from '@/payload-types'
 
 export function CartModal() {
   const { cart } = useCart()
@@ -87,9 +87,11 @@ export function CartModal() {
 
                     const imageVariant = product.gallery?.find((item: NonNullable<Product['gallery']>[number]) => {
                       if (!item.variantOption) return false
-                      const voArr = Array.isArray(item.variantOption) ? item.variantOption : [item.variantOption]
-                      const variantOptionIDs = voArr.map((vo) =>
-                        typeof vo === 'object' && vo !== null ? (vo as { id: number }).id : vo,
+                      const voArr: (number | VariantOption)[] = Array.isArray(item.variantOption)
+                        ? item.variantOption
+                        : [item.variantOption]
+                      const variantOptionIDs = voArr.map((vo: number | VariantOption) =>
+                        typeof vo === 'object' ? vo.id : vo,
                       )
 
                       const hasMatch = variant?.options?.some((option: NonNullable<typeof variant.options>[number]) => {

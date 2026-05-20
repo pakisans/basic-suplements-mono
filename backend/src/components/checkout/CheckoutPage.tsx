@@ -19,7 +19,7 @@ import { CheckoutForm } from '@/components/forms/CheckoutForm'
 import { useAddresses, useCart, usePayments } from '@payloadcms/plugin-ecommerce/client/react'
 import { CheckoutAddresses } from '@/components/checkout/CheckoutAddresses'
 import { CreateAddressModal } from '@/components/addresses/CreateAddressModal'
-import { Address } from '@/payload-types'
+import { Address, VariantOption } from '@/payload-types'
 import { Checkbox } from '@/components/ui/checkbox'
 import { AddressItem } from '@/components/addresses/AddressItem'
 import { FormItem } from '@/components/forms/FormItem'
@@ -375,9 +375,11 @@ export const CheckoutPage: React.FC = () => {
 
                 const imageVariant = product.gallery?.find((item: NonNullable<typeof product.gallery>[number]) => {
                   if (!item.variantOption) return false
-                  const voArr = Array.isArray(item.variantOption) ? item.variantOption : [item.variantOption]
-                  const variantOptionIDs = voArr.map((vo) =>
-                    typeof vo === 'object' && vo !== null ? (vo as { id: number }).id : vo,
+                  const voArr: (number | VariantOption)[] = Array.isArray(item.variantOption)
+                    ? item.variantOption
+                    : [item.variantOption]
+                  const variantOptionIDs = voArr.map((vo: number | VariantOption) =>
+                    typeof vo === 'object' ? vo.id : vo,
                   )
 
                   const hasMatch = variant?.options?.some((option: NonNullable<typeof variant.options>[number]) => {
