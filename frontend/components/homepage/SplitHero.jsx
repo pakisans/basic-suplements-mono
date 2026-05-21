@@ -6,7 +6,7 @@ function HeroPanel({ category, fallbackLabel, fallbackHref, priority }) {
   const href = category ? buildCategoryPath(category) : fallbackHref;
   const label = category?.title ?? fallbackLabel;
   const image = category?.image ?? null;
-  console.log(label);
+
   return (
     <Link
       href={href}
