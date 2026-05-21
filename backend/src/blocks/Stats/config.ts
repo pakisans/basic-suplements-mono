@@ -8,6 +8,7 @@ export const Stats: Block = {
     plural: 'Stats',
   },
   fields: [
+    { name: 'label', type: 'text', localized: true },
     {
       name: 'heading',
       type: 'text',

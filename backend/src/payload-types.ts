@@ -1233,6 +1233,7 @@ export interface FAQBlock {
  * via the `definition` "StatsBlock".
  */
 export interface StatsBlock {
+  label?: string | null;
   heading?: string | null;
   items?:
     | {
@@ -2051,6 +2052,7 @@ export interface FAQBlockSelect<T extends boolean = true> {
  * via the `definition` "StatsBlock_select".
  */
 export interface StatsBlockSelect<T extends boolean = true> {
+  label?: T;
   heading?: T;
   items?:
     | T
