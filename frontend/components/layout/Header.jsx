@@ -198,7 +198,7 @@ export function Header({ header }) {
           {/* Mobile actions */}
           <div className="flex items-center justify-end gap-1.5 lg:hidden">
             {!isCatalogOnly && <CartTrigger mobile />}
-            <MobileMenu navItems={navItems} />
+            <MobileMenu navItems={navItems} topBar={topBar} />
           </div>
         </div>
       </header>
