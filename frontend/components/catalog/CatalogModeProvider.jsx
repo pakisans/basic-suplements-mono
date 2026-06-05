@@ -31,7 +31,8 @@ export function CatalogModeProvider({ children }) {
 
   function resetGate() {
     localStorage.removeItem(STORAGE_KEY);
-    window.location.reload();
+    // User explicitly asked to pick a market — open immediately, no delay.
+    setGateVisible(true);
   }
 
   return (
