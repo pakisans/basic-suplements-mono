@@ -84,7 +84,7 @@ export function CountryGate() {
       </button>
 
       <div className="bs-card-in relative z-10 flex w-full max-w-lg flex-col items-center px-6 py-14">
-        <div className="bs-logo-wrap relative mb-8 w-56 overflow-hidden sm:w-80 lg:w-96">
+        <div className="bs-logo-wrap relative mb-4 w-56 overflow-hidden sm:w-80 lg:w-96">
           <Image
             src="/logo.png"
             alt="Basic Supplements"
