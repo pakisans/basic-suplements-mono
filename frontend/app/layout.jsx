@@ -58,7 +58,7 @@ export default async function RootLayout({ children }) {
             <CartProvider>
               <CountryGate />
               <Header header={header} />
-              <main className="flex-1">{children}</main>
+              <main className="bs-page-in flex-1">{children}</main>
               <Footer footer={footer} />
               <CartDrawer />
             </CartProvider>

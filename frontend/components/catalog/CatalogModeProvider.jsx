@@ -10,16 +10,18 @@ const CatalogModeContext = createContext({
 
 const STORAGE_KEY = 'bs-market';
 
+// Let the site load and settle before the market selector pops up.
+const GATE_DELAY_MS = 2800;
+
 export function CatalogModeProvider({ children }) {
   const [gateVisible, setGateVisible] = useState(false);
 
   useEffect(() => {
-    async function init() {
-      await Promise.resolve();
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored !== 'dismissed') setGateVisible(true);
-    }
-    init();
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored === 'dismissed') return;
+
+    const timer = setTimeout(() => setGateVisible(true), GATE_DELAY_MS);
+    return () => clearTimeout(timer);
   }, []);
 
   function dismiss() {

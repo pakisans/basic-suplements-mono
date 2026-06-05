@@ -1,4 +1,5 @@
 'use client'
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useCatalogMode } from './CatalogModeProvider'
 import { getMarkets } from '@/services/markets'
@@ -56,8 +57,8 @@ export function CountryGate() {
   }
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/97 backdrop-blur-sm">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_50%,rgba(255,255,255,0.03),transparent)]" />
+    <div className="bs-overlay-in fixed inset-0 z-[9999] flex items-center justify-center bg-black/95">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_30%,rgba(255,255,255,0.04),transparent)]" />
 
       {/* X dismiss */}
       <button
@@ -70,14 +71,24 @@ export function CountryGate() {
         </svg>
       </button>
 
-      <div className="relative z-10 flex w-full max-w-md flex-col items-center px-6 py-14">
-        <p className="mb-2 text-[10px] font-medium tracking-[0.4em] text-zinc-500 uppercase">
+      <div className="bs-card-in relative z-10 flex w-full max-w-md flex-col items-center px-6 py-14">
+        <div className="bs-logo-in mb-6 overflow-hidden rounded-2xl">
+          <Image
+            src="/logo.jpeg"
+            alt="Basic Supplements"
+            width={96}
+            height={96}
+            priority
+            className="h-20 w-20 object-cover"
+          />
+        </div>
+        <p className="bs-rise-in mb-2 text-[10px] font-medium tracking-[0.4em] text-zinc-500 uppercase" style={{ animationDelay: '0.1s' }}>
           Basic Supplements
         </p>
-        <h1 className="mb-2 text-center text-2xl font-bold tracking-tight text-white">
+        <h1 className="bs-rise-in mb-2 text-center text-2xl font-bold tracking-tight text-white" style={{ animationDelay: '0.16s' }}>
           Select your market
         </h1>
-        <p className="mb-10 text-center text-sm text-zinc-500">
+        <p className="bs-rise-in mb-10 text-center text-sm text-zinc-500" style={{ animationDelay: '0.22s' }}>
           You&apos;ll be redirected to your local distributor.
         </p>
 
