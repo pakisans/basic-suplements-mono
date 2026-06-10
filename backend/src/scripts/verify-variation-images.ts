@@ -27,12 +27,12 @@ for (const file of ['products_scraped.json', 'products_scraped_en.json']) {
 
   let nextId = 1
   for (const p of products) {
-    const optionsByLabel = new Map<string, number>()
+    const optionsByLabel = new Map<string, { id: number; type: string }>()
     const idToLabel = new Map<number, string>()
     for (const v of p.variants) {
       if (!optionsByLabel.has(v.name)) {
         const id = nextId++
-        optionsByLabel.set(v.name, id)
+        optionsByLabel.set(v.name, { id, type: v.type })
         idToLabel.set(id, `${v.type}:${v.name}`)
       }
     }
@@ -58,7 +58,7 @@ for (const file of ['products_scraped.json', 'products_scraped_en.json']) {
     for (const s of plan) for (const id of s.variantOption) taggedIds.add(id)
     variantTagged += plan.filter((s) => s.variantOption.length > 0).length
 
-    for (const [label, id] of optionsByLabel) {
+    for (const [label, { id }] of optionsByLabel) {
       totalOptions++
       if (taggedIds.has(id)) coveredOptions++
       else problems.push(`UNCOVERED option (no image): ${p.title} → ${idToLabel.get(id) ?? label}`)

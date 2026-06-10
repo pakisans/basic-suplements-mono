@@ -216,6 +216,49 @@ function resolveOptionImage(label: string, optionImageMap: Map<string, string>):
 }
 
 // ---------------------------------------------------------------------------
+// Weight / package image matching
+//
+// Multi-weight products are merged from several source listings, and each source
+// image's filename encodes the weight (e.g. ".../pro-whey-908grama-...jpg",
+// ".../pro-whey-227kg-...jpg" → 2.27 kg = 2270 g). We match a weight option to
+// the image whose filename contains a matching numeric signature.
+// ---------------------------------------------------------------------------
+function weightSignatures(label: string): string[] {
+  const lower = label.toLowerCase()
+  const match = lower.match(/[0-9]+(?:[.,][0-9]+)?/)
+  if (!match) return []
+  const numStr = match[0]
+  const value = parseFloat(numStr.replace(',', '.'))
+  const sigs = new Set<string>()
+  sigs.add(numStr.replace(/[.,]/g, '')) // raw digits, e.g. "908", "2270"
+  if (lower.includes('kg')) {
+    sigs.add(String(Math.round(value * 1000))) // "2kg" → "2000"
+  } else if (value >= 1000 && Number.isInteger(value)) {
+    sigs.add(String(value / 1000).replace(/[.,]/g, '')) // 2270 g → "2.27" → "227"
+  }
+  sigs.delete('')
+  // Most specific (longest) signatures first to avoid short ones (e.g. "2")
+  // matching the wrong image.
+  return [...sigs].sort((a, b) => b.length - a.length)
+}
+
+function imageDigitTokens(url: string): Set<string> {
+  const slug = url.split('/').pop()?.replace(/\.[^.]+$/, '') ?? ''
+  return new Set(slug.match(/[0-9]+/g) ?? [])
+}
+
+function matchWeightImage(label: string, imageUrls: string[]): string | undefined {
+  const sigs = weightSignatures(label)
+  if (sigs.length === 0) return undefined
+  for (const sig of sigs) {
+    for (const url of imageUrls) {
+      if (imageDigitTokens(url).has(sig)) return url
+    }
+  }
+  return undefined
+}
+
+// ---------------------------------------------------------------------------
 // Media upload (with per-run deduplication by URL)
 // ---------------------------------------------------------------------------
 async function fetchFile(url: string): Promise<File | null> {
@@ -262,6 +305,12 @@ export interface GalleryItem {
   variantOption?: number[]
 }
 
+/** A variant option with its scraped type (ukus / boja / težina / …). */
+export interface ProductOption {
+  id: number
+  type: string
+}
+
 /** A planned gallery slot before any media is uploaded. */
 export interface GalleryPlanItem {
   url: string
@@ -270,9 +319,9 @@ export interface GalleryPlanItem {
 
 interface PlanGalleryArgs {
   title: string
-  /** Variant option label → variantOption id, for this product's variants. */
-  optionsByLabel: Map<string, number>
-  /** Product-level image URLs from the scraped source, used as a fallback. */
+  /** Variant option label → { id, type } for this product's variants. */
+  optionsByLabel: Map<string, ProductOption>
+  /** Product-level image URLs from the scraped source (also the weight source). */
   fallbackImages: string[]
   catalog: Catalog
   maxImages?: number
@@ -298,12 +347,21 @@ export function planProductGallery({
   const main = mainImageUrl(rows) ?? fallbackImages[0] ?? null
 
   // Group option ids by the image URL they resolve to.
+  //   - flavour (ukus) / colour (boja): matched against the CSV catalog
+  //   - weight (težina) / package (pakovanje): matched against image filenames
+  //   - everything else (e.g. size) falls back to the product's main image
   const urlToOptions = new Map<string, Set<number>>()
-  for (const [label, optionId] of optionsByLabel) {
-    const url = resolveOptionImage(label, optionImageMap) ?? main
+  for (const [label, { id, type }] of optionsByLabel) {
+    let url: string | undefined
+    if (type === 'ukus' || type === 'boja') {
+      url = resolveOptionImage(label, optionImageMap)
+    } else if (type === 'težina' || type === 'pakovanje') {
+      url = matchWeightImage(label, fallbackImages)
+    }
+    url = url ?? main ?? undefined
     if (!url) continue
     if (!urlToOptions.has(url)) urlToOptions.set(url, new Set())
-    urlToOptions.get(url)!.add(optionId)
+    urlToOptions.get(url)!.add(id)
   }
 
   // Ordered, de-duplicated URL list: main shot first, then per-option images,

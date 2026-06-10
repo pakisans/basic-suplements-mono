@@ -296,12 +296,12 @@ async function seedBasicSupplements({ payload, req }: { payload: Payload; req: P
 
     // Build option label → id map for this product's variants (used to assign
     // each variation its catalog image).
-    const optionsByLabel = new Map<string, number>()
+    const optionsByLabel = new Map<string, { id: number; type: string }>()
     for (const v of p.variants) {
       const entry = vtMap.get(v.type)
       if (!entry) continue
       const optionId = entry.optionIdByLabel.get(v.name)
-      if (optionId !== undefined) optionsByLabel.set(v.name, optionId)
+      if (optionId !== undefined) optionsByLabel.set(v.name, { id: optionId, type: v.type })
     }
 
     // Build the gallery from the image catalog, tagging each variation's image
