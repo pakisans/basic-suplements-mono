@@ -1,9 +1,11 @@
 import config from '@payload-config'
 import { createLocalReq, getPayload } from 'payload'
-import type { File, Payload, PayloadRequest } from 'payload'
+import type { Payload, PayloadRequest } from 'payload'
 import { readFileSync, rmSync, existsSync, readdirSync } from 'fs'
 import { resolve, dirname, join } from 'path'
 import { fileURLToPath } from 'url'
+
+import { buildProductGallery, loadCatalog } from './lib/catalog-images'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -33,24 +35,6 @@ interface ScrapedProduct {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-async function fetchFile(url: string): Promise<File | null> {
-  try {
-    const res = await fetch(url, { method: 'GET' })
-    if (!res.ok) return null
-    const data = await res.arrayBuffer()
-    const ext = url.split('.').pop()?.split('?')[0] ?? 'jpg'
-    const name = url.split('/').pop()?.split('?')[0] ?? `img-${Date.now()}.${ext}`
-    return {
-      name,
-      data: Buffer.from(data),
-      mimetype: `image/${ext === 'jpg' ? 'jpeg' : ext}`,
-      size: data.byteLength,
-    }
-  } catch {
-    return null
-  }
-}
-
 function toSlug(text: string): string {
   return text
     .toLowerCase()
@@ -187,6 +171,15 @@ async function seedBasicSupplements({ payload, req }: { payload: Payload; req: P
   const products: ScrapedProduct[] = JSON.parse(readFileSync(jsonPath, 'utf-8'))
   payload.logger.info(`Loaded ${products.length} products`)
 
+  // Catalog of per-variation images (WooCommerce export) — authoritative source
+  // for assigning a relevant image to every product variation.
+  const catalog = loadCatalog(resolve(__dirname, '../../products_catalog.csv'))
+  payload.logger.info(`Loaded image catalog: ${catalog.products.length} products`)
+
+  // URL → media id cache, shared across the whole run to avoid re-uploading the
+  // same image multiple times.
+  const mediaCache = new Map<string, number>()
+
   // -------------------------------------------------------------------------
   // 0. Cleanup — delete existing data to prevent duplicates on re-run
   // -------------------------------------------------------------------------
@@ -301,18 +294,29 @@ async function seedBasicSupplements({ payload, req }: { payload: Payload; req: P
       if (fallback) catIds.push(fallback)
     }
 
-    // Upload images (max 6)
-    const galleryItems: { image: number }[] = []
-    for (const imgUrl of p.images.slice(0, 6)) {
-      try {
-        const file = await fetchFile(imgUrl)
-        if (!file) continue
-        const media = await payload.create({ collection: 'media', data: { alt: p.title }, file, req })
-        galleryItems.push({ image: media.id })
-      } catch {
-        payload.logger.warn(`    Image fail: ${imgUrl}`)
-      }
+    // Build option label → id map for this product's variants (used to assign
+    // each variation its catalog image).
+    const optionsByLabel = new Map<string, number>()
+    for (const v of p.variants) {
+      const entry = vtMap.get(v.type)
+      if (!entry) continue
+      const optionId = entry.optionIdByLabel.get(v.name)
+      if (optionId !== undefined) optionsByLabel.set(v.name, optionId)
     }
+
+    // Build the gallery from the image catalog, tagging each variation's image
+    // with its variantOption so the storefront shows the right image per choice.
+    const galleryItems = await buildProductGallery({
+      payload,
+      req,
+      title: p.title,
+      optionsByLabel,
+      fallbackImages: p.images,
+      catalog,
+      mediaCache,
+    })
+    const taggedCount = galleryItems.filter((g) => g.variantOption?.length).length
+    payload.logger.info(`    ${galleryItems.length} gallery images (${taggedCount} variant-tagged)`)
 
     // Group variants by type
     const variantsByType = new Map<string, ScrapedVariant[]>()
