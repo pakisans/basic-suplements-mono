@@ -385,16 +385,25 @@ interface PlanGalleryArgs {
   /** Product-level image URLs from the scraped source (also the weight source). */
   fallbackImages: string[]
   catalog: Catalog
+  /** Max number of untagged base images for products without variants. */
   maxImages?: number
 }
 
 /**
- * Resolve, for a single product, which catalog image each variation should use.
- * This is the pure (no DB / no network) core of the gallery builder: it maps
- * every variant option to a relevant catalog image. Options sharing the same
- * visual reuse the same image (tagged together on one gallery slot); options
- * without a dedicated catalog image fall back to the product's main image so no
- * variation is ever left without one.
+ * Resolve which catalog image each variation should use, producing ONE gallery
+ * slot per variant option (each tagged with a single option) so every variation
+ * is represented separately — flavour, weight, colour, etc. This is the pure
+ * (no DB / no network) core of the gallery builder.
+ *
+ * Image resolution is CSV/catalog-driven, with type names matched in both
+ * Serbian (seed:bs) and English (seed:bs:en):
+ *   - flavour (ukus/flavor) / colour (boja/color): matched against the CSV
+ *   - weight (težina/weight) / package (pakovanje/packaging): matched against
+ *     image filenames (which encode the weight, e.g. 227kg = 2270 g)
+ *   - everything else (e.g. size/veličina) has no dedicated image and reuses the
+ *     product's main image
+ * Options without a dedicated image fall back to the main image, so no variation
+ * is ever left without one.
  */
 export function planProductGallery({
   title,
@@ -407,13 +416,12 @@ export function planProductGallery({
   const optionImageMap = buildOptionImageMap(rows)
   const main = mainImageUrl(rows) ?? fallbackImages[0] ?? null
 
-  // Group option ids by the image URL they resolve to. Type names are matched in
-  // both Serbian (seed:bs) and English (seed:bs:en):
-  //   - flavour (ukus/flavor) / colour (boja/color): matched against the CSV
-  //   - weight (težina/weight) / package (pakovanje/packaging): matched against
-  //     image filenames (which encode the weight)
-  //   - everything else (e.g. size/veličina) falls back to the product main image
-  const urlToOptions = new Map<string, Set<number>>()
+  const items: GalleryPlanItem[] = []
+
+  // 1) The product's main image as an untagged base (shown by default).
+  if (main) items.push({ url: main, variantOption: [] })
+
+  // 2) One slot per variant option, each tagged with that single option.
   for (const [label, { id, type }] of optionsByLabel) {
     const t = normalizeText(type)
     let url: string | undefined
@@ -424,29 +432,21 @@ export function planProductGallery({
     }
     url = url ?? main ?? undefined
     if (!url) continue
-    if (!urlToOptions.has(url)) urlToOptions.set(url, new Set())
-    urlToOptions.get(url)!.add(id)
+    items.push({ url, variantOption: [id] })
   }
 
-  // Ordered, de-duplicated URL list: main shot first, then per-option images,
-  // then any remaining catalog/fallback images to round out the gallery.
-  const ordered: string[] = []
-  const seen = new Set<string>()
-  const add = (url?: string | null) => {
-    if (url && !seen.has(url)) {
+  // 3) For products without variants, round out the gallery with extra images.
+  if (optionsByLabel.size === 0) {
+    const seen = new Set(items.map((i) => i.url))
+    for (const url of [...rows.map((r) => r.imageUrl), ...fallbackImages]) {
+      if (items.length >= maxImages) break
+      if (!url || seen.has(url)) continue
       seen.add(url)
-      ordered.push(url)
+      items.push({ url, variantOption: [] })
     }
   }
-  add(main)
-  for (const url of urlToOptions.keys()) add(url)
-  for (const r of rows) add(r.imageUrl)
-  for (const url of fallbackImages) add(url)
 
-  return ordered.slice(0, maxImages).map((url) => ({
-    url,
-    variantOption: [...(urlToOptions.get(url) ?? [])],
-  }))
+  return items
 }
 
 interface BuildGalleryArgs extends PlanGalleryArgs {
