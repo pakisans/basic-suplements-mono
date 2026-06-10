@@ -98,7 +98,13 @@ interface CatalogRow {
 interface CatalogProduct {
   name: string
   tokens: Set<string>
+  /** Image filenames (no path/extension) — a language-independent match key. */
+  imageFilenames: Set<string>
   rows: CatalogRow[]
+}
+
+function imageFilename(url: string): string {
+  return (url.split('/').pop()?.replace(/\.[^.]+$/, '') ?? '').toLowerCase()
 }
 
 export interface Catalog {
@@ -126,20 +132,44 @@ export function loadCatalog(csvPath: string): Catalog {
     const name = (r[nameCol] ?? '').trim()
     if (!name) continue
     if (!byName.has(name)) {
-      byName.set(name, { name, tokens: tokenize(name), rows: [] })
+      byName.set(name, { name, tokens: tokenize(name), imageFilenames: new Set(), rows: [] })
     }
-    byName.get(name)!.rows.push({
+    const product = byName.get(name)!
+    const imageUrl = (r[imgCol] ?? '').trim()
+    product.rows.push({
       attributes: r[attrCol] ?? '',
       sku: (r[skuCol] ?? '').trim(),
-      imageUrl: (r[imgCol] ?? '').trim(),
+      imageUrl,
     })
+    if (imageUrl) product.imageFilenames.add(imageFilename(imageUrl))
   }
 
   return { products: [...byName.values()] }
 }
 
-// Best matching catalog product for a seed product title (token Jaccard).
-export function matchCatalogProduct(catalog: Catalog, title: string): CatalogRow[] | null {
+// Best matching catalog product. Primary key is image-filename overlap (the same
+// shop images are referenced by both the scraped JSON and the CSV, so this works
+// regardless of language); falls back to product-title token Jaccard.
+export function matchCatalogProduct(
+  catalog: Catalog,
+  title: string,
+  imageUrls: string[] = [],
+): CatalogRow[] | null {
+  const wantedFilenames = new Set(imageUrls.map(imageFilename).filter(Boolean))
+  if (wantedFilenames.size > 0) {
+    let best: CatalogProduct | null = null
+    let bestOverlap = 0
+    for (const product of catalog.products) {
+      let overlap = 0
+      for (const f of product.imageFilenames) if (wantedFilenames.has(f)) overlap++
+      if (overlap > bestOverlap) {
+        bestOverlap = overlap
+        best = product
+      }
+    }
+    if (best && bestOverlap > 0) return best.rows
+  }
+
   const titleTokens = tokenize(title)
   let best: CatalogProduct | null = null
   let bestScore = 0
@@ -192,13 +222,44 @@ function mainImageUrl(rows: CatalogRow[]): string | null {
   return best
 }
 
+// English option labels → Serbian (the catalog CSV vocabulary). The catalog is
+// Serbian, so the English seed needs this bridge to match colour/flavour images.
+const LABEL_SYNONYMS: Record<string, string> = {
+  black: 'crna',
+  white: 'belo',
+  grey: 'siva',
+  gray: 'siva',
+  'dark grey': 'tamno siva',
+  'dark gray': 'tamno siva',
+  'light grey': 'svetlo siva',
+  'light gray': 'svetlo siva',
+  beige: 'bez',
+  green: 'zelena',
+  olive: 'maslinasto zelena',
+  'olive green': 'maslinasto zelena',
+  orange: 'narandzasta',
+  blue: 'plava',
+  red: 'crvena',
+  pink: 'roza',
+  cream: 'creme',
+  cappuccino: 'boja kapucina',
+}
+
 function resolveOptionImage(label: string, optionImageMap: Map<string, string>): string | undefined {
   const normalized = normalizeText(label)
-  if (optionImageMap.has(normalized)) return optionImageMap.get(normalized)
+  // Try the label as-is and its Serbian synonym (for the English seed).
+  const candidates = [normalized]
+  if (LABEL_SYNONYMS[normalized]) candidates.push(LABEL_SYNONYMS[normalized])
+
+  for (const candidate of candidates) {
+    if (optionImageMap.has(candidate)) return optionImageMap.get(candidate)
+  }
 
   // Substring match (e.g. "Cookie's & Cream" ↔ "cookie and cream" variants).
   for (const [key, url] of optionImageMap) {
-    if (key.includes(normalized) || normalized.includes(key)) return url
+    for (const candidate of candidates) {
+      if (key.includes(candidate) || candidate.includes(key)) return url
+    }
   }
 
   // Token-overlap fallback for minor wording differences (plurals, ordering).
@@ -342,20 +403,23 @@ export function planProductGallery({
   catalog,
   maxImages = 8,
 }: PlanGalleryArgs): GalleryPlanItem[] {
-  const rows = matchCatalogProduct(catalog, title) ?? []
+  const rows = matchCatalogProduct(catalog, title, fallbackImages) ?? []
   const optionImageMap = buildOptionImageMap(rows)
   const main = mainImageUrl(rows) ?? fallbackImages[0] ?? null
 
-  // Group option ids by the image URL they resolve to.
-  //   - flavour (ukus) / colour (boja): matched against the CSV catalog
-  //   - weight (težina) / package (pakovanje): matched against image filenames
-  //   - everything else (e.g. size) falls back to the product's main image
+  // Group option ids by the image URL they resolve to. Type names are matched in
+  // both Serbian (seed:bs) and English (seed:bs:en):
+  //   - flavour (ukus/flavor) / colour (boja/color): matched against the CSV
+  //   - weight (težina/weight) / package (pakovanje/packaging): matched against
+  //     image filenames (which encode the weight)
+  //   - everything else (e.g. size/veličina) falls back to the product main image
   const urlToOptions = new Map<string, Set<number>>()
   for (const [label, { id, type }] of optionsByLabel) {
+    const t = normalizeText(type)
     let url: string | undefined
-    if (type === 'ukus' || type === 'boja') {
+    if (t === 'ukus' || t === 'flavor' || t === 'boja' || t === 'color') {
       url = resolveOptionImage(label, optionImageMap)
-    } else if (type === 'težina' || type === 'pakovanje') {
+    } else if (t === 'tezina' || t === 'weight' || t === 'pakovanje' || t === 'packaging') {
       url = matchWeightImage(label, fallbackImages)
     }
     url = url ?? main ?? undefined

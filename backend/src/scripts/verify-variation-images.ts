@@ -24,6 +24,7 @@ for (const file of ['products_scraped.json', 'products_scraped_en.json']) {
   let productsWithoutGallery = 0
   let variantTagged = 0
   const problems: string[] = []
+  const byType: Record<string, { total: number; dedicated: number }> = {}
 
   let nextId = 1
   for (const p of products) {
@@ -58,10 +59,19 @@ for (const file of ['products_scraped.json', 'products_scraped_en.json']) {
     for (const s of plan) for (const id of s.variantOption) taggedIds.add(id)
     variantTagged += plan.filter((s) => s.variantOption.length > 0).length
 
-    for (const [label, { id }] of optionsByLabel) {
+    // The first slot is the product's main image; an option on any other slot
+    // got a *dedicated* (non-fallback) image.
+    const mainUrl = plan[0]?.url
+    const urlByOptionId = new Map<number, string>()
+    for (const s of plan) for (const id of s.variantOption) urlByOptionId.set(id, s.url)
+
+    for (const [label, { id, type }] of optionsByLabel) {
       totalOptions++
+      const stat = (byType[type] ??= { total: 0, dedicated: 0 })
+      stat.total++
       if (taggedIds.has(id)) coveredOptions++
       else problems.push(`UNCOVERED option (no image): ${p.title} → ${idToLabel.get(id) ?? label}`)
+      if (taggedIds.has(id) && urlByOptionId.get(id) !== mainUrl) stat.dedicated++
     }
   }
 
@@ -71,6 +81,10 @@ for (const file of ['products_scraped.json', 'products_scraped_en.json']) {
   console.log(`variant options:          ${totalOptions}`)
   console.log(`options with an image:    ${coveredOptions} (${((coveredOptions / totalOptions) * 100).toFixed(1)}%)`)
   console.log(`variant-tagged slots:     ${variantTagged}`)
+  console.log('dedicated (own) image per variant type:')
+  for (const [type, s] of Object.entries(byType)) {
+    console.log(`  ${type.padEnd(12)} ${s.dedicated}/${s.total} dedicated`)
+  }
   if (problems.length) {
     console.log(`PROBLEMS (${problems.length}):`)
     for (const p of problems.slice(0, 40)) console.log(`  - ${p}`)
