@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ProductGallery } from './ProductGallery';
 import { ProductPrice } from './ProductPrice';
 import { ProductDetails } from './ProductDetails';

@@ -30,13 +30,13 @@ export default async function HomePage() {
 
   return (
     <>
-      {hasPageHero ? (
-        <Hero hero={page.hero} />
-      ) : (
-        <SplitHero categories={categories} />
-      )}
+      {hasPageHero && <Hero hero={page.hero} />}
 
-      {hasBlocks && <BlockRenderer blocks={page.layout} />}
+      {hasBlocks ? (
+        <BlockRenderer blocks={page.layout} />
+      ) : (
+        !hasPageHero && <SplitHero categories={categories} />
+      )}
 
       {!hasBlocks && (
         <>

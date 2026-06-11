@@ -13,11 +13,13 @@ import { FormBlock } from '@/blocks/Form/config'
 import { MediaBlock } from '@/blocks/MediaBlock/config'
 import { Quote } from '@/blocks/Quote/config'
 import { Spacer } from '@/blocks/Spacer/config'
+import { SplitHero } from '@/blocks/SplitHero/config'
 import { Stats } from '@/blocks/Stats/config'
 import { ThreeItemGrid } from '@/blocks/ThreeItemGrid/config'
 import { Video } from '@/blocks/Video/config'
 
 export const defaultContentBlocks: Block[] = [
+  SplitHero,
   Ambassador,
   BrandStory,
   Banner,
