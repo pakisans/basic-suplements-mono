@@ -18,11 +18,12 @@ export function ProductGallery({
   gallery,
   productTitle,
   activeOptionIds = [],
+  focusOptionId = null,
 }) {
   const items = useMemo(() => gallery ?? [], [gallery]);
 
-  // Stable signature of the current selection so memo/effect don't re-run on
-  // every render (activeOptionIds is a fresh array each time).
+  // Stable signature of the current selection (activeOptionIds is a fresh array
+  // each render).
   const activeKey = activeOptionIds.map(String).join(',');
 
   // Images belonging to the currently selected variation. When a variation is
@@ -34,15 +35,24 @@ export function ProductGallery({
     return matching.length ? matching : items;
   }, [items, activeKey]);
 
-  const [activeIndex, setActiveIndex] = useState(0);
+  // The image of the option the user changed most recently, so changing weight
+  // jumps to the weight image and changing flavour jumps to the flavour image.
+  const focusIndex = useMemo(() => {
+    if (focusOptionId == null) return 0;
+    const wanted = new Set([String(focusOptionId)]);
+    const idx = visibleItems.findIndex((item) => itemMatchesOptions(item, wanted));
+    return idx >= 0 ? idx : 0;
+  }, [visibleItems, focusOptionId]);
 
-  // Jump back to the first image whenever the visible set (selection) changes.
-  // Reset during render (React's recommended pattern), not in an effect.
-  const visibleKey = visibleItems.map((item, i) => item?.id ?? i).join(',');
-  const [prevKey, setPrevKey] = useState(visibleKey);
-  if (prevKey !== visibleKey) {
-    setPrevKey(visibleKey);
-    setActiveIndex(0);
+  const [activeIndex, setActiveIndex] = useState(focusIndex);
+
+  // Snap to the focused image whenever the selection or the focused option
+  // changes. Reset during render (React's recommended pattern), not in an effect.
+  const resetKey = `${activeKey}|${focusOptionId ?? ''}|${visibleItems.length}`;
+  const [prevKey, setPrevKey] = useState(resetKey);
+  if (prevKey !== resetKey) {
+    setPrevKey(resetKey);
+    setActiveIndex(focusIndex);
   }
 
   if (!visibleItems.length) {

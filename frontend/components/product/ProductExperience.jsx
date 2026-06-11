@@ -74,6 +74,9 @@ export function ProductExperience({ product }) {
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  // The option the user changed most recently, so the gallery can jump to that
+  // option's image (e.g. changing weight shows the weight image, not the flavour).
+  const [lastOptionId, setLastOptionId] = useState(null);
 
   const selectedVariant = getSelectedVariant(product, selectedOptionIds);
   const selectedImage = getSelectedImage(
@@ -111,6 +114,7 @@ export function ProductExperience({ product }) {
   function handleOptionSelect(group, optionId) {
     setError('');
     setSuccess('');
+    setLastOptionId(optionId);
     setSelectedOptionIds((current) => {
       const withoutGroup = current.filter((selectedId) => {
         return !group.options.some(
@@ -176,6 +180,7 @@ export function ProductExperience({ product }) {
             ? getSelectedOptionIds(selectedVariant)
             : selectedOptionIds
         }
+        focusOptionId={lastOptionId}
       />
 
       <div className="flex flex-col gap-5">
