@@ -5,7 +5,7 @@ import { readFileSync, rmSync, existsSync, readdirSync } from 'fs'
 import { resolve, dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
-import { buildProductGallery, loadCatalog } from './lib/catalog-images'
+import { buildProductGallery, loadCatalog, loadScrapeCatalog, mergeCatalogs } from './lib/catalog-images'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -171,9 +171,12 @@ async function seedBasicSupplements({ payload, req }: { payload: Payload; req: P
   const products: ScrapedProduct[] = JSON.parse(readFileSync(jsonPath, 'utf-8'))
   payload.logger.info(`Loaded ${products.length} products`)
 
-  // Catalog of per-variation images (WooCommerce export) — authoritative source
-  // for assigning a relevant image to every product variation.
-  const catalog = loadCatalog(resolve(__dirname, '../../products_catalog.csv'))
+  // Per-variation image catalogs. The scrape (ogistra_images.json) has one exact
+  // image per variant option and is preferred; the CSV export is the fallback.
+  const catalog = mergeCatalogs(
+    loadScrapeCatalog(resolve(__dirname, '../../ogistra_images.json')),
+    loadCatalog(resolve(__dirname, '../../products_catalog.csv')),
+  )
   payload.logger.info(`Loaded image catalog: ${catalog.products.length} products`)
 
   // URL → media id cache, shared across the whole run to avoid re-uploading the

@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs'
 import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
-import { loadCatalog, planProductGallery } from './lib/catalog-images'
+import { loadCatalog, loadScrapeCatalog, mergeCatalogs, planProductGallery } from './lib/catalog-images'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -17,7 +17,10 @@ for (const file of ['products_scraped.json', 'products_scraped_en.json']) {
     console.log(`\n(skip ${file} — not found)`)
     continue
   }
-  const catalog = loadCatalog(resolve(__dirname, '../../products_catalog.csv'))
+  const catalog = mergeCatalogs(
+    loadScrapeCatalog(resolve(__dirname, '../../ogistra_images.json')),
+    loadCatalog(resolve(__dirname, '../../products_catalog.csv')),
+  )
 
   let totalOptions = 0
   let coveredOptions = 0

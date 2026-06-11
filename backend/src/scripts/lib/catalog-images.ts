@@ -1,5 +1,5 @@
 import type { File, Payload, PayloadRequest } from 'payload'
-import { readFileSync } from 'fs'
+import { readFileSync, existsSync } from 'fs'
 
 // ---------------------------------------------------------------------------
 // Catalog-driven variation images
@@ -145,6 +145,59 @@ export function loadCatalog(csvPath: string): Catalog {
   }
 
   return { products: [...byName.values()] }
+}
+
+// ---------------------------------------------------------------------------
+// Scrape catalog (ogistra_images.json) — per-variation images scraped directly
+// from the shop. Converted into the same Catalog shape so the gallery logic is
+// shared. This is richer than the CSV (one exact image per variant option) and
+// is preferred when both are available.
+// ---------------------------------------------------------------------------
+interface ScrapedOption {
+  name: string
+  images: string[]
+}
+interface ScrapedGroup {
+  label: string
+  options: ScrapedOption[]
+}
+interface ScrapedProductRaw {
+  name: string
+  slug: string
+  defaultImages: string[]
+  groups: ScrapedGroup[]
+}
+
+export function loadScrapeCatalog(jsonPath: string): Catalog {
+  if (!existsSync(jsonPath)) return { products: [] }
+  const raw = JSON.parse(readFileSync(jsonPath, 'utf-8')) as Record<string, ScrapedProductRaw>
+
+  const products: CatalogProduct[] = []
+  for (const sp of Object.values(raw)) {
+    const rows: CatalogRow[] = []
+    const imageFilenames = new Set<string>()
+    for (const url of sp.defaultImages ?? []) if (url) imageFilenames.add(imageFilename(url))
+
+    for (const group of sp.groups ?? []) {
+      for (const option of group.options ?? []) {
+        const imageUrl = option.images?.[0] ?? ''
+        rows.push({ attributes: `${group.label}:${option.name}`, sku: '', imageUrl })
+        for (const url of option.images ?? []) if (url) imageFilenames.add(imageFilename(url))
+      }
+    }
+    // Products without variants: keep the default images so a main image resolves.
+    if (rows.length === 0) {
+      for (const url of sp.defaultImages ?? []) if (url) rows.push({ attributes: '', sku: '', imageUrl: url })
+    }
+
+    products.push({ name: sp.name, tokens: tokenize(sp.name), imageFilenames, rows })
+  }
+  return { products }
+}
+
+/** Merge several catalogs; earlier catalogs win on equal image-filename overlap. */
+export function mergeCatalogs(...catalogs: Catalog[]): Catalog {
+  return { products: catalogs.flatMap((c) => c.products) }
 }
 
 // Best matching catalog product. Primary key is image-filename overlap (the same
