@@ -185,7 +185,10 @@ async function seedBasicSupplements({ payload, req }: { payload: Payload; req: P
   // 0. Cleanup — delete existing data to prevent duplicates on re-run
   // -------------------------------------------------------------------------
   payload.logger.info('— Cleanup (delete existing catalog data)')
-  const cleanupCollections = ['variants', 'variantOptions', 'variantTypes', 'products', 'categories', 'brands', 'media'] as const
+  // FK-safe order: referencing docs (variants, products) before referenced ones
+  // (variantOptions, variantTypes), otherwise the wipe can fail half-way and
+  // leave orphaned rows ("document with ID null" in admin).
+  const cleanupCollections = ['variants', 'products', 'variantOptions', 'variantTypes', 'categories', 'brands', 'media'] as const
   for (const collection of cleanupCollections) {
     await payload.db.deleteMany({ collection, req, where: {} })
     payload.logger.info(`  Cleared: ${collection}`)
