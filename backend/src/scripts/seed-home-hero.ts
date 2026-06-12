@@ -82,14 +82,28 @@ async function run() {
 
   if (existing.docs.length > 0) {
     const home = existing.docs[0] as any
-    const rest = (home.layout ?? []).filter((b: any) => b?.blockType !== 'splitHero')
-    await payload.update({
-      collection: 'pages',
-      id: home.id,
-      data: { layout: [splitHeroBlock, ...rest] },
-      req,
-    })
-    payload.logger.info(`  Updated home page (prepended Split Hero, kept ${rest.length} other block(s))`)
+    // Keep existing blocks, but drop any previous Split Hero (dedupe) and any
+    // block that is already invalid and would fail re-validation — notably a
+    // Media Block with no media (a common cause of broken, un-openable pages).
+    const isInvalid = (b: any) =>
+      (b?.blockType === 'mediaBlock' || b?.blockType === 'media') && !b?.media
+    const rest = (home.layout ?? []).filter(
+      (b: any) => b?.blockType !== 'splitHero' && !isInvalid(b),
+    )
+
+    const setLayout = (layout: any[]) =>
+      payload.update({ collection: 'pages', id: home.id, data: { layout }, req })
+
+    try {
+      await setLayout([splitHeroBlock, ...rest])
+      payload.logger.info(`  Updated home page (Split Hero first, kept ${rest.length} other block(s))`)
+    } catch (err) {
+      // Some other existing block is invalid — fall back to a clean home with
+      // just the Split Hero so the seed always succeeds.
+      payload.logger.warn(`  Existing layout still invalid (${err}); setting Split Hero only`)
+      await setLayout([splitHeroBlock])
+      payload.logger.info('  Updated home page (Split Hero only)')
+    }
   } else {
     await payload.create({
       collection: 'pages',
