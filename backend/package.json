@@ -26,7 +26,6 @@
     "seed:bs:en": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed-basic-supplements-en.ts",
     "seed:bs:verify": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/verify-variation-images.ts",
     "reset:catalog": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/reset-catalog.ts",
-    "seed:home-hero": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/seed-home-hero.ts",
     "translate:products": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/translate-products.ts",
     "translate:products:free": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/translate-products-gtranslate.ts",
     "seed:real-data": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/scripts/seed-real-data.ts"
