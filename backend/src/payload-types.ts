@@ -302,6 +302,7 @@ export interface Product {
     | null;
   layout?:
     | (
+        | SplitHeroBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -445,6 +446,27 @@ export interface VariantType {
   updatedAt: string;
   createdAt: string;
   deletedAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SplitHeroBlock".
+ */
+export interface SplitHeroBlock {
+  /**
+   * Two image panels shown side by side. Each links somewhere.
+   */
+  panels?:
+    | {
+        image: number | Media;
+        eyebrow?: string | null;
+        title: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'splitHero';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -696,6 +718,7 @@ export interface Page {
   };
   layout?:
     | (
+        | SplitHeroBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -751,6 +774,7 @@ export interface Category {
    */
   content?:
     | (
+        | SplitHeroBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -862,6 +886,7 @@ export interface Brand {
    */
   content?:
     | (
+        | SplitHeroBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -1303,6 +1328,7 @@ export interface Post {
   };
   layout?:
     | (
+        | SplitHeroBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -1354,6 +1380,7 @@ export interface PostCategory {
    */
   content?:
     | (
+        | SplitHeroBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -1807,6 +1834,7 @@ export interface PagesSelect<T extends boolean = true> {
   layout?:
     | T
     | {
+        splitHero?: T | SplitHeroBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -1836,6 +1864,23 @@ export interface PagesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SplitHeroBlock_select".
+ */
+export interface SplitHeroBlockSelect<T extends boolean = true> {
+  panels?:
+    | T
+    | {
+        image?: T;
+        eyebrow?: T;
+        title?: T;
+        url?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2102,6 +2147,7 @@ export interface PostsSelect<T extends boolean = true> {
   layout?:
     | T
     | {
+        splitHero?: T | SplitHeroBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2146,6 +2192,7 @@ export interface CategoriesSelect<T extends boolean = true> {
   content?:
     | T
     | {
+        splitHero?: T | SplitHeroBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2186,6 +2233,7 @@ export interface PostCategoriesSelect<T extends boolean = true> {
   content?:
     | T
     | {
+        splitHero?: T | SplitHeroBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2226,6 +2274,7 @@ export interface BrandsSelect<T extends boolean = true> {
   content?:
     | T
     | {
+        splitHero?: T | SplitHeroBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2544,6 +2593,7 @@ export interface ProductsSelect<T extends boolean = true> {
   layout?:
     | T
     | {
+        splitHero?: T | SplitHeroBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
