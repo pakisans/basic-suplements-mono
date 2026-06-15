@@ -18,10 +18,12 @@ export const Categories: CollectionConfig = {
     read: () => true,
     update: adminOnly,
   },
+  // Categories are ordered by `sortOrder` everywhere (admin list + storefront).
+  defaultSort: 'sortOrder',
   admin: {
     useAsTitle: 'title',
     group: 'Content',
-    defaultColumns: ['title', 'slug', 'parent', 'updatedAt'],
+    defaultColumns: ['title', 'sortOrder', 'slug', 'parent', 'updatedAt'],
   },
   fields: [
     {
@@ -29,6 +31,17 @@ export const Categories: CollectionConfig = {
       type: 'text',
       localized: true,
       required: true,
+    },
+    {
+      name: 'sortOrder',
+      type: 'number',
+      defaultValue: 0,
+      admin: {
+        position: 'sidebar',
+        step: 1,
+        description:
+          'Display order — lower numbers appear first (among categories with the same parent). Reorder by editing this number.',
+      },
     },
     slugField({
       localized: false,

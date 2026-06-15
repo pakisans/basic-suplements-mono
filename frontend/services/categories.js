@@ -1,21 +1,13 @@
 import { payloadQuery, payloadFindBySlug } from '@/lib/payload/client'
 import { REVALIDATE } from '@/constants'
 
-const PREFERRED_PARENT_CATEGORY_ORDER = ['suplementi', 'oprema']
-
-function sortParentCategories(categories) {
-  return [...categories].sort((a, b) => {
-    const aIndex = PREFERRED_PARENT_CATEGORY_ORDER.indexOf(a.slug)
-    const bIndex = PREFERRED_PARENT_CATEGORY_ORDER.indexOf(b.slug)
-    const normalizedAIndex = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex
-    const normalizedBIndex = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex
-
-    if (normalizedAIndex !== normalizedBIndex) {
-      return normalizedAIndex - normalizedBIndex
-    }
-
-    return String(a.title).localeCompare(String(b.title), 'en')
-  })
+// CMS-driven order: sort by `sortOrder` (set in the admin), with title as a
+// stable tie-breaker.
+function bySortOrder(a, b) {
+  const ao = typeof a.sortOrder === 'number' ? a.sortOrder : 0
+  const bo = typeof b.sortOrder === 'number' ? b.sortOrder : 0
+  if (ao !== bo) return ao - bo
+  return String(a.title).localeCompare(String(b.title), 'en')
 }
 
 export async function getCategories(options = {}) {
@@ -28,18 +20,14 @@ export async function getCategories(options = {}) {
 
   const result = await payloadQuery('categories', {
     where,
-    sort: 'title',
+    sort: 'sortOrder',
     limit,
     depth,
     revalidate: REVALIDATE.categories,
     tags: ['categories'],
   })
 
-  if (parentOnly) {
-    return sortParentCategories(result.docs)
-  }
-
-  return result.docs
+  return [...result.docs].sort(bySortOrder)
 }
 
 export async function getCategoryBySlug(slug) {
@@ -55,14 +43,14 @@ export async function getSubcategories(parentSlug) {
     where: {
       'parent.slug': { equals: parentSlug },
     },
-    sort: 'title',
+    sort: 'sortOrder',
     limit: 50,
     depth: 2,
     revalidate: REVALIDATE.categories,
     tags: ['categories', `category-${parentSlug}`],
   })
 
-  return result.docs
+  return [...result.docs].sort(bySortOrder)
 }
 
 export async function getCategoryBreadcrumbs(category) {
