@@ -24,6 +24,10 @@ export const Categories: CollectionConfig = {
     useAsTitle: 'title',
     group: 'Content',
     defaultColumns: ['title', 'sortOrder', 'slug', 'parent', 'updatedAt'],
+    components: {
+      // Drag-and-drop reorder panel above the Categories list (saves instantly).
+      beforeListTable: ['@/components/admin/CategoryReorder#CategoryReorder'],
+    },
   },
   fields: [
     {
