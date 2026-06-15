@@ -51,12 +51,6 @@ export const CategoryReorder: React.FC = () => {
     return map
   }, [cats])
 
-  const titleById = useMemo(() => {
-    const m = new Map<string, string>()
-    for (const c of cats ?? []) m.set(String(c.id), c.title)
-    return m
-  }, [cats])
-
   const persist = useCallback(async (list: Cat[]) => {
     setStatus('Saving…')
     try {
@@ -102,23 +96,33 @@ export const CategoryReorder: React.FC = () => {
   )
 
   const rootList = groups.get('root') ?? []
-  const childGroups = [...groups.entries()].filter(([k]) => k !== 'root')
 
-  const renderGroup = (groupKey: string, list: Cat[]) => (
-    <ul style={{ listStyle: 'none', margin: '0 0 4px', padding: 0 }}>
-      {list.map((c) => (
-        <li
-          key={String(c.id)}
+  // Recursive tree: a row + its children nested underneath. Reordering only
+  // happens among siblings of the same parent (groupKey), which is also how
+  // sortOrder is scoped.
+  const renderNode = (c: Cat, groupKey: string, depth: number): React.ReactNode => {
+    const children = groups.get(String(c.id)) ?? []
+    return (
+      <li key={String(c.id)} style={{ listStyle: 'none' }}>
+        <div
           draggable
-          onDragStart={() => setDragId(String(c.id))}
+          onDragStart={(e) => {
+            e.stopPropagation()
+            setDragId(String(c.id))
+          }}
           onDragOver={(e) => e.preventDefault()}
-          onDrop={() => handleDrop(groupKey, String(c.id))}
+          onDrop={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            handleDrop(groupKey, String(c.id))
+          }}
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: 10,
             padding: '8px 10px',
             marginBottom: 4,
+            marginLeft: depth * 22,
             border: '1px solid var(--theme-elevation-150)',
             borderRadius: 4,
             background:
@@ -131,10 +135,15 @@ export const CategoryReorder: React.FC = () => {
           </span>
           <span style={{ flex: 1 }}>{c.title}</span>
           <span style={{ opacity: 0.45, fontSize: 12 }}>{c.slug}</span>
-        </li>
-      ))}
-    </ul>
-  )
+        </div>
+        {children.length > 0 && (
+          <ul style={{ margin: 0, padding: 0 }}>
+            {children.map((child) => renderNode(child, String(c.id), depth + 1))}
+          </ul>
+        )}
+      </li>
+    )
+  }
 
   return (
     <div style={{ margin: '0 0 24px' }}>
@@ -174,19 +183,9 @@ export const CategoryReorder: React.FC = () => {
           {cats === null ? (
             <p style={{ opacity: 0.6 }}>Loading…</p>
           ) : (
-            <>
-              <h4 style={{ margin: '0 0 8px' }}>Top-level</h4>
-              {renderGroup('root', rootList)}
-
-              {childGroups.map(([key, list]) => (
-                <div key={key} style={{ marginTop: 16 }}>
-                  <h4 style={{ margin: '0 0 8px' }}>
-                    {titleById.get(key) ?? 'Subcategories'} — subcategories
-                  </h4>
-                  {renderGroup(key, list)}
-                </div>
-              ))}
-            </>
+            <ul style={{ margin: 0, padding: 0 }}>
+              {rootList.map((c) => renderNode(c, 'root', 0))}
+            </ul>
           )}
         </div>
       )}
