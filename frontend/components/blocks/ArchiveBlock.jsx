@@ -26,10 +26,8 @@ export function ArchiveBlock({ block }) {
   return (
     <section
       aria-label="Product archive"
-      className="relative overflow-hidden bg-zinc-950 py-20 md:py-28"
+      className="relative bg-black border-t border-white/[0.06] py-24 md:py-32"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(255,255,255,0.05),transparent)]" />
 
       <div className="container relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
@@ -89,7 +87,6 @@ export function ArchiveBlock({ block }) {
         )}
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
     </section>
   );
 }

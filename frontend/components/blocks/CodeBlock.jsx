@@ -4,10 +4,8 @@ export function CodeBlock({ block }) {
   return (
     <section
       aria-label="Code snippet"
-      className="relative overflow-hidden bg-zinc-950 py-20 md:py-28"
+      className="relative bg-black border-t border-white/[0.06] py-24 md:py-32"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_50%,rgba(255,255,255,0.03),transparent)]" />
 
       <div className="container relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="relative overflow-hidden ring-1 ring-white/10">
@@ -27,11 +25,8 @@ export function CodeBlock({ block }) {
         </div>
 
         {/* corner accents */}
-        <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 border-b border-r border-white/10" />
-        <div className="pointer-events-none absolute -left-3 -top-3 h-12 w-12 border-l border-t border-white/10" />
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
     </section>
   );
 }

@@ -36,7 +36,7 @@ function Field({ field, value, onChange }) {
         required={field.required}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`${inputBase} appearance-none bg-zinc-950`}
+        className={`${inputBase} appearance-none bg-black`}
       >
         <option value="">{field.label}</option>
         {(field.options ?? []).map((opt) => (
@@ -115,10 +115,8 @@ export function FormBlock({ block }) {
   return (
     <section
       aria-label="Contact"
-      className="relative overflow-hidden bg-zinc-950 py-20 md:py-28"
+      className="relative bg-black border-t border-white/[0.06] py-24 md:py-32"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_0%,rgba(255,255,255,0.04),transparent)]" />
 
       <div className="container relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-24">
@@ -252,13 +250,10 @@ export function FormBlock({ block }) {
             </div>
 
             {/* corner accents */}
-            <div className="pointer-events-none absolute -bottom-3 -right-3 h-12 w-12 border-b border-r border-white/10" />
-            <div className="pointer-events-none absolute -left-3 -top-3 h-12 w-12 border-l border-t border-white/10" />
           </div>
         </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
     </section>
   );
 }

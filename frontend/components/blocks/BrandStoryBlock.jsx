@@ -39,7 +39,7 @@ function TextContent({
           {stats.map((stat, i) => (
             <div
               key={i}
-              className={`flex flex-col gap-1.5 px-6 py-5 ${darkStats ? 'bg-zinc-950' : 'bg-black/40 backdrop-blur-sm'}`}
+              className={`flex flex-col gap-1.5 px-6 py-5 ${darkStats ? 'bg-black' : 'bg-black/40 backdrop-blur-sm'}`}
             >
               <span className="text-3xl font-extrabold tracking-tight text-white md:text-4xl">
                 {stat.value}
@@ -93,7 +93,7 @@ export function BrandStoryBlock({ block }) {
   if (imageFit === 'contain' && image) {
     const imageOnRight = !reverse;
     return (
-      <section className="relative overflow-hidden bg-zinc-950 py-24 md:py-36">
+      <section className="relative bg-black border-t border-white/[0.06] py-28 md:py-40">
         {/* Image — right or left portion, slightly inset vertically */}
         <div
           className={`absolute inset-y-6 md:inset-y-10 ${imageOnRight ? 'right-0 left-0 lg:left-[42%]' : 'left-0 right-0 lg:right-[42%]'} overflow-hidden`}
@@ -104,14 +104,13 @@ export function BrandStoryBlock({ block }) {
             className="object-cover object-center"
           />
           {/* mobile: heavy bottom-to-top overlay so text on top is readable */}
-          <div className="absolute inset-0 bg-zinc-950/75 lg:hidden" />
+          <div className="absolute inset-0 bg-black/75 lg:hidden" />
           {/* desktop: fade toward text side */}
           <div
             className={`absolute inset-0 hidden lg:block ${imageOnRight ? 'bg-linear-to-r from-zinc-950 via-zinc-950/30 to-transparent' : 'bg-linear-to-l from-zinc-950 via-zinc-950/30 to-transparent'}`}
           />
         </div>
 
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
 
         <div className="container relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div
@@ -131,15 +130,12 @@ export function BrandStoryBlock({ block }) {
           </div>
         </div>
 
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
       </section>
     );
   }
 
   return (
-    <section className="relative overflow-hidden bg-zinc-950 py-20 md:py-28">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_110%,rgba(255,255,255,0.03),transparent)]" />
+    <section className="relative bg-black border-t border-white/[0.06] py-24 md:py-32">
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div
@@ -175,13 +171,10 @@ export function BrandStoryBlock({ block }) {
                 </div>
               )}
             </div>
-            <div className="pointer-events-none absolute -bottom-3 -right-3 h-16 w-16 border-b border-r border-white/10" />
-            <div className="pointer-events-none absolute -left-3 -top-3 h-16 w-16 border-l border-t border-white/10" />
           </div>
         </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
     </section>
   );
 }

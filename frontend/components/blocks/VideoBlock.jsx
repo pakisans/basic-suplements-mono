@@ -23,10 +23,8 @@ export function VideoBlock({ block }) {
   return (
     <section
       aria-label={block.caption ?? 'Video'}
-      className="relative overflow-hidden bg-zinc-950 py-20 md:py-28"
+      className="relative bg-black border-t border-white/[0.06] py-24 md:py-32"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_50%,rgba(255,255,255,0.03),transparent)]" />
 
       <div className="container relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <figure>
@@ -55,8 +53,6 @@ export function VideoBlock({ block }) {
           </div>
 
           {/* corner accents */}
-          <div className="pointer-events-none absolute -bottom-3 -right-3 h-16 w-16 border-b border-r border-white/10" />
-          <div className="pointer-events-none absolute -left-3 -top-3 h-16 w-16 border-l border-t border-white/10" />
 
           {block.caption && (
             <figcaption className="mt-5 text-center text-[10px] font-semibold tracking-[0.3em] text-zinc-600 uppercase">
@@ -66,7 +62,6 @@ export function VideoBlock({ block }) {
         </figure>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
     </section>
   );
 }

@@ -23,10 +23,9 @@ export function AmbassadorBlock({ block }) {
   const reverse = layout === 'media-left';
 
   return (
-    <section className="relative overflow-hidden bg-zinc-950 py-20 md:py-28">
+    <section className="relative bg-black border-t border-white/[0.06] py-24 md:py-32">
       {/* ambient glow top */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_-10%,rgba(255,255,255,0.05),transparent)]" />
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div
@@ -105,8 +104,6 @@ export function AmbassadorBlock({ block }) {
               )}
             </div>
             {/* corner accent */}
-            <div className="pointer-events-none absolute -bottom-3 -right-3 h-16 w-16 border-b border-r border-white/10" />
-            <div className="pointer-events-none absolute -left-3 -top-3 h-16 w-16 border-l border-t border-white/10" />
           </div>
         </div>
       </div>

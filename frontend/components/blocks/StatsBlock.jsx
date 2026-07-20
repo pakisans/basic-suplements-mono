@@ -101,7 +101,7 @@ function AnimatedStat({ value, label, delay = 0, inView }) {
   }, [inView, delay]);
 
   return (
-    <div className="group relative flex flex-col items-center justify-center gap-3 overflow-hidden bg-zinc-950 px-6 py-12 text-center transition-colors duration-500 hover:bg-zinc-900/50">
+    <div className="group relative flex flex-col items-center justify-center gap-3 bg-black px-6 py-12 text-center transition-colors duration-500 hover:bg-zinc-900/50">
       {/* fill bar animating upward from bottom */}
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 bg-linear-to-t from-white/[0.03] to-transparent transition-none"
@@ -170,10 +170,8 @@ export function StatsBlock({ block }) {
     <section
       ref={sectionRef}
       aria-label="Key statistics"
-      className="relative overflow-hidden bg-zinc-950 py-20 md:py-28"
+      className="relative bg-black border-t border-white/[0.06] py-24 md:py-32"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,rgba(255,255,255,0.04),transparent)]" />
 
       <div className="container relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {block.heading && (
@@ -220,7 +218,6 @@ export function StatsBlock({ block }) {
         </dl>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
     </section>
   );
 }

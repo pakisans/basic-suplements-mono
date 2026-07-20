@@ -28,39 +28,10 @@ export function CallToActionBlock({ block }) {
     <section
       ref={sectionRef}
       aria-label="Call to action"
-      className="relative overflow-hidden bg-zinc-950 py-24 md:py-36"
+      className="relative bg-black border-t border-white/[0.06] py-28 md:py-40"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/15 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_50%_50%,rgba(255,255,255,0.05),transparent)]" />
 
       <div className="container relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-        {/* decorative row — lines expand outward */}
-        <div
-          className="mb-12 flex items-center justify-center gap-3"
-          aria-hidden="true"
-          style={{ opacity: inView ? 1 : 0, transition: 'opacity 0.5s ease 0ms' }}
-        >
-          <span
-            className="h-px bg-white/10"
-            style={{ width: inView ? 80 : 0, transition: 'width 0.7s ease 100ms' }}
-          />
-          <span
-            className="h-1 w-1 rotate-45 bg-white/20"
-            style={{ opacity: inView ? 1 : 0, transform: inView ? 'rotate(45deg) scale(1)' : 'rotate(45deg) scale(0)', transition: 'opacity 0.3s ease 250ms, transform 0.3s ease 250ms' }}
-          />
-          <span
-            className="h-1.5 w-1.5 rotate-45 bg-white/30"
-            style={{ opacity: inView ? 1 : 0, transform: inView ? 'rotate(45deg) scale(1)' : 'rotate(45deg) scale(0)', transition: 'opacity 0.3s ease 320ms, transform 0.3s ease 320ms' }}
-          />
-          <span
-            className="h-1 w-1 rotate-45 bg-white/20"
-            style={{ opacity: inView ? 1 : 0, transform: inView ? 'rotate(45deg) scale(1)' : 'rotate(45deg) scale(0)', transition: 'opacity 0.3s ease 250ms, transform 0.3s ease 250ms' }}
-          />
-          <span
-            className="h-px bg-white/10"
-            style={{ width: inView ? 80 : 0, transition: 'width 0.7s ease 100ms' }}
-          />
-        </div>
 
         {block.richText && (
           <div
@@ -93,7 +64,6 @@ export function CallToActionBlock({ block }) {
         )}
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-white/15 to-transparent" />
     </section>
   );
 }

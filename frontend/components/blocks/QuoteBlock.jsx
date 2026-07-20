@@ -6,7 +6,6 @@ import { PayloadImage } from '@/components/ui/PayloadImage';
 const STARS = [1, 2, 3, 4, 5];
 
 export function QuoteBlock({ block }) {
-  if (!block.text) return null;
   const rating = block.rating ? parseInt(block.rating, 10) : null;
 
   const sectionRef = useRef(null);
@@ -28,6 +27,8 @@ export function QuoteBlock({ block }) {
     return () => observer.disconnect();
   }, []);
 
+  if (!block.text) return null;
+
   function reveal(delay = 0, extra = {}) {
     return {
       opacity: inView ? 1 : 0,
@@ -41,10 +42,8 @@ export function QuoteBlock({ block }) {
     <section
       ref={sectionRef}
       aria-label="Testimonial"
-      className="relative overflow-hidden bg-zinc-950 py-24 md:py-36"
+      className="relative bg-black border-t border-white/[0.06] py-28 md:py-40"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_70%_at_50%_50%,rgba(255,255,255,0.04),transparent)]" />
 
       <div className="container relative mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
         {/* decorative large quote mark */}
@@ -122,7 +121,6 @@ export function QuoteBlock({ block }) {
         </figure>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent" />
     </section>
   );
 }
