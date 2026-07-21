@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ProductCard } from '@/components/product/ProductCard';
+import { FeaturedProductCard } from '@/components/product/FeaturedProductCard';
 
 const ArrowIcon = () => (
   <svg viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true">
@@ -38,7 +38,7 @@ export function ThreeItemGridBlock({ block }) {
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
           {products.map((product, index) => (
-            <ProductCard key={product.id} product={product} priority={index === 0} />
+            <FeaturedProductCard key={product.id} product={product} priority={index === 0} />
           ))}
         </div>
       </div>

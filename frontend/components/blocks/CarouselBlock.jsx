@@ -1,57 +1,51 @@
 import Link from 'next/link';
-import { ProductCard } from '@/components/product/ProductCard';
-
-const ArrowIcon = () => (
-  <svg viewBox="0 0 16 16" fill="currentColor" className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden="true">
-    <path fillRule="evenodd" d="M2 8a.75.75 0 0 1 .75-.75h8.69L8.22 4.03a.75.75 0 0 1 1.06-1.06l4.5 4.5a.75.75 0 0 1 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H2.75A.75.75 0 0 1 2 8Z" clipRule="evenodd" />
-  </svg>
-);
+import { FeaturedProductCard } from '@/components/product/FeaturedProductCard';
 
 export function CarouselBlock({ block }) {
   const products = block.populatedDocs ?? block.selectedDocs ?? [];
   if (!products.length) return null;
+
+  // Emphasise the second card for visual rhythm (only when there are enough).
+  const featuredIndex = products.length >= 4 ? 1 : -1;
 
   return (
     <section
       aria-label="Featured products"
       className="relative bg-black border-t border-white/[0.06] py-24 md:py-32"
     >
-
       <div className="container relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 flex items-end justify-between gap-6">
-          <div>
-            <p className="mb-3 text-[10px] font-semibold tracking-[0.4em] text-zinc-500 uppercase">
-              Selection
+        <div className="mb-14 grid gap-6 md:grid-cols-2 md:items-end">
+          <h2 className="text-4xl font-bold leading-[1.05] tracking-tight text-white md:text-5xl">
+            Built for real results.
+          </h2>
+          <div className="flex items-start justify-between gap-8 md:justify-end md:gap-12">
+            <p className="max-w-xs text-[15px] leading-relaxed text-zinc-400">
+              Premium formulations with carefully selected, clinically-backed
+              ingredients — at honest prices.
             </p>
-            <h2 className="text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl">
-              Featured Products
-            </h2>
-            <div className="mt-4 h-px w-12 bg-white/20" />
+            <Link
+              href="/products"
+              className="group inline-flex shrink-0 items-center gap-2 whitespace-nowrap border-b border-white/40 pb-1 text-sm font-semibold text-white transition-colors hover:border-white"
+            >
+              Shop All
+              <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
+                →
+              </span>
+            </Link>
           </div>
-          <Link
-            href="/products"
-            className="group hidden shrink-0 items-center gap-2 text-[11px] font-bold tracking-[0.2em] text-zinc-500 uppercase transition-colors hover:text-white sm:flex"
-          >
-            View all <ArrowIcon />
-          </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+          {products.map((product, index) => (
+            <FeaturedProductCard
+              key={product.id}
+              product={product}
+              featured={index === featuredIndex}
+              priority={index < 2}
+            />
           ))}
         </div>
-
-        <div className="mt-8 flex items-center justify-between sm:hidden">
-          <Link
-            href="/products"
-            className="group inline-flex items-center gap-2 text-[11px] font-bold tracking-[0.2em] text-zinc-500 uppercase transition-colors hover:text-white"
-          >
-            View all products <ArrowIcon />
-          </Link>
-        </div>
       </div>
-
     </section>
   );
 }
