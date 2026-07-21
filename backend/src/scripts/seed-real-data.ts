@@ -7,55 +7,6 @@
 
 import config from '@payload-config'
 import { createLocalReq, getPayload } from 'payload'
-import type { File } from 'payload'
-
-// ─── Split Hero (first block on home) ───────────────────────────────────────────
-// Two image panels with links. Edit images/labels here or later in the admin.
-const SPLIT_HERO_PANELS = [
-  {
-    imageUrl: 'https://www.ogistra-nutrition-shop.com/3778-large_default/pro-whey-227kg-premium-whey-protein.jpg',
-    eyebrow: 'Shop',
-    title: 'Supplements',
-    url: '/products',
-  },
-  {
-    imageUrl: 'https://www.ogistra-nutrition-shop.com/3680-large_default/basic-duks-sa-kapuljacom-aerofit.jpg',
-    eyebrow: 'Shop',
-    title: 'Apparel',
-    url: '/products',
-  },
-]
-
-async function fetchFile(url: string): Promise<File | null> {
-  try {
-    const res = await fetch(url)
-    if (!res.ok) return null
-    const data = await res.arrayBuffer()
-    const ext = url.split('.').pop()?.split('?')[0] ?? 'jpg'
-    const name = url.split('/').pop()?.split('?')[0] ?? `split-hero-${Date.now()}.${ext}`
-    return { name, data: Buffer.from(data), mimetype: `image/${ext === 'jpg' ? 'jpeg' : ext}`, size: data.byteLength }
-  } catch {
-    return null
-  }
-}
-
-async function buildSplitHeroBlock(
-  payload: Awaited<ReturnType<typeof getPayload>>,
-  req: Awaited<ReturnType<typeof createLocalReq>>,
-): Promise<object | null> {
-  const panels: { image: number | string; eyebrow: string; title: string; url: string }[] = []
-  for (const p of SPLIT_HERO_PANELS) {
-    const file = await fetchFile(p.imageUrl)
-    if (!file) continue
-    const media = await payload.create({ collection: 'media', data: { alt: `${p.title} hero` }, file, req })
-    panels.push({ image: media.id, eyebrow: p.eyebrow, title: p.title, url: p.url })
-  }
-  if (panels.length < 2) {
-    payload.logger.warn('  Split Hero needs two images — skipping block.')
-    return null
-  }
-  return { blockType: 'splitHero', panels }
-}
 
 // ─── Link helper ───────────────────────────────────────────────────────────────
 
@@ -615,31 +566,7 @@ async function run() {
 
   // ─── Build and seed Home page ──────────────────────────────────────────────
   payload.logger.info('Seeding Home page…')
-  const homeBlocks: object[] = buildHomePageBlocks({ firstMediaId, contactFormId })
-
-  // Product Spotlight sections — feature a couple of real products.
-  const spotlightProducts = await payload.find({
-    collection: 'products',
-    where: { _status: { equals: 'published' } },
-    limit: 2,
-    depth: 0,
-    sort: '-createdAt',
-    req,
-  })
-  const spotlights = spotlightProducts.docs.map((p, i) => ({
-    blockType: 'productSpotlight',
-    eyebrow: 'Featured',
-    product: p.id,
-    summary:
-      'Premium, transparently formulated — made from carefully selected, quality-certified ingredients for reliable results you can feel.',
-    imageSide: i % 2 === 0 ? 'right' : 'left',
-    ctaLabel: 'Shop now',
-  }))
-  if (spotlights.length) homeBlocks.splice(1, 0, ...spotlights)
-
-  // Split Hero goes first.
-  const splitHero = await buildSplitHeroBlock(payload, req)
-  if (splitHero) homeBlocks.unshift(splitHero)
+  const homeBlocks = buildHomePageBlocks({ firstMediaId, contactFormId })
   await upsertPage(payload, req, 'home', buildHomePageData(homeBlocks), 'Home page')
 
   // ─── Seed About page ───────────────────────────────────────────────────────
