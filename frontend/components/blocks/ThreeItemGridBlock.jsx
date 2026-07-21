@@ -36,11 +36,9 @@ export function ThreeItemGridBlock({ block }) {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-px bg-white/5 ring-1 ring-white/8 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
           {products.map((product, index) => (
-            <div key={product.id} className="bg-black">
-              <ProductCard product={product} priority={index === 0} />
-            </div>
+            <ProductCard key={product.id} product={product} priority={index === 0} />
           ))}
         </div>
       </div>

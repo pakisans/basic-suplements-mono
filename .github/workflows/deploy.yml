@@ -172,7 +172,12 @@ jobs:
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           set -e
           cd /var/www/app
-          docker compose up -d --build --no-deps app1
+          docker compose build app1
+          # Remove the current + any stale/renamed leftover containers (e.g.
+          # <hash>_app1 from an interrupted recreate) so the name is free.
+          docker compose rm -sf app1 || true
+          docker ps -aq --filter "name=app1" | xargs -r docker rm -f || true
+          docker compose up -d --no-deps app1
           EOF
 
       - name: Run backend migrations
@@ -213,6 +218,8 @@ jobs:
           set -e
           cd /var/www/app
           docker compose build app2
+          docker compose rm -sf app2 || true
+          docker ps -aq --filter "name=app2" | xargs -r docker rm -f || true
           docker compose up -d --no-deps app2
           EOF
 

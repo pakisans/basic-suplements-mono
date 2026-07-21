@@ -36,11 +36,9 @@ export function CarouselBlock({ block }) {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-px bg-white/5 ring-1 ring-white/8 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
           {products.map((product) => (
-            <div key={product.id} className="bg-black">
-              <ProductCard product={product} />
-            </div>
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
 
