@@ -15,6 +15,7 @@ import { StatsBlock } from './StatsBlock';
 import { VideoBlock } from './VideoBlock';
 import { SpacerBlock } from './SpacerBlock';
 import { SplitHeroBlock } from './SplitHeroBlock';
+import { ProductSpotlightBlock } from './ProductSpotlightBlock';
 
 export function BlockRenderer({ blocks, className = '' }) {
   if (!blocks?.length) return null;
@@ -34,6 +35,8 @@ function BlockItem({ block }) {
   switch (block.blockType) {
     case 'splitHero':
       return <SplitHeroBlock block={block} />;
+    case 'productSpotlight':
+      return <ProductSpotlightBlock block={block} />;
     case 'ambassador':
       return <AmbassadorBlock block={block} />;
     case 'brandStory':

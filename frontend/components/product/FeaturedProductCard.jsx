@@ -73,15 +73,15 @@ export function FeaturedProductCard({ product, featured = false, priority = fals
       <Link
         href={href}
         aria-label={product.title}
-        className="relative mb-8 flex aspect-square w-full max-w-[220px] items-center justify-center overflow-hidden"
+        className="relative mb-8 flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-b from-zinc-100 to-zinc-300 p-4"
       >
         {image && (
           <PayloadImage
             media={image}
             fill
             priority={priority}
-            className="object-contain transition-transform duration-500 group-hover:scale-105"
-            sizes="240px"
+            className="object-contain p-3 transition-transform duration-500 group-hover:scale-105"
+            sizes="300px"
           />
         )}
       </Link>

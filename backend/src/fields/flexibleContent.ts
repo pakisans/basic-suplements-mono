@@ -11,6 +11,7 @@ import { Content } from '@/blocks/Content/config'
 import { FAQ } from '@/blocks/FAQ/config'
 import { FormBlock } from '@/blocks/Form/config'
 import { MediaBlock } from '@/blocks/MediaBlock/config'
+import { ProductSpotlight } from '@/blocks/ProductSpotlight/config'
 import { Quote } from '@/blocks/Quote/config'
 import { Spacer } from '@/blocks/Spacer/config'
 import { SplitHero } from '@/blocks/SplitHero/config'
@@ -20,6 +21,7 @@ import { Video } from '@/blocks/Video/config'
 
 export const defaultContentBlocks: Block[] = [
   SplitHero,
+  ProductSpotlight,
   Ambassador,
   BrandStory,
   Banner,

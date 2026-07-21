@@ -616,6 +616,27 @@ async function run() {
   // ─── Build and seed Home page ──────────────────────────────────────────────
   payload.logger.info('Seeding Home page…')
   const homeBlocks: object[] = buildHomePageBlocks({ firstMediaId, contactFormId })
+
+  // Product Spotlight sections — feature a couple of real products.
+  const spotlightProducts = await payload.find({
+    collection: 'products',
+    where: { _status: { equals: 'published' } },
+    limit: 2,
+    depth: 0,
+    sort: '-createdAt',
+    req,
+  })
+  const spotlights = spotlightProducts.docs.map((p, i) => ({
+    blockType: 'productSpotlight',
+    eyebrow: 'Featured',
+    product: p.id,
+    summary:
+      'Premium, transparently formulated — made from carefully selected, quality-certified ingredients for reliable results you can feel.',
+    imageSide: i % 2 === 0 ? 'right' : 'left',
+    ctaLabel: 'Shop now',
+  }))
+  if (spotlights.length) homeBlocks.splice(1, 0, ...spotlights)
+
   // Split Hero goes first.
   const splitHero = await buildSplitHeroBlock(payload, req)
   if (splitHero) homeBlocks.unshift(splitHero)
