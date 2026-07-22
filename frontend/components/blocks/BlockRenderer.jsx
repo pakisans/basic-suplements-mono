@@ -23,9 +23,7 @@ export function BlockRenderer({ blocks, className = '' }) {
   return (
     <div className={className}>
       {blocks.map((block, index) => (
-        <div key={block.id ?? index} className="mb-12 last:mb-0">
-          <BlockItem block={block} />
-        </div>
+        <BlockItem key={block.id ?? index} block={block} />
       ))}
     </div>
   );

@@ -49,13 +49,13 @@ export default async function HomePage() {
           {featuredProducts.length > 0 && (
             <Section>
               <SectionHeading
-                title="Featured Products"
+                title="Featured products"
                 subtitle="Handpicked for you"
               />
               <ProductGrid products={featuredProducts} columns={4} />
               <div className="mt-12 text-center">
                 <Button href="/products" variant="outline">
-                  All Products
+                  Shop all
                 </Button>
               </div>
             </Section>

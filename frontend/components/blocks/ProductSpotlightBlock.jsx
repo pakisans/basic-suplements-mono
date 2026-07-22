@@ -54,7 +54,7 @@ export function ProductSpotlightBlock({ block }) {
               </p>
             )}
 
-            <h2 className="text-4xl font-bold leading-[1.05] tracking-tight text-white md:text-5xl">
+            <h2 className="text-4xl font-bold leading-[1.02] tracking-tight text-white md:text-5xl lg:text-6xl">
               {product.title}
             </h2>
 
@@ -87,7 +87,7 @@ export function ProductSpotlightBlock({ block }) {
               </Link>
               {price && (
                 <span className="text-sm text-zinc-500">
-                  Od <span className="font-semibold text-zinc-300">{price}</span>
+                  From <span className="font-semibold text-zinc-300">{price}</span>
                 </span>
               )}
             </div>

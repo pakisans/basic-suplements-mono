@@ -24,9 +24,6 @@ export function AmbassadorBlock({ block }) {
 
   return (
     <section className="relative bg-black border-t border-white/[0.06] py-24 md:py-32">
-      {/* ambient glow top */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div
           className={`flex flex-col gap-12 lg:flex-row lg:items-center lg:gap-20 ${reverse ? 'lg:flex-row-reverse' : ''}`}
@@ -107,9 +104,6 @@ export function AmbassadorBlock({ block }) {
           </div>
         </div>
       </div>
-
-      {/* ambient glow bottom */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
     </section>
   );
 }

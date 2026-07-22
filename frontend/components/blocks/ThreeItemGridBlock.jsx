@@ -21,7 +21,7 @@ export function ThreeItemGridBlock({ block }) {
         <div className="mb-12 flex items-end justify-between gap-6">
           <div>
             <p className="mb-3 text-[10px] font-semibold tracking-[0.4em] text-zinc-500 uppercase">
-              Hand-picked
+              Featured
             </p>
             <h2 className="text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl">
               Top Picks
@@ -32,7 +32,7 @@ export function ThreeItemGridBlock({ block }) {
             href="/products"
             className="group hidden shrink-0 items-center gap-2 text-[11px] font-bold tracking-[0.2em] text-zinc-500 uppercase transition-colors hover:text-white sm:flex"
           >
-            Browse all <ArrowIcon />
+            Shop all <ArrowIcon />
           </Link>
         </div>
 

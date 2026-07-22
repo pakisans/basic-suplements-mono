@@ -45,10 +45,10 @@ export function FeaturedProductCard({ product, featured = false, priority = fals
 
   return (
     <div
-      className={`group relative flex h-full flex-col items-center rounded-3xl border p-6 text-center transition-colors duration-300 md:p-8 ${
+      className={`group relative flex h-full flex-col items-center rounded-3xl border p-6 text-center transition-colors duration-300 md:p-7 ${
         featured
           ? 'border-white/15 bg-zinc-900'
-          : 'border-white/10 bg-zinc-950 hover:border-white/20'
+          : 'border-white/[0.08] bg-zinc-950 hover:border-white/20'
       }`}
     >
       {badge && (
@@ -58,14 +58,14 @@ export function FeaturedProductCard({ product, featured = false, priority = fals
       )}
 
       {category && (
-        <span className="mb-5 rounded-full border border-white/15 px-4 py-1 text-[11px] font-medium tracking-wide text-zinc-300">
+        <span className="mb-5 rounded-full border border-white/15 px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
           {category}
         </span>
       )}
 
       <Link
         href={href}
-        className="mb-6 block text-xl font-bold leading-tight tracking-tight text-white transition-opacity group-hover:opacity-80 md:text-2xl"
+        className="mb-6 block text-lg font-bold leading-tight tracking-tight text-white transition-opacity group-hover:opacity-80 md:text-xl"
       >
         {product.title}
       </Link>
@@ -73,20 +73,20 @@ export function FeaturedProductCard({ product, featured = false, priority = fals
       <Link
         href={href}
         aria-label={product.title}
-        className="relative mb-8 flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-b from-zinc-100 to-zinc-300 p-4"
+        className="relative mb-7 flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-b from-zinc-100 to-zinc-300"
       >
         {image && (
           <PayloadImage
             media={image}
             fill
             priority={priority}
-            className="object-contain p-3 transition-transform duration-500 group-hover:scale-105"
-            sizes="300px"
+            className="object-contain p-5 transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 300px"
           />
         )}
       </Link>
 
-      <div className="mt-auto flex flex-col items-center gap-5">
+      <div className="mt-auto flex flex-col items-center gap-4">
         <Link
           href={href}
           className={`inline-flex items-center gap-2 rounded-full px-7 py-3 text-[13px] font-semibold transition-colors ${
@@ -95,12 +95,12 @@ export function FeaturedProductCard({ product, featured = false, priority = fals
               : 'border border-white/25 text-white hover:border-white hover:bg-white hover:text-black'
           }`}
         >
-          Shop Now <span aria-hidden="true">→</span>
+          Shop now <span aria-hidden="true">→</span>
         </Link>
 
         {!isCatalogOnly && price && (
           <p className="text-[13px] text-zinc-500">
-            Od <span className="font-semibold text-zinc-300">{price}</span>
+            From <span className="font-semibold text-zinc-300">{price}</span>
           </p>
         )}
       </div>

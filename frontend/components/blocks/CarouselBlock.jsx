@@ -20,14 +20,13 @@ export function CarouselBlock({ block }) {
           </h2>
           <div className="flex items-start justify-between gap-8 md:justify-end md:gap-12">
             <p className="max-w-xs text-[15px] leading-relaxed text-zinc-400">
-              Premium formulations with carefully selected, clinically-backed
-              ingredients — at honest prices.
+              Premium formulations with carefully selected, clinically-backed ingredients — at honest prices.
             </p>
             <Link
               href="/products"
               className="group inline-flex shrink-0 items-center gap-2 whitespace-nowrap border-b border-white/40 pb-1 text-sm font-semibold text-white transition-colors hover:border-white"
             >
-              Shop All
+              Shop all
               <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
                 →
               </span>

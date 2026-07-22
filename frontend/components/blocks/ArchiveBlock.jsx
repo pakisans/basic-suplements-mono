@@ -34,16 +34,14 @@ export function ArchiveBlock({ block }) {
         {/* Header */}
         <div className="mb-14 flex items-end justify-between gap-6">
           <div>
-            <p className="mb-3 text-[10px] font-semibold tracking-[0.4em] text-zinc-500 uppercase">
-              Products
-            </p>
+            <p className="mb-3 text-[10px] font-semibold tracking-[0.4em] text-zinc-500 uppercase">Products</p>
             {block.introContent ? (
               <div className="[&_h1]:text-4xl [&_h1]:font-extrabold [&_h1]:leading-none [&_h1]:tracking-tight [&_h1]:text-white [&_h2]:text-4xl [&_h2]:font-extrabold [&_h2]:leading-none [&_h2]:tracking-tight [&_h2]:text-white md:[&_h1]:text-5xl md:[&_h2]:text-5xl [&_p]:mt-3 [&_p]:text-[15px] [&_p]:leading-relaxed [&_p]:text-zinc-400 [&_strong]:text-white">
                 <RichText content={block.introContent} />
               </div>
             ) : (
               <h2 className="text-4xl font-extrabold leading-none tracking-tight text-white md:text-5xl">
-                All Products
+                Shop all
               </h2>
             )}
             <div className="mt-4 h-px w-12 bg-white/20" />
@@ -54,7 +52,7 @@ export function ArchiveBlock({ block }) {
               href="/products"
               className="group hidden shrink-0 items-center gap-2 text-[11px] font-bold tracking-[0.2em] text-zinc-500 uppercase transition-colors hover:text-white sm:flex"
             >
-              Browse all <ArrowIcon />
+              Shop all <ArrowIcon />
             </Link>
           )}
         </div>
@@ -81,7 +79,7 @@ export function ArchiveBlock({ block }) {
               href="/products"
               className="group inline-flex items-center gap-3 border border-white/20 px-7 py-3.5 text-[11px] font-bold tracking-[0.2em] text-white uppercase transition-all hover:border-white hover:bg-white hover:text-black"
             >
-              View all products <ArrowIcon />
+              Pogledaj sve <ArrowIcon />
             </Link>
           </div>
         )}
