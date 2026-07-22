@@ -5,8 +5,8 @@ export function CarouselBlock({ block }) {
   const products = block.populatedDocs ?? block.selectedDocs ?? [];
   if (!products.length) return null;
 
-  // Emphasise the second card for visual rhythm (only when there are enough).
-  const featuredIndex = products.length >= 4 ? 1 : -1;
+  // Emphasise the last card (solid white Shop Now button).
+  const featuredIndex = products.length >= 2 ? products.length - 1 : -1;
 
   return (
     <section
