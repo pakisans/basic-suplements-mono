@@ -32,9 +32,8 @@ function fromPrice(product) {
 }
 
 /**
- * Featured product card — uniform elevated surface, badge top-left, centered
- * code/category pill, product name, image, a Shop Now button (the emphasised
- * card gets a solid white button with an arrow), and a "Starting at" price.
+ * Large, centered "featured" product card (curated home sections): badge,
+ * category pill, name, product image, a Shop Now button, and a "from" price.
  */
 export function FeaturedProductCard({ product, featured = false, priority = false }) {
   const { isCatalogOnly } = useCatalogMode()
@@ -45,22 +44,28 @@ export function FeaturedProductCard({ product, featured = false, priority = fals
   const price = fromPrice(product)
 
   return (
-    <div className="group relative flex h-full flex-col items-center rounded-3xl bg-zinc-900 p-6 text-center md:p-8">
+    <div
+      className={`group relative flex h-full flex-col items-center rounded-3xl border p-6 text-center transition-colors duration-300 md:p-7 ${
+        featured
+          ? 'border-white/15 bg-zinc-900'
+          : 'border-white/[0.08] bg-zinc-950 hover:border-white/20'
+      }`}
+    >
       {badge && (
-        <span className="absolute left-5 top-5 rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold tracking-wide text-white">
+        <span className="absolute left-5 top-5 rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold tracking-wide text-white backdrop-blur">
           {badge}
         </span>
       )}
 
       {category && (
-        <span className="mb-5 rounded-full border border-white/25 px-4 py-1 text-[11px] font-medium tracking-wide text-zinc-200">
+        <span className="mb-5 rounded-full border border-white/15 px-4 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
           {category}
         </span>
       )}
 
       <Link
         href={href}
-        className="mb-6 block text-xl font-semibold leading-tight tracking-tight text-white transition-opacity group-hover:opacity-80 md:text-2xl"
+        className="mb-6 block text-lg font-bold leading-tight tracking-tight text-white transition-opacity group-hover:opacity-80 md:text-xl"
       >
         {product.title}
       </Link>
@@ -68,34 +73,34 @@ export function FeaturedProductCard({ product, featured = false, priority = fals
       <Link
         href={href}
         aria-label={product.title}
-        className="relative mb-8 flex aspect-square w-full max-w-[240px] items-center justify-center overflow-hidden"
+        className="relative mb-7 flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-b from-zinc-100 to-zinc-300"
       >
         {image && (
           <PayloadImage
             media={image}
             fill
             priority={priority}
-            className="object-contain transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 260px"
+            className="object-contain p-5 transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 300px"
           />
         )}
       </Link>
 
-      <div className="mt-auto flex flex-col items-center gap-5">
+      <div className="mt-auto flex flex-col items-center gap-4">
         <Link
           href={href}
-          className={`inline-flex items-center gap-2 rounded-full px-8 py-3 text-[13px] font-semibold transition-colors ${
+          className={`inline-flex items-center gap-2 rounded-full px-7 py-3 text-[13px] font-semibold transition-colors ${
             featured
               ? 'bg-white text-black hover:bg-zinc-200'
-              : 'bg-white/10 text-white hover:bg-white/20'
+              : 'border border-white/25 text-white hover:border-white hover:bg-white hover:text-black'
           }`}
         >
-          Shop Now {featured && <span aria-hidden="true">→</span>}
+          Shop now <span aria-hidden="true">→</span>
         </Link>
 
         {!isCatalogOnly && price && (
           <p className="text-[13px] text-zinc-500">
-            Starting at <span className="text-zinc-300">{price}</span>
+            From <span className="font-semibold text-zinc-300">{price}</span>
           </p>
         )}
       </div>
