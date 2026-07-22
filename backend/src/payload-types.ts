@@ -143,10 +143,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    'home-hero': HomeHero;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    'home-hero': HomeHeroSelect<false> | HomeHeroSelect<true>;
   };
   locale: 'en';
   widgets: {
@@ -303,6 +305,7 @@ export interface Product {
   layout?:
     | (
         | SplitHeroBlock
+        | ProductSpotlightBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -467,6 +470,30 @@ export interface SplitHeroBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'splitHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProductSpotlightBlock".
+ */
+export interface ProductSpotlightBlock {
+  eyebrow?: string | null;
+  imageSide?: ('right' | 'left') | null;
+  /**
+   * Image, name and price are pulled from this product.
+   */
+  product: number | Product;
+  /**
+   * Short blurb shown next to the product.
+   */
+  summary?: string | null;
+  stat?: {
+    value?: string | null;
+    label?: string | null;
+  };
+  ctaLabel?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'productSpotlight';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -719,6 +746,7 @@ export interface Page {
   layout?:
     | (
         | SplitHeroBlock
+        | ProductSpotlightBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -762,6 +790,10 @@ export interface Category {
   id: number;
   title: string;
   /**
+   * Display order — lower numbers appear first (among categories with the same parent). Reorder by editing this number.
+   */
+  sortOrder?: number | null;
+  /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
@@ -775,6 +807,7 @@ export interface Category {
   content?:
     | (
         | SplitHeroBlock
+        | ProductSpotlightBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -887,6 +920,7 @@ export interface Brand {
   content?:
     | (
         | SplitHeroBlock
+        | ProductSpotlightBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -1329,6 +1363,7 @@ export interface Post {
   layout?:
     | (
         | SplitHeroBlock
+        | ProductSpotlightBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -1381,6 +1416,7 @@ export interface PostCategory {
   content?:
     | (
         | SplitHeroBlock
+        | ProductSpotlightBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -1835,6 +1871,7 @@ export interface PagesSelect<T extends boolean = true> {
     | T
     | {
         splitHero?: T | SplitHeroBlockSelect<T>;
+        productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -1879,6 +1916,25 @@ export interface SplitHeroBlockSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProductSpotlightBlock_select".
+ */
+export interface ProductSpotlightBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  imageSide?: T;
+  product?: T;
+  summary?: T;
+  stat?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+      };
+  ctaLabel?: T;
   id?: T;
   blockName?: T;
 }
@@ -2148,6 +2204,7 @@ export interface PostsSelect<T extends boolean = true> {
     | T
     | {
         splitHero?: T | SplitHeroBlockSelect<T>;
+        productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2184,6 +2241,7 @@ export interface PostsSelect<T extends boolean = true> {
  */
 export interface CategoriesSelect<T extends boolean = true> {
   title?: T;
+  sortOrder?: T;
   generateSlug?: T;
   slug?: T;
   parent?: T;
@@ -2193,6 +2251,7 @@ export interface CategoriesSelect<T extends boolean = true> {
     | T
     | {
         splitHero?: T | SplitHeroBlockSelect<T>;
+        productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2234,6 +2293,7 @@ export interface PostCategoriesSelect<T extends boolean = true> {
     | T
     | {
         splitHero?: T | SplitHeroBlockSelect<T>;
+        productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2275,6 +2335,7 @@ export interface BrandsSelect<T extends boolean = true> {
     | T
     | {
         splitHero?: T | SplitHeroBlockSelect<T>;
+        productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2594,6 +2655,7 @@ export interface ProductsSelect<T extends boolean = true> {
     | T
     | {
         splitHero?: T | SplitHeroBlockSelect<T>;
+        productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -3188,6 +3250,18 @@ export interface FooterNewsletterBlock {
   blockType: 'footerNewsletter';
 }
 /**
+ * Blocks rendered at the top of the home page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-hero".
+ */
+export interface HomeHero {
+  id: number;
+  sections?: (SplitHeroBlock | ProductSpotlightBlock)[] | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
@@ -3394,6 +3468,21 @@ export interface FooterNewsletterBlockSelect<T extends boolean = true> {
   privacyNote?: T;
   id?: T;
   blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "home-hero_select".
+ */
+export interface HomeHeroSelect<T extends boolean = true> {
+  sections?:
+    | T
+    | {
+        splitHero?: T | SplitHeroBlockSelect<T>;
+        productSpotlight?: T | ProductSpotlightBlockSelect<T>;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
