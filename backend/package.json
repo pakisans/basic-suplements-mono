@@ -29,7 +29,8 @@
     "translate:products": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/translate-products.ts",
     "translate:products:free": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/translate-products-gtranslate.ts",
     "seed:real-data": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/scripts/seed-real-data.ts",
-    "seed:home": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/scripts/seed-home-design.ts"
+    "seed:home": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/scripts/seed-home-design.ts",
+    "clean:home-blocks": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/scripts/clean-home-layout.ts"
   },
   "dependencies": {
     "@payloadcms/admin-bar": "3.80.0",
