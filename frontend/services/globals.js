@@ -13,6 +13,18 @@ export async function getHeader() {
   }
 }
 
+export async function getHomeHero() {
+  try {
+    return await payloadGlobal('home-hero', {
+      depth: 3,
+      revalidate: REVALIDATE.globals,
+      tags: ['home-hero'],
+    })
+  } catch {
+    return null
+  }
+}
+
 export async function getFooter() {
   try {
     return await payloadGlobal('footer', {

@@ -2,6 +2,7 @@ import React from 'react'
 import { getHomePage } from '@/services/pages'
 import { getFeaturedProducts, getNewProducts } from '@/services/products'
 import { getCategories } from '@/services/categories'
+import { getHomeHero } from '@/services/globals'
 import { Hero } from '@/components/layout/Hero'
 import { SplitHero } from '@/components/homepage/SplitHero'
 import { BlockRenderer } from '@/components/blocks/BlockRenderer'
@@ -18,24 +19,29 @@ export const metadata = buildMetadata({
 })
 
 export default async function HomePage() {
-  const [page, featuredProducts, newProducts, categories] = await Promise.all([
-    getHomePage(),
-    getFeaturedProducts(4),
-    getNewProducts(8),
-    getCategories({ parentOnly: true, limit: 6 }),
-  ])
+  const [page, homeHero, featuredProducts, newProducts, categories] =
+    await Promise.all([
+      getHomePage(),
+      getHomeHero(),
+      getFeaturedProducts(4),
+      getNewProducts(8),
+      getCategories({ parentOnly: true, limit: 6 }),
+    ])
 
+  const heroSections = homeHero?.sections ?? []
   const hasPageHero = page?.hero && page.hero.type !== 'none'
   const hasBlocks = page?.layout && page.layout.length > 0
 
   return (
     <>
+      {heroSections.length > 0 && <BlockRenderer blocks={heroSections} />}
+
       {hasPageHero && <Hero hero={page.hero} />}
 
       {hasBlocks ? (
         <BlockRenderer blocks={page.layout} />
       ) : (
-        !hasPageHero && <SplitHero categories={categories} />
+        !hasPageHero && heroSections.length === 0 && <SplitHero categories={categories} />
       )}
 
       {!hasBlocks && (

@@ -26,6 +26,7 @@ import { Tags } from '@/collections/Tags'
 import { Users } from '@/collections/Users'
 import { Footer } from '@/globals/Footer'
 import { Header } from '@/globals/Header'
+import { HomeHero } from '@/globals/HomeHero'
 import { plugins } from './plugins'
 
 const filename = fileURLToPath(import.meta.url)
@@ -93,7 +94,7 @@ export default buildConfig({
   }),
   //email: nodemailerAdapter(),
   endpoints: [],
-  globals: [Header, Footer],
+  globals: [Header, Footer, HomeHero],
   localization: {
     locales: [
       // {

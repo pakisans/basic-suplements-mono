@@ -1,14 +1,9 @@
 /**
  * seed-home-design.ts
  *
- * Adds the new home-page design blocks — a Split Hero (Supplements / Apparel)
- * and two Product Spotlights — to the home page WITHOUT overwriting the rest of
- * it. Kept separate from seed-real-data on purpose so re-running either one
- * doesn't clobber the other.
- *
- * Non-destructive: reads the existing home layout, removes any previous
- * splitHero / productSpotlight (and invalid blocks), then puts the hero first,
- * the spotlights next, and keeps every other existing block.
+ * Seeds ONLY the "Home Hero" global (Split Hero + Product Spotlights) shown at
+ * the top of the home page. It touches nothing else — not the home page layout,
+ * not any other block. Safe to run any time; independent of seed-real-data.
  *
  * Run: pnpm seed:home
  */
@@ -16,7 +11,7 @@ import config from '@payload-config'
 import { createLocalReq, getPayload } from 'payload'
 import type { File } from 'payload'
 
-// Edit here or later in the admin (Pages → Home → Layout).
+// Edit here or later in the admin (Globals → Home Hero).
 const HERO_PANELS = [
   {
     imageUrl: 'https://www.ogistra-nutrition-shop.com/3778-large_default/pro-whey-227kg-premium-whey-protein.jpg',
@@ -53,7 +48,7 @@ async function run() {
   const req = await createLocalReq({ locale: 'en' }, payload)
   req.context = { ...req.context, disableRevalidate: true }
 
-  payload.logger.info('=== Seed home design (Split Hero + Product Spotlights) ===')
+  payload.logger.info('=== Seed Home Hero global (Split Hero + Product Spotlights) ===')
 
   // 1. Split Hero — upload the two panel images.
   const panels: { image: number; eyebrow: string; title: string; url: string }[] = []
@@ -88,49 +83,15 @@ async function run() {
   }))
   payload.logger.info(`  Prepared ${spotlights.length} product spotlight(s)`)
 
-  const designBlocks = [...(splitHero ? [splitHero] : []), ...spotlights] as any[]
-  if (!designBlocks.length) {
-    payload.logger.error('  Nothing to add — aborting.')
+  const sections = [...(splitHero ? [splitHero] : []), ...spotlights]
+  if (!sections.length) {
+    payload.logger.error('  Nothing to seed — aborting.')
     return
   }
 
-  // 3. Merge into the home page (depth 0 so existing relations are ids).
-  const existing = await payload.find({
-    collection: 'pages',
-    where: { slug: { equals: 'home' } },
-    depth: 0,
-    limit: 1,
-    req,
-  })
-
-  const isInvalid = (b: any) =>
-    (b?.blockType === 'mediaBlock' || b?.blockType === 'media') && !b?.media
-  const isDesignBlock = (b: any) => b?.blockType === 'splitHero' || b?.blockType === 'productSpotlight'
-
-  if (existing.docs.length > 0) {
-    const home = existing.docs[0] as any
-    const rest = (home.layout ?? []).filter((b: any) => !isDesignBlock(b) && !isInvalid(b))
-    const layout = [...designBlocks, ...rest]
-
-    const setLayout = (l: any[]) =>
-      payload.update({ collection: 'pages', id: home.id, data: { layout: l }, req })
-
-    try {
-      await setLayout(layout)
-      payload.logger.info(`  Updated home (hero + ${spotlights.length} spotlights, kept ${rest.length} other block(s))`)
-    } catch (err) {
-      payload.logger.warn(`  Existing layout still invalid (${err}); setting design blocks only`)
-      await setLayout(designBlocks)
-      payload.logger.info('  Updated home (design blocks only)')
-    }
-  } else {
-    await payload.create({
-      collection: 'pages',
-      data: { slug: 'home', title: 'Home', _status: 'published', layout: designBlocks } as any,
-      req,
-    })
-    payload.logger.info('  Created home page with design blocks')
-  }
+  // 3. Write ONLY the Home Hero global.
+  await payload.updateGlobal({ slug: 'home-hero', data: { sections } as any, req })
+  payload.logger.info(`  Saved Home Hero global (${sections.length} section(s)).`)
 
   payload.logger.info('=== Done ===')
 }

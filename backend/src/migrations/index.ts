@@ -6,6 +6,7 @@ import * as migration_20260520_113552 from './20260520_113552';
 import * as migration_20260612_064927_add_split_hero from './20260612_064927_add_split_hero';
 import * as migration_20260615_082744_add_category_sort_order from './20260615_082744_add_category_sort_order';
 import * as migration_20260721_194018_add_product_spotlight from './20260721_194018_add_product_spotlight';
+import * as migration_20260722_065651_add_home_hero_global from './20260722_065651_add_home_hero_global';
 
 export const migrations = [
   {
@@ -46,6 +47,11 @@ export const migrations = [
   {
     up: migration_20260721_194018_add_product_spotlight.up,
     down: migration_20260721_194018_add_product_spotlight.down,
-    name: '20260721_194018_add_product_spotlight'
+    name: '20260721_194018_add_product_spotlight',
+  },
+  {
+    up: migration_20260722_065651_add_home_hero_global.up,
+    down: migration_20260722_065651_add_home_hero_global.down,
+    name: '20260722_065651_add_home_hero_global'
   },
 ];
