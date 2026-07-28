@@ -47,12 +47,12 @@ export function ProductCarousel({ products, featuredIndex = -1 }) {
       onPointerUp={endDrag}
       onPointerCancel={endDrag}
       onClickCapture={onClickCapture}
-      className="group/track flex cursor-grab snap-x snap-mandatory gap-4 overflow-x-auto pb-4 select-none active:cursor-grabbing sm:gap-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      className="group/track flex cursor-grab snap-x snap-mandatory gap-4 overflow-x-auto px-1 py-6 select-none active:cursor-grabbing sm:gap-6 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       {products.map((product, index) => (
         <div
           key={product.id ?? index}
-          className="w-[80%] shrink-0 snap-start transition-all duration-300 ease-out group-hover/track:opacity-40 hover:z-10 hover:-translate-y-1 hover:!opacity-100 sm:w-[46%] lg:w-[24%]"
+          className="relative w-[80%] shrink-0 snap-start transition-all duration-300 ease-out group-hover/track:opacity-40 hover:z-10 hover:-translate-y-2 hover:!opacity-100 sm:w-[46%] lg:w-[24%]"
         >
           <FeaturedProductCard
             product={product}
