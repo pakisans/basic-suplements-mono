@@ -29,8 +29,13 @@ export default async function HomePage() {
     ])
 
   const heroSections = homeHero?.sections ?? []
+  // Split Hero + Product Spotlight belong to the Home Hero global. If they were
+  // ever added to the page layout too, skip them here so they never render twice.
+  const pageBlocks = (page?.layout ?? []).filter(
+    (b) => b?.blockType !== 'splitHero' && b?.blockType !== 'productSpotlight',
+  )
   const hasPageHero = page?.hero && page.hero.type !== 'none'
-  const hasBlocks = page?.layout && page.layout.length > 0
+  const hasBlocks = pageBlocks.length > 0
 
   return (
     <>
@@ -39,7 +44,7 @@ export default async function HomePage() {
       {hasPageHero && <Hero hero={page.hero} />}
 
       {hasBlocks ? (
-        <BlockRenderer blocks={page.layout} />
+        <BlockRenderer blocks={pageBlocks} />
       ) : (
         !hasPageHero && heroSections.length === 0 && <SplitHero categories={categories} />
       )}

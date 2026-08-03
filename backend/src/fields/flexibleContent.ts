@@ -6,6 +6,7 @@ import { Banner } from '@/blocks/Banner/config'
 import { BrandStory } from '@/blocks/BrandStory/config'
 import { CallToAction } from '@/blocks/CallToAction/config'
 import { Carousel } from '@/blocks/Carousel/config'
+import { FeatureShowcase } from '@/blocks/FeatureShowcase/config'
 import { Code } from '@/blocks/Code/config'
 import { Content } from '@/blocks/Content/config'
 import { FAQ } from '@/blocks/FAQ/config'
@@ -22,6 +23,7 @@ import { Video } from '@/blocks/Video/config'
 export const defaultContentBlocks: Block[] = [
   SplitHero,
   ProductSpotlight,
+  FeatureShowcase,
   Ambassador,
   BrandStory,
   Banner,
