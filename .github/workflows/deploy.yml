@@ -38,7 +38,7 @@ jobs:
       - name: Deploy repo
         shell: bash
         run: |
-          ssh -i ~/.ssh/id_ed25519 \
+          ssh -i ~/.ssh/id_ed25519 -o ServerAliveInterval=30 -o ServerAliveCountMax=1000 \
             -p ${{ secrets.SSH_PORT }} \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           set -e
@@ -60,7 +60,7 @@ jobs:
       - name: Ensure backend media directory exists
         shell: bash
         run: |
-          ssh -i ~/.ssh/id_ed25519 \
+          ssh -i ~/.ssh/id_ed25519 -o ServerAliveInterval=30 -o ServerAliveCountMax=1000 \
             -p ${{ secrets.SSH_PORT }} \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
             "mkdir -p /var/www/app/backend/public/media"
@@ -82,7 +82,7 @@ jobs:
             echo "STRIPE_WEBHOOKS_SIGNING_SECRET=${{ secrets.STRIPE_WEBHOOKS_SIGNING_SECRET }}"
             echo "PAYLOAD_URL_BUILD=http://127.0.0.1:3001"
             echo "NEXT_PUBLIC_PAYLOAD_URL=${{ secrets.PAYLOAD_PUBLIC_SERVER_URL }}"
-          } | ssh -i ~/.ssh/id_ed25519 \
+          } | ssh -i ~/.ssh/id_ed25519 -o ServerAliveInterval=30 -o ServerAliveCountMax=1000 \
               -p ${{ secrets.SSH_PORT }} \
               ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
               "cat > /var/www/app/.env"
@@ -99,7 +99,7 @@ jobs:
             echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}"
             echo "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}"
             echo "STRIPE_WEBHOOKS_SIGNING_SECRET=${{ secrets.STRIPE_WEBHOOKS_SIGNING_SECRET }}"
-          } | ssh -i ~/.ssh/id_ed25519 \
+          } | ssh -i ~/.ssh/id_ed25519 -o ServerAliveInterval=30 -o ServerAliveCountMax=1000 \
               -p ${{ secrets.SSH_PORT }} \
               ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
               "cat > /var/www/app/backend/.env"
@@ -112,7 +112,7 @@ jobs:
             echo "NEXT_PUBLIC_PAYLOAD_URL=${{ secrets.PAYLOAD_PUBLIC_SERVER_URL }}"
             echo "NEXT_PUBLIC_SERVER_URL=${{ secrets.NEXT_PUBLIC_SERVER_URL }}"
             echo "REVALIDATE_SECRET=${{ secrets.REVALIDATE_SECRET }}"
-          } | ssh -i ~/.ssh/id_ed25519 \
+          } | ssh -i ~/.ssh/id_ed25519 -o ServerAliveInterval=30 -o ServerAliveCountMax=1000 \
               -p ${{ secrets.SSH_PORT }} \
               ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
               "cat > /var/www/app/frontend/.env"
@@ -120,7 +120,7 @@ jobs:
       - name: Ensure postgres is running
         shell: bash
         run: |
-          ssh -i ~/.ssh/id_ed25519 \
+          ssh -i ~/.ssh/id_ed25519 -o ServerAliveInterval=30 -o ServerAliveCountMax=1000 \
             -p ${{ secrets.SSH_PORT }} \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           set -e
@@ -136,7 +136,7 @@ jobs:
       - name: Bootstrap backend migrations before build
         shell: bash
         run: |
-          ssh -i ~/.ssh/id_ed25519 \
+          ssh -i ~/.ssh/id_ed25519 -o ServerAliveInterval=30 -o ServerAliveCountMax=1000 \
             -p ${{ secrets.SSH_PORT }} \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << EOF
           set -e
@@ -167,7 +167,7 @@ jobs:
       - name: Rebuild and restart backend
         shell: bash
         run: |
-          ssh -i ~/.ssh/id_ed25519 \
+          ssh -i ~/.ssh/id_ed25519 -o ServerAliveInterval=30 -o ServerAliveCountMax=1000 \
             -p ${{ secrets.SSH_PORT }} \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           set -e
@@ -183,7 +183,7 @@ jobs:
       - name: Run backend migrations
         shell: bash
         run: |
-          ssh -i ~/.ssh/id_ed25519 \
+          ssh -i ~/.ssh/id_ed25519 -o ServerAliveInterval=30 -o ServerAliveCountMax=1000 \
             -p ${{ secrets.SSH_PORT }} \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           set -e
@@ -212,7 +212,7 @@ jobs:
       - name: Rebuild and restart frontend
         shell: bash
         run: |
-          ssh -i ~/.ssh/id_ed25519 \
+          ssh -i ~/.ssh/id_ed25519 -o ServerAliveInterval=30 -o ServerAliveCountMax=1000 \
             -p ${{ secrets.SSH_PORT }} \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           set -e
@@ -226,7 +226,7 @@ jobs:
       - name: Ensure nginx is running
         shell: bash
         run: |
-          ssh -i ~/.ssh/id_ed25519 \
+          ssh -i ~/.ssh/id_ed25519 -o ServerAliveInterval=30 -o ServerAliveCountMax=1000 \
             -p ${{ secrets.SSH_PORT }} \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           set -e
