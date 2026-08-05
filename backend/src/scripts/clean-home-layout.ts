@@ -41,14 +41,18 @@ async function run() {
   const after = before.filter((b) => !isDesignBlock(b) && !isInvalid(b))
   const removed = before.length - after.length
 
-  if (removed === 0) {
-    payload.logger.info('Home layout already clean — no design blocks to remove.')
-    return
-  }
-
-  await payload.update({ collection: 'pages', id: home.id, data: { layout: after }, req })
+  // Always re-publish. Pages has drafts enabled, so ANY update without
+  // _status: 'published' flips the page to draft — which makes it vanish from
+  // the public (published) API and takes the whole page layout (product
+  // carousel, etc.) down with it. Keep it published no matter what.
+  await payload.update({
+    collection: 'pages',
+    id: home.id,
+    data: { layout: after, _status: 'published' },
+    req,
+  })
   payload.logger.info(
-    `Removed ${removed} block(s) from home layout (kept ${after.length}). Design blocks now live only in the Home Hero global.`,
+    `Removed ${removed} block(s) from home layout (kept ${after.length}) and re-published home. Design blocks now live only in the Home Hero global.`,
   )
 }
 

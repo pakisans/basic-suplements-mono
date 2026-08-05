@@ -1,8 +1,34 @@
 import Link from 'next/link';
 import { FeaturedProductCard } from '@/components/product/FeaturedProductCard';
+import { getProducts } from '@/services/products';
 
-export function CarouselBlock({ block }) {
-  const products = block.populatedDocs ?? block.selectedDocs ?? [];
+// Products come from the CMS: either an individually-selected list or a
+// collection (optionally filtered by categories). The backend does not
+// auto-populate `populatedDocs`, so in collection mode we fetch here.
+async function resolveProducts(block) {
+  if (block.populateBy === 'selection') {
+    return (block.selectedDocs ?? [])
+      .map((item) => item?.value ?? item)
+      .filter((p) => p?.id);
+  }
+
+  if (Array.isArray(block.populatedDocs) && block.populatedDocs.length) {
+    return block.populatedDocs.map((item) => item?.value ?? item).filter((p) => p?.id);
+  }
+
+  const categories = (block.categories ?? [])
+    .map((c) => (c && typeof c === 'object' ? c.slug : null))
+    .filter(Boolean);
+
+  const res = await getProducts(
+    categories.length ? { categories } : {},
+    { limit: block.limit ?? 8 },
+  );
+  return (res.docs ?? []).filter((p) => p?.id);
+}
+
+export async function CarouselBlock({ block }) {
+  const products = (await resolveProducts(block)).slice(0, 4);
   if (!products.length) return null;
 
   // Emphasise the second card for visual rhythm (only when there are enough).
