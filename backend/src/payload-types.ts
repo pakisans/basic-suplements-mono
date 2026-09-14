@@ -307,6 +307,7 @@ export interface Product {
         | SplitHeroBlock
         | ProductSpotlightBlock
         | FeatureShowcaseBlock
+        | HighlightBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -519,6 +520,30 @@ export interface FeatureShowcaseBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'featureShowcase';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HighlightBlock".
+ */
+export interface HighlightBlock {
+  badge?: string | null;
+  variant?: ('right' | 'left') | null;
+  heading: string;
+  body?: string | null;
+  cta?: {
+    label?: string | null;
+    url?: string | null;
+  };
+  mainImage: number | Media;
+  gallery?:
+    | {
+        image: number | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'highlight';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -773,6 +798,7 @@ export interface Page {
         | SplitHeroBlock
         | ProductSpotlightBlock
         | FeatureShowcaseBlock
+        | HighlightBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -835,6 +861,7 @@ export interface Category {
         | SplitHeroBlock
         | ProductSpotlightBlock
         | FeatureShowcaseBlock
+        | HighlightBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -949,6 +976,7 @@ export interface Brand {
         | SplitHeroBlock
         | ProductSpotlightBlock
         | FeatureShowcaseBlock
+        | HighlightBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -1393,6 +1421,7 @@ export interface Post {
         | SplitHeroBlock
         | ProductSpotlightBlock
         | FeatureShowcaseBlock
+        | HighlightBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -1447,6 +1476,7 @@ export interface PostCategory {
         | SplitHeroBlock
         | ProductSpotlightBlock
         | FeatureShowcaseBlock
+        | HighlightBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -1903,6 +1933,7 @@ export interface PagesSelect<T extends boolean = true> {
         splitHero?: T | SplitHeroBlockSelect<T>;
         productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
+        highlight?: T | HighlightBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -1976,6 +2007,31 @@ export interface ProductSpotlightBlockSelect<T extends boolean = true> {
 export interface FeatureShowcaseBlockSelect<T extends boolean = true> {
   eyebrow?: T;
   imageSide?: T;
+  heading?: T;
+  body?: T;
+  cta?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+      };
+  mainImage?: T;
+  gallery?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HighlightBlock_select".
+ */
+export interface HighlightBlockSelect<T extends boolean = true> {
+  badge?: T;
+  variant?: T;
   heading?: T;
   body?: T;
   cta?:
@@ -2262,6 +2318,7 @@ export interface PostsSelect<T extends boolean = true> {
         splitHero?: T | SplitHeroBlockSelect<T>;
         productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
+        highlight?: T | HighlightBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2310,6 +2367,7 @@ export interface CategoriesSelect<T extends boolean = true> {
         splitHero?: T | SplitHeroBlockSelect<T>;
         productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
+        highlight?: T | HighlightBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2353,6 +2411,7 @@ export interface PostCategoriesSelect<T extends boolean = true> {
         splitHero?: T | SplitHeroBlockSelect<T>;
         productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
+        highlight?: T | HighlightBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2396,6 +2455,7 @@ export interface BrandsSelect<T extends boolean = true> {
         splitHero?: T | SplitHeroBlockSelect<T>;
         productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
+        highlight?: T | HighlightBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2717,6 +2777,7 @@ export interface ProductsSelect<T extends boolean = true> {
         splitHero?: T | SplitHeroBlockSelect<T>;
         productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
+        highlight?: T | HighlightBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
