@@ -19,6 +19,7 @@ import { ProductSpotlightBlock } from './ProductSpotlightBlock';
 import { FeatureShowcaseBlock } from './FeatureShowcaseBlock';
 import { HighlightBlock } from './HighlightBlock';
 import { CapsuleTechBlock } from './CapsuleTechBlock';
+import { ScienceIntroBlock } from './ScienceIntroBlock';
 
 export function BlockRenderer({ blocks, className = '' }) {
   if (!blocks?.length) return null;
@@ -44,6 +45,8 @@ function BlockItem({ block }) {
       return <HighlightBlock block={block} />;
     case 'capsuleTech':
       return <CapsuleTechBlock block={block} />;
+    case 'scienceIntro':
+      return <ScienceIntroBlock block={block} />;
     case 'ambassador':
       return <AmbassadorBlock block={block} />;
     case 'brandStory':

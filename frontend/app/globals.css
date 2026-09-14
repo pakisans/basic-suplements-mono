@@ -306,7 +306,40 @@
   animation: bs-page-in 0.7s ease forwards;
 }
 
+/* ---------------------------------------------------------------------------
+   Science Intro blok — animacija statične slike u kvadratnom vizualu
+   --------------------------------------------------------------------------- */
+@keyframes bs-ken-burns {
+  from {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.12) translate3d(-1.5%, -1.5%, 0);
+  }
+}
+
+@keyframes bs-float {
+  0%,
+  100% {
+    transform: scale(1.04) translate3d(0, -1%, 0);
+  }
+  50% {
+    transform: scale(1.04) translate3d(0, 1%, 0);
+  }
+}
+
+.bs-ken-burns {
+  animation: bs-ken-burns 22s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.bs-float {
+  animation: bs-float 9s ease-in-out infinite;
+  will-change: transform;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .bs-ken-burns,
+  .bs-float,
   .bs-overlay-in,
   .bs-card-in,
   .bs-rise-in,

@@ -309,6 +309,7 @@ export interface Product {
         | FeatureShowcaseBlock
         | HighlightBlock
         | CapsuleTechBlock
+        | ScienceIntroBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -586,6 +587,39 @@ export interface CapsuleTechBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ScienceIntroBlock".
+ */
+export interface ScienceIntroBlock {
+  brandMark?: string | null;
+  mediaSide?: ('right' | 'left') | null;
+  heading: string;
+  body?: string | null;
+  /**
+   * Ako URL ostane prazan a postoji video, dugme otvara video u lightboxu (kao na originalu).
+   */
+  cta?: {
+    label?: string | null;
+    url?: string | null;
+  };
+  footer?: {
+    label?: string | null;
+    title?: string | null;
+  };
+  /**
+   * Video ima prioritet nad slikom. Slika se animira (spori zoom / lebdenje) da vizual ne bude statičan.
+   */
+  media?: {
+    video?: (number | null) | Media;
+    videoUrl?: string | null;
+    image?: (number | null) | Media;
+    motion?: ('zoom' | 'float' | 'none') | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'scienceIntro';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "AmbassadorBlock".
  */
 export interface AmbassadorBlock {
@@ -839,6 +873,7 @@ export interface Page {
         | FeatureShowcaseBlock
         | HighlightBlock
         | CapsuleTechBlock
+        | ScienceIntroBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -903,6 +938,7 @@ export interface Category {
         | FeatureShowcaseBlock
         | HighlightBlock
         | CapsuleTechBlock
+        | ScienceIntroBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -1019,6 +1055,7 @@ export interface Brand {
         | FeatureShowcaseBlock
         | HighlightBlock
         | CapsuleTechBlock
+        | ScienceIntroBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -1465,6 +1502,7 @@ export interface Post {
         | FeatureShowcaseBlock
         | HighlightBlock
         | CapsuleTechBlock
+        | ScienceIntroBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -1521,6 +1559,7 @@ export interface PostCategory {
         | FeatureShowcaseBlock
         | HighlightBlock
         | CapsuleTechBlock
+        | ScienceIntroBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -1979,6 +2018,7 @@ export interface PagesSelect<T extends boolean = true> {
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
         highlight?: T | HighlightBlockSelect<T>;
         capsuleTech?: T | CapsuleTechBlockSelect<T>;
+        scienceIntro?: T | ScienceIntroBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2126,6 +2166,38 @@ export interface CapsuleTechBlockSelect<T extends boolean = true> {
         title?: T;
         text?: T;
         id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ScienceIntroBlock_select".
+ */
+export interface ScienceIntroBlockSelect<T extends boolean = true> {
+  brandMark?: T;
+  mediaSide?: T;
+  heading?: T;
+  body?: T;
+  cta?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+      };
+  footer?:
+    | T
+    | {
+        label?: T;
+        title?: T;
+      };
+  media?:
+    | T
+    | {
+        video?: T;
+        videoUrl?: T;
+        image?: T;
+        motion?: T;
       };
   id?: T;
   blockName?: T;
@@ -2400,6 +2472,7 @@ export interface PostsSelect<T extends boolean = true> {
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
         highlight?: T | HighlightBlockSelect<T>;
         capsuleTech?: T | CapsuleTechBlockSelect<T>;
+        scienceIntro?: T | ScienceIntroBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2450,6 +2523,7 @@ export interface CategoriesSelect<T extends boolean = true> {
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
         highlight?: T | HighlightBlockSelect<T>;
         capsuleTech?: T | CapsuleTechBlockSelect<T>;
+        scienceIntro?: T | ScienceIntroBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2495,6 +2569,7 @@ export interface PostCategoriesSelect<T extends boolean = true> {
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
         highlight?: T | HighlightBlockSelect<T>;
         capsuleTech?: T | CapsuleTechBlockSelect<T>;
+        scienceIntro?: T | ScienceIntroBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2540,6 +2615,7 @@ export interface BrandsSelect<T extends boolean = true> {
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
         highlight?: T | HighlightBlockSelect<T>;
         capsuleTech?: T | CapsuleTechBlockSelect<T>;
+        scienceIntro?: T | ScienceIntroBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2863,6 +2939,7 @@ export interface ProductsSelect<T extends boolean = true> {
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
         highlight?: T | HighlightBlockSelect<T>;
         capsuleTech?: T | CapsuleTechBlockSelect<T>;
+        scienceIntro?: T | ScienceIntroBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;

@@ -16,6 +16,7 @@ import { FormBlock } from '@/blocks/Form/config'
 import { MediaBlock } from '@/blocks/MediaBlock/config'
 import { ProductSpotlight } from '@/blocks/ProductSpotlight/config'
 import { Quote } from '@/blocks/Quote/config'
+import { ScienceIntro } from '@/blocks/ScienceIntro/config'
 import { Spacer } from '@/blocks/Spacer/config'
 import { SplitHero } from '@/blocks/SplitHero/config'
 import { Stats } from '@/blocks/Stats/config'
@@ -28,6 +29,7 @@ export const defaultContentBlocks: Block[] = [
   FeatureShowcase,
   Highlight,
   CapsuleTech,
+  ScienceIntro,
   Ambassador,
   BrandStory,
   Banner,

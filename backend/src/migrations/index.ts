@@ -10,6 +10,7 @@ import * as migration_20260722_065651_add_home_hero_global from './20260722_0656
 import * as migration_20260803_054646_add_feature_showcase from './20260803_054646_add_feature_showcase';
 import * as migration_20260914_130723_add_highlight from './20260914_130723_add_highlight';
 import * as migration_20260914_133654_add_capsule_tech from './20260914_133654_add_capsule_tech';
+import * as migration_20260914_212902_add_science_intro from './20260914_212902_add_science_intro';
 
 export const migrations = [
   {
@@ -70,6 +71,11 @@ export const migrations = [
   {
     up: migration_20260914_133654_add_capsule_tech.up,
     down: migration_20260914_133654_add_capsule_tech.down,
-    name: '20260914_133654_add_capsule_tech'
+    name: '20260914_133654_add_capsule_tech',
+  },
+  {
+    up: migration_20260914_212902_add_science_intro.up,
+    down: migration_20260914_212902_add_science_intro.down,
+    name: '20260914_212902_add_science_intro'
   },
 ];
