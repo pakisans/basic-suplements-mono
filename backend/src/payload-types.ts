@@ -308,6 +308,7 @@ export interface Product {
         | ProductSpotlightBlock
         | FeatureShowcaseBlock
         | HighlightBlock
+        | CapsuleTechBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -544,6 +545,44 @@ export interface HighlightBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'highlight';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CapsuleTechBlock".
+ */
+export interface CapsuleTechBlock {
+  backgroundImage?: (number | null) | Media;
+  label?: string | null;
+  heading: string;
+  note?: {
+    pill?: string | null;
+    title?: string | null;
+    metric?: string | null;
+    metricSuffix?: string | null;
+    arrow?: ('up' | 'down' | 'none') | null;
+  };
+  disclaimer?: string | null;
+  /**
+   * Video ima prioritet nad slikom. Ako nemaš video fajl, upiši direktan URL ili koristi sliku.
+   */
+  media?: {
+    video?: (number | null) | Media;
+    videoUrl?: string | null;
+    image?: (number | null) | Media;
+  };
+  /**
+   * Prva se crta levo-gore, druga desno-dole — kao na originalu.
+   */
+  columns?:
+    | {
+        title: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'capsuleTech';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -799,6 +838,7 @@ export interface Page {
         | ProductSpotlightBlock
         | FeatureShowcaseBlock
         | HighlightBlock
+        | CapsuleTechBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -862,6 +902,7 @@ export interface Category {
         | ProductSpotlightBlock
         | FeatureShowcaseBlock
         | HighlightBlock
+        | CapsuleTechBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -977,6 +1018,7 @@ export interface Brand {
         | ProductSpotlightBlock
         | FeatureShowcaseBlock
         | HighlightBlock
+        | CapsuleTechBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -1422,6 +1464,7 @@ export interface Post {
         | ProductSpotlightBlock
         | FeatureShowcaseBlock
         | HighlightBlock
+        | CapsuleTechBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -1477,6 +1520,7 @@ export interface PostCategory {
         | ProductSpotlightBlock
         | FeatureShowcaseBlock
         | HighlightBlock
+        | CapsuleTechBlock
         | AmbassadorBlock
         | BrandStoryBlock
         | BannerBlock
@@ -1934,6 +1978,7 @@ export interface PagesSelect<T extends boolean = true> {
         productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
         highlight?: T | HighlightBlockSelect<T>;
+        capsuleTech?: T | CapsuleTechBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2045,6 +2090,41 @@ export interface HighlightBlockSelect<T extends boolean = true> {
     | T
     | {
         image?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CapsuleTechBlock_select".
+ */
+export interface CapsuleTechBlockSelect<T extends boolean = true> {
+  backgroundImage?: T;
+  label?: T;
+  heading?: T;
+  note?:
+    | T
+    | {
+        pill?: T;
+        title?: T;
+        metric?: T;
+        metricSuffix?: T;
+        arrow?: T;
+      };
+  disclaimer?: T;
+  media?:
+    | T
+    | {
+        video?: T;
+        videoUrl?: T;
+        image?: T;
+      };
+  columns?:
+    | T
+    | {
+        title?: T;
+        text?: T;
         id?: T;
       };
   id?: T;
@@ -2319,6 +2399,7 @@ export interface PostsSelect<T extends boolean = true> {
         productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
         highlight?: T | HighlightBlockSelect<T>;
+        capsuleTech?: T | CapsuleTechBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2368,6 +2449,7 @@ export interface CategoriesSelect<T extends boolean = true> {
         productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
         highlight?: T | HighlightBlockSelect<T>;
+        capsuleTech?: T | CapsuleTechBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2412,6 +2494,7 @@ export interface PostCategoriesSelect<T extends boolean = true> {
         productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
         highlight?: T | HighlightBlockSelect<T>;
+        capsuleTech?: T | CapsuleTechBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2456,6 +2539,7 @@ export interface BrandsSelect<T extends boolean = true> {
         productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
         highlight?: T | HighlightBlockSelect<T>;
+        capsuleTech?: T | CapsuleTechBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;
@@ -2778,6 +2862,7 @@ export interface ProductsSelect<T extends boolean = true> {
         productSpotlight?: T | ProductSpotlightBlockSelect<T>;
         featureShowcase?: T | FeatureShowcaseBlockSelect<T>;
         highlight?: T | HighlightBlockSelect<T>;
+        capsuleTech?: T | CapsuleTechBlockSelect<T>;
         ambassador?: T | AmbassadorBlockSelect<T>;
         brandStory?: T | BrandStoryBlockSelect<T>;
         banner?: T | BannerBlockSelect<T>;

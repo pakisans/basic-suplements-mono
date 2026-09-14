@@ -6,6 +6,7 @@ import { Banner } from '@/blocks/Banner/config'
 import { BrandStory } from '@/blocks/BrandStory/config'
 import { CallToAction } from '@/blocks/CallToAction/config'
 import { Carousel } from '@/blocks/Carousel/config'
+import { CapsuleTech } from '@/blocks/CapsuleTech/config'
 import { FeatureShowcase } from '@/blocks/FeatureShowcase/config'
 import { Highlight } from '@/blocks/Highlight/config'
 import { Code } from '@/blocks/Code/config'
@@ -26,6 +27,7 @@ export const defaultContentBlocks: Block[] = [
   ProductSpotlight,
   FeatureShowcase,
   Highlight,
+  CapsuleTech,
   Ambassador,
   BrandStory,
   Banner,

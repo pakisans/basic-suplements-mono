@@ -31,7 +31,8 @@
     "seed:real-data": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/scripts/seed-real-data.ts",
     "seed:home": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/scripts/seed-home-design.ts",
     "clean:home-blocks": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/scripts/clean-home-layout.ts",
-    "seed:highlight": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/scripts/seed-highlight-block.ts"
+    "seed:highlight": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/scripts/seed-highlight-block.ts",
+    "seed:capsule": "cross-env NODE_OPTIONS=--no-deprecation tsx --env-file=.env src/scripts/seed-capsule-block.ts"
   },
   "dependencies": {
     "@payloadcms/admin-bar": "3.80.0",
