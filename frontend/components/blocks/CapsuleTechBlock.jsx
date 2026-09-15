@@ -65,7 +65,8 @@ export function CapsuleTechBlock({ block }) {
   const bg = mediaUrl(block?.backgroundImage);
   const videoSrc = mediaUrl(media.video) || media.videoUrl || null;
   const imageSrc = mediaUrl(media.image);
-  const arrow = note.arrow === 'down' ? '↓' : note.arrow === 'none' ? null : '↑';
+  const arrow =
+    note.arrow === 'down' ? '↓' : note.arrow === 'none' ? null : '↑';
 
   return (
     <section
@@ -147,7 +148,9 @@ export function CapsuleTechBlock({ block }) {
                       aria-hidden="true"
                       className="block text-[32px] leading-none transition-all duration-700 ease-out"
                       style={{
-                        transform: inView ? 'translateY(0px)' : 'translateY(30px)',
+                        transform: inView
+                          ? 'translateY(0px)'
+                          : 'translateY(30px)',
                         opacity: inView ? 1 : 0,
                       }}
                     >
@@ -204,7 +207,7 @@ export function CapsuleTechBlock({ block }) {
           {columns[0] && (
             <div className="z-10 flex w-full max-w-[320px] items-center lg:-mt-[30px] lg:mb-24 lg:w-[270px] lg:max-w-none lg:self-start">
               <Annotation column={columns[0]} offset={inView ? -10 : 20} />
-              <div className="hidden h-px w-[70px] shrink-0 self-start border-t border-dashed border-white/40 lg:my-12 lg:block" />
+              <div className="hidden h-px w-[144px] shrink-0 self-start border-t border-dashed border-white/40 lg:my-12 lg:block" />
             </div>
           )}
 
@@ -212,7 +215,7 @@ export function CapsuleTechBlock({ block }) {
 
           {columns[1] && (
             <div className="z-10 flex w-full max-w-[320px] items-center lg:-mt-[30px] lg:mb-24 lg:w-[270px] lg:max-w-none lg:self-end">
-              <div className="hidden h-px w-[70px] shrink-0 self-center border-t border-dashed border-white/40 lg:mb-12 lg:mt-8 lg:block" />
+              <div className="hidden h-px w-[144px] shrink-0 self-center border-t border-dashed border-white/40 lg:mb-12 lg:mt-8 lg:block" />
               <Annotation column={columns[1]} offset={inView ? 10 : -20} />
             </div>
           )}
@@ -234,7 +237,9 @@ function Annotation({ column, offset }) {
       <h3 className="mb-1 text-[12px] font-medium uppercase leading-[13.2px] text-white">
         {column.title}
       </h3>
-      <p className="m-0 text-[12px] leading-[16.8px] text-zinc-400">{column.text}</p>
+      <p className="m-0 text-[12px] leading-[16.8px] text-zinc-400">
+        {column.text}
+      </p>
     </div>
   );
 }

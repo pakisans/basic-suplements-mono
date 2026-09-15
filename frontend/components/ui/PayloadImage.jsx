@@ -11,6 +11,7 @@ export function PayloadImage({
   sizes,
   priority = false,
   quality = 85,
+  style,
 }) {
   if (!media) return null;
 
@@ -30,6 +31,7 @@ export function PayloadImage({
           sizes={sizes ?? '100vw'}
           priority={priority}
           quality={quality}
+          style={style}
         />
       );
     }
@@ -45,6 +47,7 @@ export function PayloadImage({
         sizes={sizes}
         priority={priority}
         quality={quality}
+        style={style}
       />
     );
   }
@@ -67,6 +70,7 @@ export function PayloadImage({
         sizes={sizes ?? '100vw'}
         priority={priority}
         quality={quality}
+        style={style}
       />
     );
   }
@@ -82,6 +86,7 @@ export function PayloadImage({
       sizes={sizes}
       priority={priority}
       quality={quality}
+      style={style}
     />
   );
 }

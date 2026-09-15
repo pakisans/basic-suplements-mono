@@ -18,6 +18,33 @@ import { PayloadImage } from '@/components/ui/PayloadImage';
  * Boje su prilagođene tamnoj temi sajta: panel zinc-950 na crnoj pozadini,
  * naslov bel, tekst zinc-400, CTA belo dugme sa crnim tekstom.
  */
+/**
+ * Okvir glavne slike se prilagođava formatu fajla, a ne obrnuto:
+ *   - pejzaž do 16:9 → okvir tačno prati format slike, pa `cover` ništa ne odseca
+ *   - širi od 16:9 → okvir ostaje 16:9 (minimalno seče stranice)
+ *   - kvadrat i sve uspravnije → okvir je kvadrat, i dodatno se ograniči na 560px
+ *     da ne razvuče celu sekciju u visinu
+ *   - uspravna slika (ratio < 1) ide `contain` sa malo padinga, da se proizvod
+ *     vidi ceo (bočne trake na tamnoj podlozi umesto odsečene glave/dna)
+ *   - ako medij nema dimenzije (ručno unet URL) → 16:9 + `cover`, kao pre
+ */
+const MAX_RATIO = 16 / 9;
+
+function mainFrame(media) {
+  const w = typeof media === 'object' ? media?.width : null;
+  const h = typeof media === 'object' ? media?.height : null;
+  const ratio = w && h ? w / h : null;
+
+  if (!ratio) return { aspectRatio: '16 / 9', fit: 'cover', narrow: false };
+
+  const frame = Math.min(Math.max(ratio, 1), MAX_RATIO);
+  return {
+    aspectRatio: String(frame),
+    fit: ratio < 1 ? 'contain' : 'cover',
+    narrow: frame < 1.25,
+  };
+}
+
 export function HighlightBlock({ block }) {
   const main = block?.mainImage;
   if (!main) return null;
@@ -28,6 +55,16 @@ export function HighlightBlock({ block }) {
     .slice(0, 3);
   const imagesLeft = block.variant === 'left';
   const cta = block.cta || {};
+  const frame = mainFrame(main);
+
+  // Male pločice dele jedan odnos (da red ostane poravnat): najuspravnija slika
+  // diktira okvir, u granicama kvadrat … 8/7. Uspravne idu `contain`.
+  const tileRatios = gallery
+    .map((g) => (typeof g === 'object' && g?.width && g?.height ? g.width / g.height : null))
+    .filter(Boolean);
+  const tileAspect = tileRatios.length
+    ? Math.min(Math.max(Math.min(...tileRatios), 1), 8 / 7)
+    : 8 / 7;
 
   return (
     <section
@@ -91,28 +128,44 @@ export function HighlightBlock({ block }) {
           {/* Slike */}
           <div className={`md:col-span-6 ${imagesLeft ? 'md:order-1' : 'md:order-2'}`}>
             <div className="grid grid-cols-6 gap-3 md:gap-4">
-              <div className="relative col-span-6 aspect-[16/9] overflow-hidden rounded-2xl bg-zinc-900">
+              <div
+                className={`relative col-span-6 mx-auto w-full overflow-hidden rounded-2xl bg-zinc-900 ${
+                  frame.narrow ? 'max-w-[560px]' : ''
+                } ${frame.fit === 'contain' ? 'p-4 md:p-6' : ''}`}
+                style={{ aspectRatio: frame.aspectRatio }}
+              >
                 <PayloadImage
                   media={main}
                   fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1440px) 50vw, 704px"
+                  style={{ objectFit: frame.fit }}
                 />
               </div>
 
-              {gallery.map((img, i) => (
-                <div
-                  key={img?.id ?? i}
-                  className="relative col-span-2 aspect-[8/7] overflow-hidden rounded-2xl bg-zinc-900"
-                >
-                  <PayloadImage
-                    media={img}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 33vw, 17vw"
-                  />
-                </div>
-              ))}
+              {gallery.map((img, i) => {
+                const r =
+                  typeof img === 'object' && img?.width && img?.height
+                    ? img.width / img.height
+                    : null;
+                const fit = r !== null && r < 1 ? 'contain' : 'cover';
+
+                return (
+                  <div
+                    key={img?.id ?? i}
+                    className={`relative col-span-2 overflow-hidden rounded-2xl bg-zinc-900 ${
+                      fit === 'contain' ? 'p-2' : ''
+                    }`}
+                    style={{ aspectRatio: String(tileAspect) }}
+                  >
+                    <PayloadImage
+                      media={img}
+                      fill
+                      sizes="(max-width: 768px) 33vw, 17vw"
+                      style={{ objectFit: fit }}
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
