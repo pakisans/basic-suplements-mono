@@ -2,21 +2,21 @@ import type { Block } from 'payload'
 
 /**
  * Science Intro — 1:1 rekreacija seed.com "MicrobioSection" (Microbiome 101 intro):
- * krem sekcija, 12-kolonski grid; levo brand oznaka u uglastim zagradama, veliki
+ * tamna sekcija, 12-kolonski grid; levo brand oznaka u uglastim zagradama, veliki
  * naslov, tekst i pill dugme sa play krugom, dole levo "SCIENCE / …" oznaka;
  * desno veliki kvadratni vizual (video koji se sam pušta ili animirana slika).
  *
- * Izmereno direktno sa seed.com (computed styles):
- *   sekcija   bg #FCFCF7, color #1C3A13, padding 0 32px, min-height 760px
+ * Geometrija je izmerena direktno sa seed.com (computed styles), a paleta je
+ * NAŠA (crna tema) — belo pill dugme sa crnim play krugom:
+ *   sekcija   padding 0 32px, min-height 760px
  *   grid      12 kolona, gap 32px, align-items center, max-w 1440
  *   brand     col 1/span 2, 20px / 18px, weight 350, letter-spacing -0.6px
  *   tekst     col 1/span 5 — naslov 48px / 52.8px, weight 350, -0.72px
  *   body      16px / 20.8px, margin-top 32px
- *   dugme     bg #1C3A13, text #FCFCF7, pill, padding 5px 5px 5px 34px, gap 18px,
- *             play krug 38px bg #36542D
+ *   dugme     pill, padding 5px 5px 5px 34px, gap 18px, play krug 38px
  *   footer    col 1/span 3, align-self end — label 16px uppercase (ls 0.24px, 400)
  *             + naslov 16px weight 500
- *   vizual    col 7/span 6, kvadrat (1/1), radius 32px, bg #EEEEE9,
+ *   vizual    col 7/span 6, kvadrat (1/1), radius 32px,
  *             video autoplay + loop + muted, object-fit cover
  */
 export const ScienceIntro: Block = {

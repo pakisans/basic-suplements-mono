@@ -87,7 +87,8 @@
       "Bash(awk '/^export async function up/,/^export async function down/' src/migrations/20260914_130723_add_highlight.ts)",
       "Bash(awk '/^export async function up/,/^export async function down/' src/migrations/20260914_133654_add_capsule_tech.ts)",
       "Bash(echo \"== lint exit: $? ==\")",
-      "Bash(pkill -f \"next dev\")"
+      "Bash(pkill -f \"next dev\")",
+      "Bash(timeout 60 gh run list --limit 3)"
     ]
   }
 }

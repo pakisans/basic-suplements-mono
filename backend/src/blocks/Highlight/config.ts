@@ -2,16 +2,17 @@ import type { Block } from 'payload'
 
 /**
  * Highlight — 1:1 rekreacija seed.com "HighlightSection" sekcije:
- * krem panel sa zaobljenim gornjim uglovima, sa jedne strane pill badge +
+ * tamni panel sa zaobljenim gornjim uglovima, sa jedne strane pill badge +
  * naslov + tekst + CTA, sa druge strane grid od jedne velike i tri male slike.
  *
- * Izmereno direktno sa seed.com (computed styles):
- *   section   bg #FCFCF7, radius 32px 32px 0 0, padding 80px 32px
+ * Geometrija je izmerena direktno sa seed.com (computed styles), a paleta je
+ * NAŠA (crna tema) — belo pill dugme sa crnim tekstom, tamne površine:
+ *   section   radius 32px 32px 0 0, padding 80px 32px
  *   grid      12 kolona, gap 32px — tekst span 6 (align-self: center), slike span 6
- *   badge     bg #D3FA99, text #1C3A13, radius 1000px, 12px/500
+ *   badge     pill, radius 1000px, 12px/500
  *   naslov    40px / 44px, weight 350, letter-spacing -0.4px
  *   body      16px / 20.8px
- *   CTA       bg #1C3A13, text #FCFCF7, radius 1000px, padding 16px 24px
+ *   CTA       pill, radius 1000px, padding 16px 24px
  *   slike     grid 6 kolona, gap 16px; velika 1/-1 (704x396), male span 2 (224x196), radius 16px
  */
 export const Highlight: Block = {

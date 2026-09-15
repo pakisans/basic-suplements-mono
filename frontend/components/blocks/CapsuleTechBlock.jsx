@@ -1,29 +1,30 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { PayloadImage } from '@/components/ui/PayloadImage';
 import { PUBLIC_PAYLOAD_URL } from '@/constants';
 
 /**
- * Capsule Tech — 1:1 rekreacija seed.com "ViaCapSection" sekcije.
+ * Capsule Tech — struktura preuzeta sa seed.com "ViaCapSection", paleta je NAŠA
+ * (crna tema): foto pozadina zatamnjena, preko nje tamna frosted glass kartica;
+ * levo animirani label (slovo po slovo), naslov, "note" kartica sa pill-om i
+ * brojačem, disclaimer; desno vizual proizvoda sa dve anotacije povezane
+ * isprekidanim linijama.
  *
- * Izmereno sa seed.com (computed styles):
+ * Geometrija je 1:1 sa originalom (izmereno sa seed.com):
  *   sekcija    padding 80px 32px, background-image cover
- *   kartica    max-w 1440, padding 80px, radius 32px, bg rgba(87,94,85,.35), backdrop-blur 37.5px
+ *   kartica    max-w 1440, padding 80px, radius 32px, backdrop-blur 37.5px
  *   levo       576px, desno 768px (min-h 400px), gap 32px
- *   label      12px / 18px, uppercase, weight 300, #FCFCF7
+ *   label      12px / 18px, uppercase, weight 300
  *   naslov     40px / 44px, weight 350, letter-spacing -0.4px, margin-top 24px
- *   note       inline-flex, padding 32px, radius 16px, border 1px rgba(255,255,255,.25), gap 24px
- *   note pill  12px, border 1.5px solid #FCFCF7, radius 1000px, padding 0 8px, margin 0 8px 4px 0
- *   naslov note 18px / 23.4px, weight 350
+ *   note       inline-flex, padding 32px, radius 16px, border 1px, gap 24px
+ *   note pill  12px, border 1.5px, radius 1000px, padding 0 8px
  *   brojač     32px / 48px, weight 300; sufiks 16px; strelica 32px
- *   disclaimer 12px / 16.8px, margin-top 24px
- *   anotacija  subhead 12px / 13.2px / 500 uppercase + tekst 12px / 16.8px, kolona 200px
- *   linija     70px, 1px dashed #FCFCF7 (leva: margin 48px 0, desna: 32px 0 48px)
- *   spacer     100px
- *   video      400×400, absolute, centriran u desnoj koloni, object-fit contain
+ *   anotacije  tekst 200px + isprekidana linija 70px, spacer 100px
+ *   vizual     400×400, absolute, centriran u desnoj koloni, object-fit contain
  *
  * Animacije na ulazu u viewport (kao na originalu):
- *   kartica translateY 60→0 · kolone +20→-10 i -20→+10 · strelica 30px/0 → 0/1
+ *   kartica translateY 60→0 · kolone ±20→∓10 · strelica 30px/0 → 0/1
  *   brojač 0→N · slova labela ulaze sa stagger-om od 50ms
  */
 
@@ -70,18 +71,33 @@ export function CapsuleTechBlock({ block }) {
     <section
       ref={sectionRef}
       aria-label={block?.heading || 'Capsule technology'}
-      className="relative overflow-hidden bg-zinc-950 px-6 py-16 md:px-8 md:py-20"
-      style={bg ? { backgroundImage: `url(${bg})`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+      className="relative overflow-hidden bg-black px-6 py-16 md:px-8 md:py-20"
     >
+      {/* Pozadina + zatamnjenje, da beli tekst uvek ima kontrast */}
+      {bg && (
+        <>
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url(${bg})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+          <div aria-hidden="true" className="absolute inset-0 bg-black/70" />
+        </>
+      )}
+
       {/* Frosted glass kartica */}
       <div
-        className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-8 overflow-hidden rounded-[32px] bg-[rgba(87,94,85,0.35)] p-8 text-[#FCFCF7] backdrop-blur-[37.5px] transition-transform duration-1000 ease-out md:p-12 lg:flex-row lg:items-start lg:p-20"
+        className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-8 overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.06] p-8 text-white backdrop-blur-[37.5px] transition-transform duration-1000 ease-out md:p-12 lg:flex-row lg:items-start lg:p-20"
         style={{ transform: inView ? 'translateY(0px)' : 'translateY(60px)' }}
       >
         {/* Levo: label + naslov + note + disclaimer */}
         <div className="w-full shrink-0 lg:w-[576px]">
           {block?.label && (
-            <p className="m-0 text-[12px] font-light uppercase leading-[18px] text-[#FCFCF7]">
+            <p className="m-0 text-[12px] font-light uppercase leading-[18px] text-zinc-300">
               <span aria-hidden="true">●</span>{' '}
               <span className="sr-only">{block.label}</span>
               <span aria-hidden="true">
@@ -94,7 +110,7 @@ export function CapsuleTechBlock({ block }) {
                       transitionDelay: `${i * 50}ms`,
                     }}
                   >
-                    {char === ' ' ? ' ' : char}
+                    {char === ' ' ? ' ' : char}
                   </span>
                 ))}
               </span>
@@ -102,18 +118,21 @@ export function CapsuleTechBlock({ block }) {
           )}
 
           <h2
-            className="mt-6 text-[32px] leading-[36px] tracking-[-0.4px] md:text-[40px] md:leading-[44px]"
+            className="mt-6 text-[32px] leading-[36px] tracking-[-0.4px] text-white md:text-[40px] md:leading-[44px]"
             style={{ fontWeight: 350 }}
           >
             {block?.heading}
           </h2>
 
           {(note.title || note.metric) && (
-            <div className="mt-6 inline-flex items-center gap-6 rounded-2xl border border-white/25 p-8">
+            <div className="mt-6 inline-flex items-center gap-6 rounded-2xl border border-white/15 bg-black/20 p-8">
               {note.title && (
-                <p className="m-0 text-[18px] leading-[23.4px]" style={{ fontWeight: 350 }}>
+                <p
+                  className="m-0 text-[18px] leading-[23.4px] text-white"
+                  style={{ fontWeight: 350 }}
+                >
                   {note.pill && (
-                    <span className="mb-1 mr-2 inline-flex items-center rounded-full border-[1.5px] border-[#FCFCF7] px-2 text-[12px] leading-[18px]">
+                    <span className="mb-1 mr-2 inline-flex items-center rounded-full border-[1.5px] border-white px-2 text-[12px] leading-[18px] text-white">
                       {note.pill}
                     </span>
                   )}
@@ -122,7 +141,7 @@ export function CapsuleTechBlock({ block }) {
               )}
 
               {note.metric && (
-                <p className="m-0 flex items-center text-[16px] leading-6">
+                <p className="m-0 flex items-center text-[16px] leading-6 text-white">
                   {arrow && (
                     <span
                       aria-hidden="true"
@@ -145,13 +164,13 @@ export function CapsuleTechBlock({ block }) {
           )}
 
           {block?.disclaimer && (
-            <p className="mt-6 text-[12px] leading-[16.8px]" style={{ fontWeight: 350 }}>
+            <p className="mt-6 text-[12px] leading-[16.8px] text-zinc-400">
               {block.disclaimer}
             </p>
           )}
         </div>
 
-        {/* Desno: video + dve anotacije sa isprekidanim linijama */}
+        {/* Desno: vizual + dve anotacije sa isprekidanim linijama */}
         <div className="relative flex w-full flex-col items-center gap-8 lg:min-h-[400px] lg:w-[768px] lg:flex-row lg:items-center lg:justify-between lg:gap-0">
           {(videoSrc || imageSrc) && (
             <div className="pointer-events-none z-[5] flex h-[280px] w-[280px] items-center justify-center lg:absolute lg:left-1/2 lg:top-1/2 lg:h-[400px] lg:w-[400px] lg:-translate-x-1/2 lg:-translate-y-1/2">
@@ -170,24 +189,22 @@ export function CapsuleTechBlock({ block }) {
                   style={{ objectFit: 'contain' }}
                 />
               ) : (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={imageSrc}
-                  alt={block?.heading || ''}
-                  className="h-full w-full"
-                  style={{ objectFit: 'contain' }}
-                />
+                <div className="relative h-full w-full">
+                  <PayloadImage
+                    media={media.image}
+                    fill
+                    className="object-contain"
+                    sizes="400px"
+                  />
+                </div>
               )}
             </div>
           )}
 
           {columns[0] && (
             <div className="z-10 flex w-full max-w-[320px] items-center lg:-mt-[30px] lg:mb-24 lg:w-[270px] lg:max-w-none lg:self-start">
-              <Annotation
-                column={columns[0]}
-                offset={inView ? -10 : 20}
-              />
-              <div className="hidden h-px w-[70px] shrink-0 self-start border-t border-dashed border-[#FCFCF7] lg:my-12 lg:block" />
+              <Annotation column={columns[0]} offset={inView ? -10 : 20} />
+              <div className="hidden h-px w-[70px] shrink-0 self-start border-t border-dashed border-white/40 lg:my-12 lg:block" />
             </div>
           )}
 
@@ -195,7 +212,7 @@ export function CapsuleTechBlock({ block }) {
 
           {columns[1] && (
             <div className="z-10 flex w-full max-w-[320px] items-center lg:-mt-[30px] lg:mb-24 lg:w-[270px] lg:max-w-none lg:self-end">
-              <div className="hidden h-px w-[70px] shrink-0 self-center border-t border-dashed border-[#FCFCF7] lg:mb-12 lg:mt-8 lg:block" />
+              <div className="hidden h-px w-[70px] shrink-0 self-center border-t border-dashed border-white/40 lg:mb-12 lg:mt-8 lg:block" />
               <Annotation column={columns[1]} offset={inView ? 10 : -20} />
             </div>
           )}
@@ -214,12 +231,10 @@ function Annotation({ column, offset }) {
         transition: 'transform 1000ms ease-out',
       }}
     >
-      <h3 className="mb-1 text-[12px] font-medium uppercase leading-[13.2px] text-[#FCFCF7]">
+      <h3 className="mb-1 text-[12px] font-medium uppercase leading-[13.2px] text-white">
         {column.title}
       </h3>
-      <p className="m-0 text-[12px] leading-[16.8px]" style={{ fontWeight: 350 }}>
-        {column.text}
-      </p>
+      <p className="m-0 text-[12px] leading-[16.8px] text-zinc-400">{column.text}</p>
     </div>
   );
 }

@@ -2,24 +2,26 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { PayloadImage } from '@/components/ui/PayloadImage';
 import { PUBLIC_PAYLOAD_URL } from '@/constants';
 
 /**
- * Science Intro — 1:1 rekreacija seed.com "MicrobioSection" (Microbiome 101 intro).
+ * Science Intro — struktura preuzeta sa seed.com "MicrobioSection", paleta je
+ * NAŠA (crna tema): crna sekcija, 12-kolonski grid; levo brand oznaka u uglastim
+ * zagradama, veliki naslov, tekst i belo pill dugme sa play krugom, u dnu
+ * "SCIENCE / …" oznaka; desno veliki kvadratni vizual (video ili animirana slika).
  *
- * Izmereno sa seed.com (computed styles):
- *   sekcija   bg #FCFCF7, color #1C3A13, padding 0 32px, min-height 760px
+ * Geometrija je 1:1 sa originalom (izmereno sa seed.com):
+ *   sekcija   padding 0 32px, min-height 760px
  *   grid      12 kolona / gap 32px / align-items center, max-w 1440
- *   brand     col 1/span 2, 20px / 18px, weight 350, letter-spacing -0.6px
- *   naslov    col 1/span 5, 48px / 52.8px, weight 350, letter-spacing -0.72px
+ *   brand     20px / 18px, weight 350, letter-spacing -0.6px (prikačen za vrh)
+ *   naslov    col span 5, 48px / 52.8px, weight 350, letter-spacing -0.72px
  *   body      16px / 20.8px, margin-top 32px
- *   dugme     pill #1C3A13 → #FCFCF7, padding 5px 5px 5px 34px, gap 18px,
- *             play krug 38px bg #36542D, margin-top 32px
- *   footer    col 1/span 3, align-self end; label 16px/24 uppercase ls 0.24px w400,
- *             naslov 16px/24 w500 ls -0.12px
- *   vizual    col 7/span 6, kvadrat 1/1, radius 32px, bg #EEEEE9, video autoplay+loop+muted
+ *   dugme     pill, padding 5px 5px 5px 34px, gap 18px, play krug 38px, margin-top 32px
+ *   footer    prikačen za dno; label 16px/24 uppercase ls 0.24px, naslov 16px/24 w500
+ *   vizual    col span 6, kvadrat 1/1, radius 32px, video autoplay+loop+muted
  *
- * Animacije (dodate — original ih čuva za scroll experience koji se otvara na "Discover"):
+ * Animacije:
  *   ulaz u viewport: brand → naslov → tekst → dugme → footer (stagger 90ms,
  *   translateY 16px + fade), vizual fade + scale 0.96 → 1
  *   video se pušta samo dok je sekcija u vidnom polju
@@ -106,7 +108,7 @@ export function ScienceIntroBlock({ block }) {
     <section
       ref={sectionRef}
       aria-label={block?.heading || 'Science'}
-      className="bg-[#FCFCF7] px-6 py-16 text-[#1C3A13] md:px-8 lg:min-h-[760px] lg:py-0"
+      className="border-t border-zinc-900 bg-black px-6 py-16 text-white md:px-8 lg:min-h-[760px] lg:py-0"
     >
       <div className="mx-auto grid w-full max-w-[1440px] grid-cols-1 items-center gap-8 lg:min-h-[760px] lg:grid-cols-12">
         {/* Tekstualna kolona */}
@@ -117,7 +119,7 @@ export function ScienceIntroBlock({ block }) {
         >
           {block?.brandMark && (
             <p
-              className="m-0 text-[20px] leading-[18px] tracking-[-0.6px]"
+              className="m-0 text-[20px] leading-[18px] tracking-[-0.6px] text-zinc-400"
               style={{ fontWeight: 350, ...rise(0) }}
             >
               {block.brandMark} <span aria-hidden="true">【</span>
@@ -128,7 +130,7 @@ export function ScienceIntroBlock({ block }) {
 
           <div>
             <h2
-              className="m-0 text-[34px] leading-[38px] tracking-[-0.72px] md:text-[48px] md:leading-[52.8px]"
+              className="m-0 text-[34px] leading-[38px] tracking-[-0.72px] text-white md:text-[48px] md:leading-[52.8px]"
               style={{ fontWeight: 350, ...rise(1) }}
             >
               {block?.heading}
@@ -136,7 +138,7 @@ export function ScienceIntroBlock({ block }) {
 
             {block?.body && (
               <p
-                className="mt-8 max-w-[36rem] text-[16px] leading-[20.8px]"
+                className="mt-8 max-w-[36rem] text-[16px] leading-[20.8px] text-zinc-400"
                 style={rise(2)}
               >
                 {block.body}
@@ -166,17 +168,14 @@ export function ScienceIntroBlock({ block }) {
           </div>
 
           {(footer.label || footer.title) && (
-            <p
-              className="m-0 flex flex-wrap items-baseline gap-2"
-              style={rise(4)}
-            >
+            <p className="m-0 flex flex-wrap items-baseline gap-2" style={rise(4)}>
               {footer.label && (
-                <span className="text-[16px] uppercase leading-6 tracking-[0.24px]">
+                <span className="text-[16px] uppercase leading-6 tracking-[0.24px] text-zinc-500">
                   {footer.label}
                 </span>
               )}
               {footer.title && (
-                <span className="text-[16px] font-medium leading-6 tracking-[-0.12px]">
+                <span className="text-[16px] font-medium leading-6 tracking-[-0.12px] text-white">
                   {footer.title}
                 </span>
               )}
@@ -187,7 +186,7 @@ export function ScienceIntroBlock({ block }) {
         {/* Vizual */}
         {(videoSrc || imageSrc) && (
           <figure
-            className={`relative m-0 aspect-square w-full overflow-hidden rounded-[32px] bg-[#EEEEE9] lg:col-span-6 ${
+            className={`relative m-0 aspect-square w-full overflow-hidden rounded-[32px] bg-zinc-900 lg:col-span-6 ${
               mediaLeft ? 'lg:order-1 lg:col-start-1' : 'lg:order-2 lg:col-start-7'
             }`}
             style={{
@@ -209,11 +208,11 @@ export function ScienceIntroBlock({ block }) {
                 className="h-full w-full object-cover"
               />
             ) : (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={imageSrc}
-                alt={block?.heading || ''}
-                className={`h-full w-full object-cover ${motionClass}`}
+              <PayloadImage
+                media={media.image}
+                fill
+                className={`object-cover ${motionClass}`}
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             )}
           </figure>
@@ -226,7 +225,7 @@ export function ScienceIntroBlock({ block }) {
           aria-modal="true"
           aria-label={block?.heading || 'Video'}
           onClick={closeLightbox}
-          className="bs-overlay-in fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-6"
+          className="bs-overlay-in fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-6"
         >
           <button
             type="button"
@@ -253,16 +252,16 @@ export function ScienceIntroBlock({ block }) {
 }
 
 const ctaClass =
-  'group inline-flex items-center gap-[18px] rounded-full bg-[#1C3A13] py-[5px] pl-[34px] pr-[5px] text-[16px] text-[#FCFCF7] transition-colors hover:bg-[#16300F]';
+  'group inline-flex items-center gap-[18px] rounded-full bg-white py-[5px] pl-[34px] pr-[5px] text-[16px] font-medium text-black transition-colors hover:bg-zinc-200';
 
 function PlayCircle() {
   return (
-    <span className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full bg-[#36542D] transition-transform duration-300 group-hover:scale-110">
+    <span className="flex h-[38px] w-[38px] shrink-0 items-center justify-center rounded-full bg-black transition-transform duration-300 group-hover:scale-110">
       <svg
         viewBox="0 0 16 16"
         fill="currentColor"
         aria-hidden="true"
-        className="h-3 w-3 text-[#FCFCF7]"
+        className="h-3 w-3 text-white"
       >
         <path d="M12.4231 8 5.5 12.5v-9L12.4231 8Z" />
       </svg>
@@ -270,10 +269,7 @@ function PlayCircle() {
   );
 }
 
-/**
- * Mali znak između uglastih zagrada — kapsula, kao brand oznaka.
- * (Original tu ima svoj brend ikonicu; ovo je naš geometrijski ekvivalent.)
- */
+/** Mali znak između uglastih zagrada — kapsula, kao brand oznaka. */
 function CapsuleMark() {
   return (
     <svg

@@ -2,21 +2,22 @@ import type { Block } from 'payload'
 
 /**
  * Capsule Tech — 1:1 rekreacija seed.com "ViaCapSection" sekcije:
- * foto pozadina + frosted glass kartica preko nje; levo animirani label
+ * zatamnjena foto pozadina + tamna frosted glass kartica; levo animirani label
  * (slovo po slovo), naslov, "note" kartica sa pill-om i brojačem (↑ 17x) i
  * disclaimer; desno 360° video proizvoda sa dve anotacije (gornja levo,
  * donja desno) povezane isprekidanim linijama.
  *
- * Izmereno direktno sa seed.com (computed styles):
+ * Geometrija je izmerena direktno sa seed.com (computed styles), a paleta je
+ * NAŠA (crna tema):
  *   sekcija    padding 80px 32px, background-image cover
- *   kartica    max-w 1440, padding 80px, radius 32px, bg rgba(87,94,85,.35), backdrop-blur 37.5px
+ *   kartica    max-w 1440, padding 80px, radius 32px, backdrop-blur 37.5px
  *   levo       576px, desno 768px, gap 32px, desna kolona min-h 400px
  *   label      12px / 18px, uppercase, weight 300
  *   naslov     40px / 44px, weight 350, letter-spacing -0.4px, margin-top 24px
- *   note       inline-flex, padding 32px, radius 16px, border 1px rgba(255,255,255,.25), gap 24px
- *   note pill  12px, border 1.5px solid #FCFCF7, radius 1000px, padding 0 8px
+ *   note       inline-flex, padding 32px, radius 16px, border 1px, gap 24px
+ *   note pill  12px, border 1.5px, radius 1000px, padding 0 8px
  *   brojač     32px / 48px, weight 300; sufiks 16px; strelica 32px
- *   anotacije  tekst 200px + isprekidana linija 70px (1px dashed #FCFCF7), spacer 100px
+ *   anotacije  tekst 200px + isprekidana linija 70px (1px dashed), spacer 100px
  *   video      400×400, absolute, centriran u desnoj koloni, object-fit contain
  *   sve na ulazu u viewport: kartica translateY 60→0, kolone ±20→∓10,
  *   strelica 30px/0 → 0/1, brojač 0→N, slova labela stagger 50ms
