@@ -40,7 +40,6 @@ function BlockItem({ block }) {
     case 'productSpotlight':
       return <ProductSpotlightBlock block={block} />;
     case 'featureShowcase':
-      return null;
       return <FeatureShowcaseBlock block={block} />;
     case 'highlight':
       return <HighlightBlock block={block} />;
