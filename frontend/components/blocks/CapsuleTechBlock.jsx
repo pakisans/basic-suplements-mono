@@ -5,7 +5,7 @@ import { PayloadImage } from '@/components/ui/PayloadImage';
 import { PUBLIC_PAYLOAD_URL } from '@/constants';
 
 /**
- * Capsule Tech — struktura preuzeta sa seed.com "ViaCapSection", paleta je NAŠA
+ * Capsule Tech - struktura preuzeta sa seed.com "ViaCapSection", paleta je NAŠA
  * (crna tema): foto pozadina zatamnjena, preko nje tamna frosted glass kartica;
  * levo animirani label (slovo po slovo), naslov, "note" kartica sa pill-om i
  * brojačem, disclaimer; desno vizual proizvoda sa dve anotacije povezane
@@ -27,6 +27,9 @@ import { PUBLIC_PAYLOAD_URL } from '@/constants';
  *   kartica translateY 60→0 · kolone ±20→∓10 · strelica 30px/0 → 0/1
  *   brojač 0→N · slova labela ulaze sa stagger-om od 50ms
  */
+
+// Anotacije (OUTER LAYER / INNER CORE) privremeno sakrivene
+const SHOW_ANNOTATIONS = false;
 
 function mediaUrl(media) {
   if (!media) return null;
@@ -204,16 +207,18 @@ export function CapsuleTechBlock({ block }) {
             </div>
           )}
 
-          {columns[0] && (
+          {SHOW_ANNOTATIONS && columns[0] && (
             <div className="z-10 flex w-full max-w-[320px] items-center lg:-mt-[30px] lg:mb-24 lg:w-[270px] lg:max-w-none lg:self-start">
               <Annotation column={columns[0]} offset={inView ? -10 : 20} />
               <div className="hidden h-px w-[144px] shrink-0 self-start border-t border-dashed border-white/40 lg:my-12 lg:block" />
             </div>
           )}
 
-          <div className="hidden w-[100px] shrink-0 lg:block" />
+          {SHOW_ANNOTATIONS && (
+            <div className="hidden w-[100px] shrink-0 lg:block" />
+          )}
 
-          {columns[1] && (
+          {SHOW_ANNOTATIONS && columns[1] && (
             <div className="z-10 flex w-full max-w-[320px] items-center lg:-mt-[30px] lg:mb-24 lg:w-[270px] lg:max-w-none lg:self-end">
               <div className="hidden h-px w-[144px] shrink-0 self-center border-t border-dashed border-white/40 lg:mb-12 lg:mt-8 lg:block" />
               <Annotation column={columns[1]} offset={inView ? 10 : -20} />
